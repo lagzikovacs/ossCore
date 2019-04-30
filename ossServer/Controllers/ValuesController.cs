@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ossServer.Controllers
 {
+    [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
     public class ValuesController : ControllerBase
@@ -19,9 +20,20 @@ namespace ossServer.Controllers
 
         // GET api/values/5
         [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        public async Task<StringResult> Get(int id)
         {
-            return "value";
+            var result = new StringResult { Result = "value" };
+
+            try
+            {
+                throw new Exception("kaki");
+            }
+            catch (Exception ex)
+            {
+                result.Error = ex.Message;
+            }
+
+            return result;
         }
 
         // POST api/values
@@ -41,5 +53,14 @@ namespace ossServer.Controllers
         public void Delete(int id)
         {
         }
+    }
+
+    public class EmptyResult
+    {
+        public string Error { get; set; }
+    }
+    public class StringResult : EmptyResult
+    {
+        public string Result { get; set; }
     }
 }
