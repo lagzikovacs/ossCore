@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using ossServer.BaseResults;
+﻿using Microsoft.AspNetCore.Mvc;
 using ossServer.Models;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Primitiv.Afakulcs
 {
