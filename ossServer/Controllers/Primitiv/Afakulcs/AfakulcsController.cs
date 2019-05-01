@@ -23,7 +23,7 @@ namespace ossServer.Controllers.Primitiv.Afakulcs
         [HttpPost]
         public async Task<AfaKulcsResult> Read([FromQuery] string sid, [FromBody] string maszk)
         {
-            return await new AfakulcsBll(_context, sid).Read(maszk);
+            return await AfakulcsBll.Read(_context, sid, maszk);
         }
     }
 }
