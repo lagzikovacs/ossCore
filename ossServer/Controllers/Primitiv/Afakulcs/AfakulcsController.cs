@@ -21,27 +21,9 @@ namespace ossServer.Controllers.Primitiv.Afakulcs
         }
 
         [HttpPost]
-        public async Task<StringResult> Read([FromQuery] string sid, [FromBody] string maszk)
+        public async Task<AfaKulcsResult> Read([FromQuery] string sid, [FromBody] string maszk)
         {
-            var result = new StringResult();
-
-            using (var tr = await _context.Database.BeginTransactionAsync())
-                try
-                {
-                //    if (sid == null)
-                //        throw new ArgumentNullException(nameof(sid));
-
-                    result.Result = sid + "-" + maszk;
-
-                    tr.Commit();
-                }
-                catch (Exception ex)
-                {
-                    tr.Rollback();
-                    result.Error = ex.Message;
-                }
-
-            return result;
+            return await new AfakulcsBll(_context, sid).Read(maszk);
         }
     }
 }
