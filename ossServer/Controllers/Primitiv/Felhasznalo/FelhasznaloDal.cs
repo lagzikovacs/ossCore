@@ -4,7 +4,6 @@ using ossServer.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Primitiv.Felhasznalo
 {
@@ -29,38 +28,32 @@ namespace ossServer.Controllers.Primitiv.Felhasznalo
             return result.First();
         }
 
-        public static List<FELHASZNALO> Read(ossContext model, string maszk)
+        public static List<Models.Felhasznalo> Read(ossContext model, string maszk)
         {
-            return model.FELHASZNALO.AsNoTracking()
-              .Where(s => s.NEV.Contains(maszk)).OrderBy(s => s.NEV).ToList();
+            return model.Felhasznalo.AsNoTracking()
+              .Where(s => s.Nev.Contains(maszk)).OrderBy(s => s.Nev).ToList();
         }
 
-        public static void Exists(ossContext model, FELHASZNALO entity)
+        public static void Exists(ossContext model, Models.Felhasznalo entity)
         {
-            if (model.FELHASZNALO.Any(s => s.AZONOSITO == entity.AZONOSITO))
-                throw new Exception(string.Format(Messages.MarLetezoTetel, entity.AZONOSITO));
+            if (model.Felhasznalo.Any(s => s.Azonosito == entity.Azonosito))
+                throw new Exception(string.Format(Messages.MarLetezoTetel, entity.Azonosito));
         }
 
-        public static int Add(ossContext model, FELHASZNALO entity)
+        public static int Add(ossContext model, Models.Felhasznalo entity)
         {
             Register.Creation(model, entity);
-            model.FELHASZNALO.Add(entity);
+            model.Felhasznalo.Add(entity);
             model.SaveChanges();
 
-            return entity.FELHASZNALOKOD;
-        }
-
-        public static void Lock(ossContext model, int pKey, DateTime utoljaraModositva)
-        {
-            if (!model.LockFELHASZNALO(pKey, utoljaraModositva))
-                throw new Exception(Messages.AdatMegvaltozottNemLehetModositani);
+            return entity.Felhasznalokod;
         }
 
         public static void CheckReferences(ossContext model, int pKey)
         {
             var result = new Dictionary<string, int>();
 
-            var n = model.CSOPORTFELHASZNALO.Count(s => s.FELHASZNALOKOD == pKey);
+            var n = model.Csoportfelhasznalo.Count(s => s.Felhasznalokod == pKey);
             if (n > 0)
                 result.Add("CSOPORTFELHASZNALO.FELHASZNALOKOD", n);
 
@@ -74,24 +67,24 @@ namespace ossServer.Controllers.Primitiv.Felhasznalo
             }
         }
 
-        public static void Delete(ossContext model, FELHASZNALO entity)
+        public static void Delete(ossContext model, Models.Felhasznalo entity)
         {
-            model.FELHASZNALO.Remove(entity);
+            model.Felhasznalo.Remove(entity);
             model.SaveChanges();
         }
 
-        public static void ExistsAnother(ossContext model, FELHASZNALO entity)
+        public static void ExistsAnother(ossContext model, Models.Felhasznalo entity)
         {
-            if (model.FELHASZNALO.Any(s => s.AZONOSITO == entity.AZONOSITO && s.FELHASZNALOKOD != entity.FELHASZNALOKOD))
-                throw new Exception(string.Format(Messages.NemMenthetoMarLetezik, entity.AZONOSITO));
+            if (model.Felhasznalo.Any(s => s.Azonosito == entity.Azonosito && s.Felhasznalokod != entity.Felhasznalokod))
+                throw new Exception(string.Format(Messages.NemMenthetoMarLetezik, entity.Azonosito));
         }
 
-        public static int Update(ossContext model, FELHASZNALO entity)
+        public static int Update(ossContext model, Models.Felhasznalo entity)
         {
             Register.Modification(model, entity);
             model.SaveChanges();
 
-            return entity.FELHASZNALOKOD;
+            return entity.Felhasznalokod;
         }
     }
 }
