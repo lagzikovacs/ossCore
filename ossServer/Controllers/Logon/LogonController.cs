@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ossServer.BaseResults;
 using ossServer.Models;
+using ossServer.Utils;
 using System;
 using System.Threading.Tasks;
 
@@ -33,7 +34,7 @@ namespace ossServer.Controllers.Logon
                 catch (Exception ex)
                 {
                     tr.Rollback();
-                    result.Error = ex.Message;
+                    result.Error = ex.InmostMessage();
                 }
 
             return result;
@@ -54,7 +55,7 @@ namespace ossServer.Controllers.Logon
                 catch (Exception ex)
                 {
                     tr.Rollback();
-                    result.Error = ex.Message;
+                    result.Error = ex.InmostMessage();
                 }
 
             return result;
@@ -75,7 +76,7 @@ namespace ossServer.Controllers.Logon
                 catch (Exception ex)
                 {
                     tr.Rollback();
-                    result.Error = ex.Message;
+                    result.Error = ex.InmostMessage();
                 }
 
             return result;
@@ -96,7 +97,7 @@ namespace ossServer.Controllers.Logon
                 catch (Exception ex)
                 {
                     tr.Rollback();
-                    result.Error = ex.Message;
+                    result.Error = ex.InmostMessage();
                 }
 
             return result;
