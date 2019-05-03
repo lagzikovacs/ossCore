@@ -24,5 +24,13 @@ namespace ossServer.Controllers.Particio
                 throw new Exception(string.Format(Messages.AdatNemTalalhato, $"{nameof(Models.Particio.Particiokod)}={key}"));
             return result.First();
         }
+
+        public static int Update(ossContext model, Models.Particio entity)
+        {
+            Register.Modification(model, entity);
+            model.SaveChanges();
+
+            return entity.Particiokod;
+        }
     }
 }
