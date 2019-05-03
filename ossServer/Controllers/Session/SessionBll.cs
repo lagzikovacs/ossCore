@@ -4,18 +4,13 @@ using ossServer.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Session
 {
   public class SessionBll
   {
     private static readonly object LockMe = new object();
-    private readonly string _sid;
-
-    public SessionBll(string sid)
-    {
-      _sid = sid;
-    }
 
     internal static string CreateNew(ossContext context, string ip, string host, string osUser,
       int felhasznaloKod, string felhasznalo, string azonosito, bool logol)
@@ -103,12 +98,12 @@ namespace ossServer.Controllers.Session
         }
     }
 
-    public static void Delete(ossContext model, string sid)
+    public static void Delete(ossContext context, string sid)
     {
       lock (LockMe)
       {
-        var entity = SessionDal.Get(model, sid);
-        SessionDal.Delete(model, entity);
+        var entity = SessionDal.Get(context, sid);
+        SessionDal.Delete(context, entity);
       }
     }
 
