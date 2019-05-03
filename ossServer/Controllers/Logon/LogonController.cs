@@ -21,9 +21,66 @@ namespace ossServer.Controllers.Logon
         }
 
         [HttpPost]
+        public async Task<SzerepkorokResult> Szerepkorok([FromQuery] string sid)
+        {
+            var result = new SzerepkorokResult();
+
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    result.Result = LogonBll.Szerepkorok(_context, sid);
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.Message;
+                }
+
+            return result;
+        }
+
+        [HttpPost]
+        public async Task<BaseResults.EmptyResult> Szerepkorvalasztas([FromQuery] string sid, [FromBody] SzerepkorvalasztasParameter par)
+        {
+            var result = new BaseResults.EmptyResult();
+
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    LogonBll.SzerepkorValasztas(_context, sid, par.ParticioKod, par.CsoportKod);
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.Message;
+                }
+
+            return result;
+        }
+
+        [HttpPost]
         public async Task<BaseResults.EmptyResult> Kijelentkezes([FromQuery] string sid)
         {
-            return await LogonBll.Kijelentkezes(_context, sid);
+            var result = new BaseResults.EmptyResult();
+
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    LogonBll.Kijelentkezes(_context, sid);
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.Message;
+                }
+
+            return result;
         }
     }
 }
