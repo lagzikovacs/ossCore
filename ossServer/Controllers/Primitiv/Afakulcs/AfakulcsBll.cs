@@ -9,7 +9,7 @@ namespace ossServer.Controllers.Primitiv.Afakulcs
 {
     public class AfakulcsBll
     {
-        public int Add(ossContext context, string sid, AfakulcsDto dto)
+        public static int Add(ossContext context, string sid, AfakulcsDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
@@ -20,7 +20,7 @@ namespace ossServer.Controllers.Primitiv.Afakulcs
             return AfakulcsDal.Add(context, entity);
         }
 
-        public AfakulcsDto CreateNew(ossContext context, string sid)
+        public static AfakulcsDto CreateNew(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
@@ -28,7 +28,7 @@ namespace ossServer.Controllers.Primitiv.Afakulcs
             return new AfakulcsDto();
         }
 
-        public void Delete(ossContext context, string sid, AfakulcsDto dto)
+        public static void Delete(ossContext context, string sid, AfakulcsDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
@@ -39,7 +39,7 @@ namespace ossServer.Controllers.Primitiv.Afakulcs
             AfakulcsDal.Delete(context, entity);
         }
 
-        public AfakulcsDto Get(ossContext context, string sid, int key)
+        public static AfakulcsDto Get(ossContext context, string sid, int key)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);
@@ -57,7 +57,7 @@ namespace ossServer.Controllers.Primitiv.Afakulcs
             return ObjectUtils.Convert<Models.Afakulcs, AfakulcsDto>(entities);
         }
 
-        public int Update(ossContext context, string sid, AfakulcsDto dto)
+        public static int Update(ossContext context, string sid, AfakulcsDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
@@ -70,7 +70,7 @@ namespace ossServer.Controllers.Primitiv.Afakulcs
             return AfakulcsDal.Update(context, entity);
         }
 
-        public void ZoomCheck(ossContext context, string sid, int afakulcskod, string afakulcs)
+        public static void ZoomCheck(ossContext context, string sid, int afakulcskod, string afakulcs)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);
