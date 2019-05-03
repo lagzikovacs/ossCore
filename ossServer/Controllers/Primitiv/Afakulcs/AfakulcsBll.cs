@@ -1,4 +1,5 @@
-﻿using ossServer.Models;
+﻿using ossServer.Controllers.Session;
+using ossServer.Models;
 using ossServer.Utils;
 using System;
 using System.Collections.Generic;
@@ -16,15 +17,10 @@ namespace ossServer.Controllers.Primitiv.Afakulcs
             using (var tr = await context.Database.BeginTransactionAsync())
                 try
                 {
-                    //    if (sid == null)
-                    //        throw new ArgumentNullException(nameof(sid));
+                    SessionBll.Check(context, sid);
 
                     var entities = AfakulcsDal.Read(context, maszk);
                     result.Result = ObjectUtils.Convert<Models.Afakulcs, AfakulcsDto>(entities);
-
-                    //result.Result = new List<AfakulcsDto>();
-                    //foreach (var e in entities)
-                    //    result.Result.Add(ObjectUtils.Convert<Models.Afakulcs, AfakulcsDto>(e));
 
                     tr.Commit();
                 }

@@ -1,4 +1,7 @@
-﻿using System;
+﻿using ossServer.Controllers.Csoport;
+using ossServer.Controllers.Particio;
+using ossServer.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,88 +17,93 @@ namespace ossServer.Controllers.Session
       _sid = sid;
     }
 
-    internal static string CreateNew(OSSContext model, string ip, string host, string osUser,
+    internal static string CreateNew(ossContext context, string ip, string host, string osUser,
       int felhasznaloKod, string felhasznalo, string azonosito, bool logol)
     {
       string result;
 
       lock (LockMe)
       {
-        Purge(model);
+        Purge(context);
 
-        var entity = new SESSION
+        var entity = new Models.Session
         {
-          SESSIONID = Guid.NewGuid().ToString(),
+          Sessionid = Guid.NewGuid().ToString(),
 
-          FELHASZNALOKOD = felhasznaloKod,
-          FELHASZNALO = felhasznalo,
-          AZONOSITO = azonosito,
-          LOGOL = logol,
+          Felhasznalokod = felhasznaloKod,
+          Felhasznalo = felhasznalo,
+          Azonosito = azonosito,
+          Logol = logol,
 
-          IP = ip,
-          HOST = host,
-          OSUSER = osUser,
+          Ip = ip,
+          Host = host,
+          Osuser = osUser,
 
-          ERVENYES = DateTime.Now.AddHours(8), //hűha
-          LETREHOZVA = DateUtils.SqlNow,
+          Ervenyes = DateTime.Now.AddHours(8), //hűha
+          Letrehozva = DateTime.Now,
         };
 
-        result = SessionDal.Add(model, entity);
+        result = SessionDal.Add(context, entity);
+        entity = SessionDal.Get(context, result);
 
-        entity = SessionDal.Get(model, result);
-        model.RefreshModelFromSession(entity);
-      }
+                context.CurrentSession = entity;
+            }
 
       return result;
     }
 
-    internal static void Check(OSSContext model, string sid, bool roleMustBeChosen)
+        public static void UpdateRole(ossContext context, string sid, int particioKod, int csoportKod)
+        {
+            CsoportDal.CheckSzerepkor(context, particioKod, csoportKod);
+
+            var entityParticio = ParticioDal.Get(context, particioKod);
+            var entityCsoport = CsoportDal.Get(context, csoportKod);
+
+            lock (LockMe)
+            {
+                var entity = SessionDal.Get(context, sid);
+
+                entity.Particiokod = particioKod;
+                entity.Particio = entityParticio.Megnevezes;
+                entity.Csoportkod = csoportKod;
+                entity.Csoport = entityCsoport.Csoport1;
+
+                SessionDal.Update(context, entity);
+                entity = SessionDal.Get(context, sid);
+
+                context.CurrentSession = entity;
+            }
+        }
+
+    public static void Check(ossContext context, string sid, bool roleMustBeChosen = true)
     {
-      SESSION entity;
+        if (string.IsNullOrEmpty(sid))
+            throw new ArgumentNullException(nameof(sid));
 
-      lock (LockMe)
-      {
-        var entities = Purge(model).Where(s => s.SESSIONID == sid);
-        if (entities.Count() == 0)
-          throw new Exception("Ismeretlen Sid vagy lejárt munkamenet!");
-        entity = entities.First();
+        lock (LockMe)
+        {
+            context.CurrentSession = null;
 
-        if (roleMustBeChosen)
-          if (entity.PARTICIOKOD == null || entity.CSOPORTKOD == null)
-            throw new Exception("Bejelentkezés után kötelező szerepkört választani!");
+            var entities = Purge(context).Where(s => s.Sessionid == sid);
+            if (entities.Count() == 0)
+                throw new Exception("Ismeretlen Sid vagy lejárt munkamenet!");
+            var entity = entities.First();
 
-        // entity.ERVENYES = DateTime.Now.AddHours(1);
-        entity.ERVENYES = entity.ERVENYES.AddMinutes(1);
+            if (roleMustBeChosen)
+                if (entity.Particiokod == null || entity.Csoportkod == null)
+                    throw new Exception("Bejelentkezés után kötelező szerepkört választani!");
 
-        SessionDal.Update(model, entity);
-      }
+            // entity.ERVENYES = DateTime.Now.AddHours(1);
+            entity.Ervenyes = entity.Ervenyes.AddMinutes(1);
 
-      model.RefreshModelFromSession(entity);
+            SessionDal.Update(context, entity);
+            entity = SessionDal.Get(context, sid);
+
+            context.CurrentSession = entity;
+        }
     }
 
-    internal static void UpdateRole(OSSContext model, string sid, int particioKod, int csoportKod)
-    {
-      CsoportDal.CheckSzerepkor(model, particioKod, csoportKod);
-
-      var entityParticio = ParticioDal.Get(model, particioKod);
-      var entityCsoport = CsoportDal.Get(model, csoportKod);
-
-      SESSION entity;
-
-      lock (LockMe)
-      {
-        entity = SessionDal.Get(model, sid);
-        entity.PARTICIOKOD = particioKod;
-        entity.PARTICIO = entityParticio.MEGNEVEZES;
-        entity.CSOPORTKOD = csoportKod;
-        entity.CSOPORT = entityCsoport.CSOPORT1;
-        SessionDal.Update(model, entity);
-      }
-
-      model.RefreshModelFromSession(entity);
-    }
-
-    internal static void Delete(OSSContext model, string sid)
+    public static void Delete(ossContext model, string sid)
     {
       lock (LockMe)
       {
@@ -104,15 +112,15 @@ namespace ossServer.Controllers.Session
       }
     }
 
-    private static List<SESSION> Purge(OSSContext model)
+    private static List<Models.Session> Purge(ossContext model)
     {
       var entities = SessionDal.Read(model);
       var most = DateTime.Now;
-      var result = new List<SESSION>();
+      var result = new List<Models.Session>();
 
       foreach (var entity in entities)
       {
-        if (entity.ERVENYES <= most)
+        if (entity.Ervenyes <= most)
           SessionDal.Delete(model, entity);
         else
           result.Add(entity);
