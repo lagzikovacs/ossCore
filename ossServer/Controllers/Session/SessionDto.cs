@@ -5,9 +5,7 @@ namespace ossServer.Controllers.Session
     public class SessionDto
     {
         public string Sessionid { get; set; }
-        public int? Particiokod { get; set; }
         public string Particio { get; set; }
-        public int? Csoportkod { get; set; }
         public string Csoport { get; set; }
         public int Felhasznalokod { get; set; }
         public string Felhasznalo { get; set; }
