@@ -21,7 +21,7 @@ namespace ossServer.Controllers.Menu
         }
 
         [HttpPost]
-        public async Task<AngularMenuResult> Add([FromQuery] string sid)
+        public async Task<AngularMenuResult> AngularMenu([FromQuery] string sid)
         {
             var result = new AngularMenuResult();
 
