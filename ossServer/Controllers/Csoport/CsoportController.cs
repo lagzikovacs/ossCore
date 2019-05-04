@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ossServer.BaseResults;
 using ossServer.Controllers.Primitiv.Felhasznalo;
 using ossServer.Models;
 using ossServer.Utils;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Csoport
 {
