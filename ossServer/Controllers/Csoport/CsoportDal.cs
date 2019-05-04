@@ -26,6 +26,11 @@ namespace ossServer.Controllers.Csoport
             return entity.Csoportkod;
         }
 
+        public async static void Lock(ossContext context, int pKey, DateTime utoljaraModositva)
+        {
+            await context.ExecuteLockFunction("lockcsoport", "csoportkod", pKey, utoljaraModositva);
+        }
+
         public static Models.Csoport Get(ossContext context, int pKey)
         {
             var result = context.Csoport
@@ -81,7 +86,7 @@ namespace ossServer.Controllers.Csoport
 
         public static List<Models.Csoport> Read(ossContext context, string maszk)
         {
-            return context.Csoport.Include("Particio").AsNoTracking()
+            return context.Csoport.Include(r => r.ParticiokodNavigation).AsNoTracking()
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod && s.Csoport1.Contains(maszk))
               .OrderBy(s => s.Csoport1).ToList();
         }
@@ -93,7 +98,7 @@ namespace ossServer.Controllers.Csoport
               .Where(s => s.Felhasznalokod == context.CurrentSession.Felhasznalokod)
               .Select(s => s.Csoportkod);
 
-            return context.Csoport.Include("Particio")
+            return context.Csoport.Include(r => r.ParticiokodNavigation)
               .Where(s => qryCsf.Contains(s.Csoportkod))
               .OrderBy(s => s.ParticiokodNavigation.Megnevezes)
               .ThenBy(s => s.Csoport1)
@@ -114,7 +119,7 @@ namespace ossServer.Controllers.Csoport
         public static int Joge(ossContext context, string jogKod)
         {
             return context.Csoportjog
-              .Include("Lehetsegesjog")
+              .Include(r => r.LehetsegesjogkodNavigation)
               .Where(s => s.Csoportkod == context.CurrentSession.Csoportkod)
               .Count(s => s.LehetsegesjogkodNavigation.Jogkod == jogKod);
         }
@@ -128,7 +133,7 @@ namespace ossServer.Controllers.Csoport
         public static List<string> Jogaim(ossContext context)
         {
             return context.Csoportjog
-                .Include("Lehetsegesjog")
+                .Include(r => r.LehetsegesjogkodNavigation)
                 .Where(s => s.Csoportkod == context.CurrentSession.Csoportkod)
                 .Select(s => s.LehetsegesjogkodNavigation.Jogkod)
                 .ToList();
