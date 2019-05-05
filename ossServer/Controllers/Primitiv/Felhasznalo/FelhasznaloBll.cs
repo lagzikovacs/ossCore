@@ -10,7 +10,7 @@ namespace ossServer.Controllers.Primitiv.Felhasznalo
 {
     public class FelhasznaloBll
     {
-        public int Add(ossContext context, string sid, FelhasznaloDto dto)
+        public static int Add(ossContext context, string sid, FelhasznaloDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.FELHASZNALOMOD);
@@ -21,14 +21,14 @@ namespace ossServer.Controllers.Primitiv.Felhasznalo
             return FelhasznaloDal.Add(context, entity);
         }
 
-        public FelhasznaloDto CreateNew(ossContext context, string sid)
+        public static FelhasznaloDto CreateNew(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
             return new FelhasznaloDto { Statusz = "OK", Statuszkelte = DateTime.Now.Date, Logonlog = true };
         }
 
-        public FelhasznaloDto Get(ossContext context, string sid, int key)
+        public static FelhasznaloDto Get(ossContext context, string sid, int key)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.FELHASZNALO);
@@ -37,7 +37,7 @@ namespace ossServer.Controllers.Primitiv.Felhasznalo
             return ObjectUtils.Convert<Models.Felhasznalo, FelhasznaloDto>(entity);
         }
 
-        public List<FelhasznaloDto> Read(ossContext context, string sid, string maszk)
+        public static List<FelhasznaloDto> Read(ossContext context, string sid, string maszk)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.FELHASZNALO);
@@ -46,7 +46,7 @@ namespace ossServer.Controllers.Primitiv.Felhasznalo
             return ObjectUtils.Convert<Models.Felhasznalo, FelhasznaloDto>(entities);
         }
 
-        public int Update(ossContext context, string sid, FelhasznaloDto dto)
+        public static int Update(ossContext context, string sid, FelhasznaloDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.FELHASZNALOMOD);
@@ -62,7 +62,7 @@ namespace ossServer.Controllers.Primitiv.Felhasznalo
             return FelhasznaloDal.Update(context, entity);
         }
 
-        public void Delete(ossContext context, string sid, FelhasznaloDto dto)
+        public static void Delete(ossContext context, string sid, FelhasznaloDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.FELHASZNALOMOD);
@@ -75,7 +75,7 @@ namespace ossServer.Controllers.Primitiv.Felhasznalo
 
         //rendszergazdának, felülírja a jelszót
         //a jelszó legyen hash-elt
-        public void JelszoBeallitas(ossContext context, string sid, int felhasznaloKod, string jelszo, DateTime utolsoModositas)
+        public static void JelszoBeallitas(ossContext context, string sid, int felhasznaloKod, string jelszo, DateTime utolsoModositas)
         {
             SessionBll.Check(context, sid);
             // TODO: külön jog legyen ehhez
@@ -89,7 +89,7 @@ namespace ossServer.Controllers.Primitiv.Felhasznalo
 
         //usernek, csak a sajátot lehet, a régit ellenőrzi
         //a jelszó legyen hash-elt
-        public void JelszoCsere(ossContext context, string sid, string regiJelszo, string ujJelszo)
+        public static void JelszoCsere(ossContext context, string sid, string regiJelszo, string ujJelszo)
         {
             SessionBll.Check(context, sid);
             //nincs külön jog, csak a bejelentkezett, szerepkört is választott usernek működik
