@@ -26,7 +26,7 @@ namespace ossServer.Controllers.Primitiv.Afakulcs
 
         public async static void Lock(ossContext context, int pKey, DateTime utoljaraModositva)
         {
-            await context.ExecuteLockFunction("lockafakulcs", "felhasznalokod", pKey, utoljaraModositva);
+            await context.ExecuteLockFunction("lockafakulcs", "afakulcskod", pKey, utoljaraModositva);
         }
 
         public static Models.Afakulcs Get(ossContext context, int pKey)

@@ -9,31 +9,6 @@ namespace ossServer.Controllers.Primitiv.Felhasznalo
 {
     public class FelhasznaloDal
     {
-        public static Models.Felhasznalo Get(ossContext model, int key)
-        {
-            var result = model.Felhasznalo.Where(s => s.Felhasznalokod == key).ToList();
-            if (result.Count != 1)
-                throw new Exception(string.Format(Messages.AdatNemTalalhato, 
-                    $"{nameof(Models.Felhasznalo.Felhasznalokod)}={key}"));
-            return result.First();
-        }
-
-        public static Models.Felhasznalo Get(ossContext model, string azonosito, string jelszo)
-        {
-            var result = model.Felhasznalo.AsNoTracking()
-              .Where(s => s.Azonosito == azonosito && s.Jelszo == jelszo)
-              .ToList();
-            if (result.Count != 1)
-                throw new Exception($"Ismeretlen azonosító vagy hibás jelszó: {azonosito}!");
-            return result.First();
-        }
-
-        public static List<Models.Felhasznalo> Read(ossContext model, string maszk)
-        {
-            return model.Felhasznalo.AsNoTracking()
-              .Where(s => s.Nev.Contains(maszk)).OrderBy(s => s.Nev).ToList();
-        }
-
         public static void Exists(ossContext model, Models.Felhasznalo entity)
         {
             if (model.Felhasznalo.Any(s => s.Azonosito == entity.Azonosito))
@@ -47,6 +22,36 @@ namespace ossServer.Controllers.Primitiv.Felhasznalo
             model.SaveChanges();
 
             return entity.Felhasznalokod;
+        }
+
+        public async static void Lock(ossContext context, int pKey, DateTime utoljaraModositva)
+        {
+            await context.ExecuteLockFunction("lockfelhasznalo", "felhasznalokod", pKey, utoljaraModositva);
+        }
+
+        public static Models.Felhasznalo Get(ossContext model, int key)
+        {
+            var result = model.Felhasznalo.Where(s => s.Felhasznalokod == key).ToList();
+            if (result.Count != 1)
+                throw new Exception(string.Format(Messages.AdatNemTalalhato, 
+                    $"{nameof(Models.Felhasznalo.Felhasznalokod)}={key}"));
+            return result.First();
+        }
+
+        public static Models.Felhasznalo Get(ossContext model, string azonosito, string jelszo)
+        {
+            var result = model.Felhasznalo.AsNoTracking()
+              .Where(s => s.Azonosito == azonosito && s.Jelszo == jelszo && s.Statusz == "OK")
+              .ToList();
+            if (result.Count != 1)
+                throw new Exception($"Ismeretlen azonosító vagy hibás jelszó: {azonosito}!");
+            return result.First();
+        }
+
+        public static List<Models.Felhasznalo> Read(ossContext model, string maszk)
+        {
+            return model.Felhasznalo.AsNoTracking()
+              .Where(s => s.Nev.Contains(maszk)).OrderBy(s => s.Nev).ToList();
         }
 
         public static void CheckReferences(ossContext model, int pKey)
