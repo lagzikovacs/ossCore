@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace ossServer.Controllers.Primitiv.Teendo
+﻿namespace ossServer.Controllers.Primitiv.Teendo
 {
     public class TeendoZoomParameter
     {
+        public int Teendokod { get; set; }
+        public string Teendo { get; set; }
     }
 }

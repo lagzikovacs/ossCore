@@ -1,11 +1,10 @@
-﻿using System;
+﻿using ossServer.BaseResults;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Primitiv.Fizetesimod
 {
-    public class FizetesimodResult
+    public class FizetesimodResult : EmptyResult
     {
+        public List<FizetesimodDto> Result { get; set; }
     }
 }

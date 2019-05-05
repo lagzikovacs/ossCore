@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace ossServer.Controllers.Primitiv.Penznem
+﻿namespace ossServer.Controllers.Primitiv.Penznem
 {
     public class PenznemZoomParameter
     {
+        public int Penznemkod { get; set; }
+        public string Penznem { get; set; }
     }
 }

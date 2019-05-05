@@ -1,11 +1,10 @@
-﻿using System;
+﻿using ossServer.BaseResults;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Primitiv.Me
 {
-    public class MennyisegiegysegResult
+    public class MennyisegiegysegResult : EmptyResult
     {
+        public List<MennyisegiegysegDto> Result { get; set; }
     }
 }

@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace ossServer.Controllers.Primitiv.Termekdij
+﻿namespace ossServer.Controllers.Primitiv.Termekdij
 {
     public class TermekdijZoomParameter
     {
+        public int Termekdijkod { get; set; }
+        public string Termekdijkt { get; set; }
     }
 }

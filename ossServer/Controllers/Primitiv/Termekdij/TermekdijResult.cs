@@ -1,11 +1,10 @@
-﻿using System;
+﻿using ossServer.BaseResults;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Primitiv.Termekdij
 {
-    public class TermekdijResult
+    public class TermekdijResult : EmptyResult
     {
+        public List<TermekdijDto> Result { get; set; }
     }
 }

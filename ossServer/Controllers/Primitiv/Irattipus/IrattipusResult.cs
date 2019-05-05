@@ -1,11 +1,10 @@
-﻿using System;
+﻿using ossServer.BaseResults;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Primitiv.Irattipus
 {
-    public class IrattipusResult
+    public class IrattipusResult : EmptyResult
     {
+        public List<IrattipusDto> Result { get; set; }
     }
 }

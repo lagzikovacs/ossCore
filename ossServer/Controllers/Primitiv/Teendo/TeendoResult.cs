@@ -1,11 +1,10 @@
-﻿using System;
+﻿using ossServer.BaseResults;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Primitiv.Teendo
 {
-    public class TeendoResult
+    public class TeendoResult : EmptyResult
     {
+        public List<TeendoDto> Result { get; set; }
     }
 }

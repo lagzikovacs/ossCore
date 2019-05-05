@@ -1,11 +1,10 @@
-﻿using System;
+﻿using ossServer.BaseResults;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Primitiv.Helyseg
 {
-    public class HelysegResult
+    public class HelysegResult : EmptyResult
     {
+        public List<HelysegDto> Result { get; set; }
     }
 }

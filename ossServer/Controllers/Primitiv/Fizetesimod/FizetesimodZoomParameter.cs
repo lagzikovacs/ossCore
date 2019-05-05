@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace ossServer.Controllers.Primitiv.Fizetesimod
+﻿namespace ossServer.Controllers.Primitiv.Fizetesimod
 {
     public class FizetesimodZoomParameter
     {
+        public int FizetesimodKod { get; set; }
+        public string Fizetesimod { get; set; }
     }
 }
