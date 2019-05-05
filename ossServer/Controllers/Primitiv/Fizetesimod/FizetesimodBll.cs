@@ -9,7 +9,7 @@ namespace ossServer.Controllers.Primitiv.Fizetesimod
 {
     public class FizetesimodBll
     {
-        public int Add(ossContext context, string sid, FizetesimodDto dto)
+        public static int Add(ossContext context, string sid, FizetesimodDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
@@ -19,14 +19,14 @@ namespace ossServer.Controllers.Primitiv.Fizetesimod
             return FizetesimodDal.Add(context, entity);
         }
 
-        public FizetesimodDto CreateNew(ossContext context, string sid)
+        public static FizetesimodDto CreateNew(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
             return new FizetesimodDto();
         }
 
-        public void Delete(ossContext context, string sid, FizetesimodDto dto)
+        public static void Delete(ossContext context, string sid, FizetesimodDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
@@ -37,7 +37,7 @@ namespace ossServer.Controllers.Primitiv.Fizetesimod
             FizetesimodDal.Delete(context, entity);
         }
 
-        public FizetesimodDto Get(ossContext context, string sid, int key)
+        public static FizetesimodDto Get(ossContext context, string sid, int key)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);
@@ -46,7 +46,7 @@ namespace ossServer.Controllers.Primitiv.Fizetesimod
             return ObjectUtils.Convert<Models.Fizetesimod, FizetesimodDto>(entity);
         }
 
-        public List<FizetesimodDto> Read(ossContext context, string sid, string maszk)
+        public static List<FizetesimodDto> Read(ossContext context, string sid, string maszk)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);
@@ -55,7 +55,7 @@ namespace ossServer.Controllers.Primitiv.Fizetesimod
             return ObjectUtils.Convert<Models.Fizetesimod, FizetesimodDto>(entities);
         }
 
-        public int Update(ossContext context, string sid, FizetesimodDto dto)
+        public static int Update(ossContext context, string sid, FizetesimodDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
@@ -67,7 +67,7 @@ namespace ossServer.Controllers.Primitiv.Fizetesimod
             return FizetesimodDal.Update(context, entity);
         }
 
-        public void ZoomCheck(ossContext context, string sid, int fizetesimodKod, string fizetesimod)
+        public static void ZoomCheck(ossContext context, string sid, int fizetesimodKod, string fizetesimod)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);

@@ -9,7 +9,7 @@ namespace ossServer.Controllers.Primitiv.Penznem
 {
     public class PenznemBll
     {
-        public int Add(ossContext context, string sid, PenznemDto dto)
+        public static int Add(ossContext context, string sid, PenznemDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
@@ -19,14 +19,14 @@ namespace ossServer.Controllers.Primitiv.Penznem
             return PenznemDal.Add(context, entity);
         }
 
-        public PenznemDto CreateNew(ossContext context, string sid)
+        public static PenznemDto CreateNew(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
             return new PenznemDto();
         }
 
-        public void Delete(ossContext context, string sid, PenznemDto dto)
+        public static void Delete(ossContext context, string sid, PenznemDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);
@@ -37,7 +37,7 @@ namespace ossServer.Controllers.Primitiv.Penznem
             PenznemDal.Delete(context, entity);
         }
 
-        public PenznemDto Get(ossContext context, string sid, int key)
+        public static PenznemDto Get(ossContext context, string sid, int key)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);
@@ -46,7 +46,7 @@ namespace ossServer.Controllers.Primitiv.Penznem
             return ObjectUtils.Convert<Models.Penznem, PenznemDto>(entity);
         }
 
-        public List<PenznemDto> Read(ossContext context, string sid, string maszk)
+        public static List<PenznemDto> Read(ossContext context, string sid, string maszk)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);
@@ -55,7 +55,7 @@ namespace ossServer.Controllers.Primitiv.Penznem
             return ObjectUtils.Convert<Models.Penznem, PenznemDto>(entities);
         }
 
-        public int Update(ossContext context, string sid, PenznemDto dto)
+        public static int Update(ossContext context, string sid, PenznemDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);
@@ -67,7 +67,7 @@ namespace ossServer.Controllers.Primitiv.Penznem
             return PenznemDal.Update(context, entity);
         }
 
-        public void ZoomCheck(ossContext context, string sid, int penznemkod, string penznem)
+        public static void ZoomCheck(ossContext context, string sid, int penznemkod, string penznem)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);

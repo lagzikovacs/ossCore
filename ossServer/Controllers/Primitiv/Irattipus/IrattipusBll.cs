@@ -9,7 +9,7 @@ namespace ossServer.Controllers.Primitiv.Irattipus
 {
     public class IrattipusBll
     {
-        public int Add(ossContext context, string sid, IrattipusDto dto)
+        public static int Add(ossContext context, string sid, IrattipusDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
@@ -19,14 +19,14 @@ namespace ossServer.Controllers.Primitiv.Irattipus
             return IrattipusDal.Add(context, entity);
         }
 
-        public IrattipusDto CreateNew(ossContext context, string sid)
+        public static IrattipusDto CreateNew(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
             return new IrattipusDto();
         }
 
-        public void Delete(ossContext context, string sid, IrattipusDto dto)
+        public static void Delete(ossContext context, string sid, IrattipusDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
@@ -37,7 +37,7 @@ namespace ossServer.Controllers.Primitiv.Irattipus
             IrattipusDal.Delete(context, entity);
         }
 
-        public IrattipusDto Get(ossContext context, string sid, int key)
+        public static IrattipusDto Get(ossContext context, string sid, int key)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);
@@ -46,7 +46,7 @@ namespace ossServer.Controllers.Primitiv.Irattipus
             return ObjectUtils.Convert<Models.Irattipus, IrattipusDto>(entity);
         }
 
-        public List<IrattipusDto> Read(ossContext context, string sid, string maszk)
+        public static List<IrattipusDto> Read(ossContext context, string sid, string maszk)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);
@@ -55,7 +55,7 @@ namespace ossServer.Controllers.Primitiv.Irattipus
             return ObjectUtils.Convert<Models.Irattipus, IrattipusDto>(entities);
         }
 
-        public int Update(ossContext context, string sid, IrattipusDto dto)
+        public static int Update(ossContext context, string sid, IrattipusDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
@@ -67,7 +67,7 @@ namespace ossServer.Controllers.Primitiv.Irattipus
             return IrattipusDal.Update(context, entity);
         }
 
-        public void ZoomCheck(ossContext context, string sid, int irattipuskod, string irattipus)
+        public static void ZoomCheck(ossContext context, string sid, int irattipuskod, string irattipus)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);

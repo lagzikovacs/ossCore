@@ -9,7 +9,7 @@ namespace ossServer.Controllers.Primitiv.Teendo
 {
     public class TeendoBll
     {
-        public int Add(ossContext context, string sid, TeendoDto dto)
+        public static int Add(ossContext context, string sid, TeendoDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
@@ -19,14 +19,14 @@ namespace ossServer.Controllers.Primitiv.Teendo
             return TeendoDal.Add(context, entity);
         }
 
-        public TeendoDto CreateNew(ossContext context, string sid)
+        public static TeendoDto CreateNew(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
             return new TeendoDto();
         }
 
-        public void Delete(ossContext context, string sid, TeendoDto dto)
+        public static void Delete(ossContext context, string sid, TeendoDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
@@ -37,7 +37,7 @@ namespace ossServer.Controllers.Primitiv.Teendo
             TeendoDal.Delete(context, entity);
         }
 
-        public TeendoDto Get(ossContext context, string sid, int key)
+        public static TeendoDto Get(ossContext context, string sid, int key)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);
@@ -46,7 +46,7 @@ namespace ossServer.Controllers.Primitiv.Teendo
             return ObjectUtils.Convert<Models.Teendo, TeendoDto>(entity);
         }
 
-        public List<TeendoDto> Read(ossContext context, string sid, string maszk)
+        public static List<TeendoDto> Read(ossContext context, string sid, string maszk)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);
@@ -55,7 +55,7 @@ namespace ossServer.Controllers.Primitiv.Teendo
             return ObjectUtils.Convert<Models.Teendo, TeendoDto>(entities);
         }
 
-        public int Update(ossContext context, string sid, TeendoDto dto)
+        public static int Update(ossContext context, string sid, TeendoDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
@@ -67,7 +67,7 @@ namespace ossServer.Controllers.Primitiv.Teendo
             return TeendoDal.Update(context, entity);
         }
 
-        public void ZoomCheck(ossContext context, string sid, int teendokod, string teendo)
+        public static void ZoomCheck(ossContext context, string sid, int teendokod, string teendo)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);

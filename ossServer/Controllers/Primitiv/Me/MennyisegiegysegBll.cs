@@ -9,7 +9,7 @@ namespace ossServer.Controllers.Primitiv.Me
 {
     public class MennyisegiegysegBll
     {
-        public int Add(ossContext context, string sid, MennyisegiegysegDto dto)
+        public static int Add(ossContext context, string sid, MennyisegiegysegDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
@@ -19,14 +19,14 @@ namespace ossServer.Controllers.Primitiv.Me
             return MennyisegiegysegDal.Add(context, entity);
         }
 
-        public MennyisegiegysegDto CreateNew(ossContext context, string sid)
+        public static MennyisegiegysegDto CreateNew(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
             return new MennyisegiegysegDto();
         }
 
-        public void Delete(ossContext context, string sid, MennyisegiegysegDto dto)
+        public static void Delete(ossContext context, string sid, MennyisegiegysegDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
@@ -37,7 +37,7 @@ namespace ossServer.Controllers.Primitiv.Me
             MennyisegiegysegDal.Delete(context, entity);
         }
 
-        public MennyisegiegysegDto Get(ossContext context, string sid, int key)
+        public static MennyisegiegysegDto Get(ossContext context, string sid, int key)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);
@@ -46,7 +46,7 @@ namespace ossServer.Controllers.Primitiv.Me
             return ObjectUtils.Convert<Models.Mennyisegiegyseg, MennyisegiegysegDto>(entity);
         }
 
-        public List<MennyisegiegysegDto> Read(ossContext context, string sid, string maszk)
+        public static List<MennyisegiegysegDto> Read(ossContext context, string sid, string maszk)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);
@@ -55,7 +55,7 @@ namespace ossServer.Controllers.Primitiv.Me
             return ObjectUtils.Convert<Models.Mennyisegiegyseg, MennyisegiegysegDto>(entities);
         }
 
-        public int Update(ossContext context, string sid, MennyisegiegysegDto dto)
+        public static int Update(ossContext context, string sid, MennyisegiegysegDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
@@ -67,7 +67,7 @@ namespace ossServer.Controllers.Primitiv.Me
             return MennyisegiegysegDal.Update(context, entity);
         }
 
-        public void ZoomCheck(ossContext context, string sid, int mekod, string me)
+        public static void ZoomCheck(ossContext context, string sid, int mekod, string me)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);

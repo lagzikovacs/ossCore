@@ -9,7 +9,7 @@ namespace ossServer.Controllers.Primitiv.Helyseg
 {
     public class HelysegBll
     {
-        public int Add(ossContext context, string sid, HelysegDto dto)
+        public static int Add(ossContext context, string sid, HelysegDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
@@ -19,14 +19,14 @@ namespace ossServer.Controllers.Primitiv.Helyseg
             return HelysegDal.Add(context, entity);
         }
 
-        public HelysegDto CreateNew(ossContext context, string sid)
+        public static HelysegDto CreateNew(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
             return new HelysegDto();
         }
 
-        public void Delete(ossContext context, string sid, HelysegDto dto)
+        public static void Delete(ossContext context, string sid, HelysegDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
@@ -37,7 +37,7 @@ namespace ossServer.Controllers.Primitiv.Helyseg
             HelysegDal.Delete(context, entity);
         }
 
-        public HelysegDto Get(ossContext context, string sid, int key)
+        public static HelysegDto Get(ossContext context, string sid, int key)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);
@@ -46,7 +46,7 @@ namespace ossServer.Controllers.Primitiv.Helyseg
             return ObjectUtils.Convert<Models.Helyseg, HelysegDto>(entity);
         }
 
-        public List<HelysegDto> Read(ossContext context, string sid, string maszk)
+        public static List<HelysegDto> Read(ossContext context, string sid, string maszk)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);
@@ -55,7 +55,7 @@ namespace ossServer.Controllers.Primitiv.Helyseg
             return ObjectUtils.Convert<Models.Helyseg, HelysegDto>(entities);
         }
 
-        public int Update(ossContext context, string sid, HelysegDto dto)
+        public static int Update(ossContext context, string sid, HelysegDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
@@ -67,7 +67,7 @@ namespace ossServer.Controllers.Primitiv.Helyseg
             return HelysegDal.Update(context, entity);
         }
 
-        public void ZoomCheck(ossContext context, string sid, int helysegkod, string helysegnev)
+        public static void ZoomCheck(ossContext context, string sid, int helysegkod, string helysegnev)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);

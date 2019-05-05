@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ossServer.BaseResults;
 using ossServer.Models;
+using ossServer.Utils;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Primitiv.Me
 {
@@ -20,174 +21,149 @@ namespace ossServer.Controllers.Primitiv.Me
         }
 
         [HttpPost]
-        [Route("api/" + Name + "/" + nameof(Add))]
-        public async Task<Int32Result> Add([FromUri] string sid, [FromBody] MennyisegiEgysegDto dto)
+        public async Task<Int32Result> Add([FromQuery] string sid, [FromBody] MennyisegiegysegDto dto)
         {
             var result = new Int32Result();
-            var task = new Task<Int32Result>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
-                  if (dto == null)
-                      throw new ArgumentNullException(nameof(dto));
 
-                  result.Result = new MennyisegiEgysegBll(sid).Add(dto);
-              })
-            );
-            task.Start();
-            return await task;
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    result.Result = MennyisegiegysegBll.Add(_context, sid, dto);
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sid"></param>
-        /// <returns></returns>
         [HttpPost]
-        [Route("api/" + Name + "/" + nameof(CreateNew))]
-        public async Task<MennyisegiEgysegResult> CreateNew([FromUri] string sid)
+        public async Task<MennyisegiegysegResult> CreateNew([FromQuery] string sid)
         {
-            var result = new MennyisegiEgysegResult();
-            var task = new Task<MennyisegiEgysegResult>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
+            var result = new MennyisegiegysegResult();
 
-                  result.Result = new List<MennyisegiEgysegDto> { new MennyisegiEgysegBll(sid).CreateNew() };
-              })
-            );
-            task.Start();
-            return await task;
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    result.Result = new List<MennyisegiegysegDto> { MennyisegiegysegBll.CreateNew(_context, sid) };
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sid"></param>
-        /// <param name="dto"></param>
-        /// <returns></returns>
         [HttpPost]
-        [Route("api/" + Name + "/" + nameof(Delete))]
-        public async Task<EmptyResult> Delete([FromUri] string sid, [FromBody] MennyisegiEgysegDto dto)
+        public async Task<BaseResults.EmptyResult> Delete([FromQuery] string sid, [FromBody] MennyisegiegysegDto dto)
         {
-            var result = new EmptyResult();
-            var task = new Task<EmptyResult>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
-                  if (dto == null)
-                      throw new ArgumentNullException(nameof(dto));
+            var result = new BaseResults.EmptyResult();
 
-                  new MennyisegiEgysegBll(sid).Delete(dto);
-              })
-            );
-            task.Start();
-            return await task;
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    MennyisegiegysegBll.Delete(_context, sid, dto);
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sid"></param>
-        /// <param name="key"></param>
-        /// <returns></returns>
         [HttpPost]
-        [Route("api/" + Name + "/" + nameof(Get))]
-        public async Task<MennyisegiEgysegResult> Get([FromUri] string sid, [FromBody] int key)
+        public async Task<MennyisegiegysegResult> Get([FromQuery] string sid, [FromBody] int key)
         {
-            var result = new MennyisegiEgysegResult();
-            var task = new Task<MennyisegiEgysegResult>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
+            var result = new MennyisegiegysegResult();
 
-                  result.Result = new List<MennyisegiEgysegDto> { new MennyisegiEgysegBll(sid).Get(key) };
-              })
-            );
-            task.Start();
-            return await task;
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    result.Result = new List<MennyisegiegysegDto> { MennyisegiegysegBll.Get(_context, sid, key) };
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sid"></param>
-        /// <param name="maszk"></param>
-        /// <returns></returns>
         [HttpPost]
-        [Route("api/" + Name + "/" + nameof(Read))]
-        public async Task<MennyisegiEgysegResult> Read([FromUri] string sid, [FromBody] string maszk)
+        public async Task<MennyisegiegysegResult> Read([FromQuery] string sid, [FromBody] string maszk)
         {
-            var result = new MennyisegiEgysegResult();
-            var task = new Task<MennyisegiEgysegResult>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
-                  if (maszk == null)
-                      throw new ArgumentNullException(nameof(maszk));
+            var result = new MennyisegiegysegResult();
 
-                  result.Result = new MennyisegiEgysegBll(sid).Read(maszk);
-              })
-            );
-            task.Start();
-            return await task;
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    result.Result = MennyisegiegysegBll.Read(_context, sid, maszk);
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sid"></param>
-        /// <param name="dto"></param>
-        /// <returns></returns>
         [HttpPost]
-        [Route("api/" + Name + "/" + nameof(Update))]
-        public async Task<Int32Result> Update([FromUri] string sid, [FromBody] MennyisegiEgysegDto dto)
+        public async Task<Int32Result> Update([FromQuery] string sid, [FromBody] MennyisegiegysegDto dto)
         {
             var result = new Int32Result();
-            var task = new Task<Int32Result>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
-                  if (dto == null)
-                      throw new ArgumentNullException(nameof(dto));
 
-                  result.Result = new MennyisegiEgysegBll(sid).Update(dto);
-              })
-            );
-            task.Start();
-            return await task;
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    result.Result = MennyisegiegysegBll.Update(_context, sid, dto);
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sid"></param>
-        /// <param name="par"></param>
-        /// <returns></returns>
         [HttpPost]
-        [Route("api/" + Name + "/" + nameof(ZoomCheck))]
-        public async Task<EmptyResult> ZoomCheck([FromUri] string sid, [FromBody] MeZoomParameter par)
+        public async Task<BaseResults.EmptyResult> ZoomCheck([FromQuery] string sid, [FromBody] MennyisegiegysegZoomParameter par)
         {
-            var result = new EmptyResult();
-            var task = new Task<EmptyResult>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
-                  if (par == null)
-                      throw new ArgumentNullException(nameof(par));
+            var result = new BaseResults.EmptyResult();
 
-                  new MennyisegiEgysegBll(sid).ZoomCheck(par.Mekod, par.Me);
-              })
-            );
-            task.Start();
-            return await task;
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    MennyisegiegysegBll.ZoomCheck(_context, sid, par.Mekod, par.Me);
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
         }
     }
 }

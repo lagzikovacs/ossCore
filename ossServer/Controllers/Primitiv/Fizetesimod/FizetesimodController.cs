@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ossServer.BaseResults;
 using ossServer.Models;
+using ossServer.Utils;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Primitiv.Fizetesimod
 {
@@ -20,174 +21,150 @@ namespace ossServer.Controllers.Primitiv.Fizetesimod
         }
 
         [HttpPost]
-        [Route("api/" + Name + "/" + nameof(Add))]
-        public async Task<Int32Result> Add([FromUri] string sid, [FromBody] FizetesiModDto dto)
+        public async Task<Int32Result> Add([FromQuery] string sid, [FromBody] FizetesimodDto dto)
         {
             var result = new Int32Result();
-            var task = new Task<Int32Result>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
-                  if (dto == null)
-                      throw new ArgumentNullException(nameof(dto));
 
-                  result.Result = new FizetesiModBll(sid).Add(dto);
-              })
-            );
-            task.Start();
-            return await task;
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    result.Result = FizetesimodBll.Add(_context, sid, dto);
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sid"></param>
-        /// <returns></returns>
         [HttpPost]
-        [Route("api/" + Name + "/" + nameof(CreateNew))]
-        public async Task<FizetesiModResult> CreateNew([FromUri] string sid)
+        public async Task<FizetesimodResult> CreateNew([FromQuery] string sid)
         {
-            var result = new FizetesiModResult();
-            var task = new Task<FizetesiModResult>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
+            var result = new FizetesimodResult();
 
-                  result.Result = new List<FizetesiModDto> { new FizetesiModBll(sid).CreateNew() };
-              })
-            );
-            task.Start();
-            return await task;
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    result.Result = new List<FizetesimodDto> { FizetesimodBll.CreateNew(_context, sid) };
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sid"></param>
-        /// <param name="dto"></param>
-        /// <returns></returns>
         [HttpPost]
-        [Route("api/" + Name + "/" + nameof(Delete))]
-        public async Task<EmptyResult> Delete([FromUri] string sid, [FromBody] FizetesiModDto dto)
+        public async Task<BaseResults.EmptyResult> Delete([FromQuery] string sid, [FromBody] FizetesimodDto dto)
         {
-            var result = new EmptyResult();
-            var task = new Task<EmptyResult>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
-                  if (dto == null)
-                      throw new ArgumentNullException(nameof(dto));
+            var result = new BaseResults.EmptyResult();
 
-                  new FizetesiModBll(sid).Delete(dto);
-              })
-            );
-            task.Start();
-            return await task;
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    FizetesimodBll.Delete(_context, sid, dto);
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sid"></param>
-        /// <param name="key"></param>
-        /// <returns></returns>
         [HttpPost]
-        [Route("api/" + Name + "/" + nameof(Get))]
-        public async Task<FizetesiModResult> Get([FromUri] string sid, [FromBody] int key)
+        public async Task<FizetesimodResult> Get([FromQuery] string sid, [FromBody] int key)
         {
-            var result = new FizetesiModResult();
-            var task = new Task<FizetesiModResult>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
+            var result = new FizetesimodResult();
 
-                  result.Result = new List<FizetesiModDto> { new FizetesiModBll(sid).Get(key) };
-              })
-            );
-            task.Start();
-            return await task;
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    result.Result = new List<FizetesimodDto> { FizetesimodBll.Get(_context, sid, key) };
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sid"></param>
-        /// <param name="maszk"></param>
-        /// <returns></returns>
         [HttpPost]
-        [Route("api/" + Name + "/" + nameof(Read))]
-        public async Task<FizetesiModResult> Read([FromUri] string sid, [FromBody] string maszk)
+        public async Task<FizetesimodResult> Read([FromQuery] string sid, [FromBody] string maszk)
         {
-            var result = new FizetesiModResult();
-            var task = new Task<FizetesiModResult>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
-                  if (maszk == null)
-                      throw new ArgumentNullException(nameof(maszk));
+            var result = new FizetesimodResult();
 
-                  result.Result = new FizetesiModBll(sid).Read(maszk);
-              })
-            );
-            task.Start();
-            return await task;
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    result.Result = FizetesimodBll.Read(_context, sid, maszk);
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sid"></param>
-        /// <param name="dto"></param>
-        /// <returns></returns>
         [HttpPost]
-        [Route("api/" + Name + "/" + nameof(Update))]
-        public async Task<Int32Result> Update([FromUri] string sid, [FromBody] FizetesiModDto dto)
+        public async Task<Int32Result> Update([FromQuery] string sid, [FromBody] FizetesimodDto dto)
         {
             var result = new Int32Result();
-            var task = new Task<Int32Result>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
-                  if (dto == null)
-                      throw new ArgumentNullException(nameof(dto));
 
-                  result.Result = new FizetesiModBll(sid).Update(dto);
-              })
-            );
-            task.Start();
-            return await task;
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    result.Result = FizetesimodBll.Update(_context, sid, dto);
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sid"></param>
-        /// <param name="par"></param>
-        /// <returns></returns>
         [HttpPost]
-        [Route("api/" + Name + "/" + nameof(ZoomCheck))]
-        public async Task<EmptyResult> ZoomCheck([FromUri] string sid, [FromBody] FizetesimodZoomParameter par)
+        public async Task<BaseResults.EmptyResult> ZoomCheck([FromQuery] string sid, [FromBody] FizetesimodZoomParameter par)
         {
-            var result = new EmptyResult();
-            var task = new Task<EmptyResult>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
-                  if (par == null)
-                      throw new ArgumentNullException(nameof(par));
+            var result = new BaseResults.EmptyResult();
 
-                  new FizetesiModBll(sid).ZoomCheck(par.FizetesimodKod, par.Fizetesimod);
-              })
-            );
-            task.Start();
-            return await task;
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    FizetesimodBll.ZoomCheck(_context, sid, par.FizetesimodKod, par.Fizetesimod);
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
         }
     }
 }

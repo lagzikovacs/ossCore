@@ -9,7 +9,7 @@ namespace ossServer.Controllers.Primitiv.Termekdij
 {
     public class TermekdijBll
     {
-        public int Add(ossContext context, string sid, TermekdijDto dto)
+        public static int Add(ossContext context, string sid, TermekdijDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
@@ -19,14 +19,14 @@ namespace ossServer.Controllers.Primitiv.Termekdij
             return TermekdijDal.Add(context, entity);
         }
 
-        public TermekdijDto CreateNew(ossContext context, string sid)
+        public static TermekdijDto CreateNew(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
             return new TermekdijDto { Termekdijegysegar = 0 };
         }
 
-        public void Delete(ossContext context, string sid, TermekdijDto dto)
+        public static void Delete(ossContext context, string sid, TermekdijDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
@@ -37,7 +37,7 @@ namespace ossServer.Controllers.Primitiv.Termekdij
             TermekdijDal.Delete(context, entity);
         }
 
-        public TermekdijDto Get(ossContext context, string sid, int key)
+        public static TermekdijDto Get(ossContext context, string sid, int key)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);
@@ -46,7 +46,7 @@ namespace ossServer.Controllers.Primitiv.Termekdij
             return ObjectUtils.Convert<Models.Termekdij, TermekdijDto>(entity);
         }
 
-        public List<TermekdijDto> Read(ossContext context, string sid, string maszk)
+        public static List<TermekdijDto> Read(ossContext context, string sid, string maszk)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);
@@ -55,7 +55,7 @@ namespace ossServer.Controllers.Primitiv.Termekdij
             return ObjectUtils.Convert<Models.Termekdij, TermekdijDto>(entities);
         }
 
-        public int Update(ossContext context, string sid, TermekdijDto dto)
+        public static int Update(ossContext context, string sid, TermekdijDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
@@ -67,7 +67,7 @@ namespace ossServer.Controllers.Primitiv.Termekdij
             return TermekdijDal.Update(context, entity);
         }
 
-        public void ZoomCheck(ossContext context, string sid, int termekdijkod, string termekdijkt)
+        public static void ZoomCheck(ossContext context, string sid, int termekdijkod, string termekdijkt)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);
