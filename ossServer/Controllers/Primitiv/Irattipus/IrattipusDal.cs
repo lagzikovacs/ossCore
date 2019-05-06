@@ -46,7 +46,7 @@ namespace ossServer.Controllers.Primitiv.Irattipus
         {
             var result = new Dictionary<string, int>();
 
-            var n = context.Irattipus.Count(s => s.Irattipuskod == pKey);
+            var n = context.Irat.Count(s => s.Irattipuskod == pKey);
             if (n > 0)
                 result.Add("IRAT.IRATTIPUS", n);
 
