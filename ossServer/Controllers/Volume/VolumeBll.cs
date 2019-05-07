@@ -1,4 +1,5 @@
 ﻿using ossServer.Controllers.Csoport;
+using ossServer.Controllers.Dokumentum;
 using ossServer.Controllers.Session;
 using ossServer.Enums;
 using ossServer.Models;
@@ -23,7 +24,7 @@ namespace ossServer.Controllers.Volume
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.VOLUME);
 
-            return VolumeDal.DokumentumkodByVolume(context, volumeKod);
+            return DokumentumDal.DokumentumkodByVolume(context, volumeKod);
         }
     }
 }
