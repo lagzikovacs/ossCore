@@ -1,17 +1,21 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using ossServer.Enums;
+using ossServer.Models;
+using ossServer.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Irat
 {
     public class IratDal
     {
-        internal static IOrderedQueryable<IRAT> GetQuery(OSSContext model, List<SzMT> szmt)
+        public static IOrderedQueryable<Models.Irat> GetQuery(ossContext context, List<SzMT> szmt)
         {
-            var qry = model.IRAT.AsNoTracking()
-              .Include("IRATTIPUS").Include("UGYFEL")
-              .Where(s => s.PARTICIOKOD == model.Session.PARTICIOKOD);
+            var qry = context.Irat.AsNoTracking()
+              .Include(r => r.IrattipuskodNavigation)
+              .Include(r1 => r1.UgyfelkodNavigation)
+              .Where(s => s.Particiokod == context.CurrentSession.Particiokod);
 
             foreach (var f in szmt)
             {
@@ -19,25 +23,25 @@ namespace ossServer.Controllers.Irat
                 {
                     case Szempont.Kod:
                         qry = int.TryParse((string)f.Minta, out var iratKod)
-                          ? qry.Where(s => s.IRATKOD <= iratKod)
-                          : qry.Where(s => s.IRATKOD >= 0);
+                          ? qry.Where(s => s.Iratkod <= iratKod)
+                          : qry.Where(s => s.Iratkod >= 0);
                         break;
                     case Szempont.Keletkezett:
                         qry = DateTime.TryParse((string)f.Minta, out var keletkezett)
-                          ? qry.Where(s => s.KELETKEZETT >= keletkezett)
-                          : qry.Where(s => s.KELETKEZETT >= DateTime.MinValue);
+                          ? qry.Where(s => s.Keletkezett >= keletkezett)
+                          : qry.Where(s => s.Keletkezett >= DateTime.MinValue);
                         break;
                     case Szempont.Ugyfel:
-                        qry = qry.Where(s => s.UGYFEL.NEV.Contains((string)f.Minta));
+                        qry = qry.Where(s => s.UgyfelkodNavigation.Nev.Contains((string)f.Minta));
                         break;
                     case Szempont.Targy:
-                        qry = qry.Where(s => s.TARGY.Contains((string)f.Minta));
+                        qry = qry.Where(s => s.Targy.Contains((string)f.Minta));
                         break;
                     case Szempont.Irattipus:
-                        qry = qry.Where(s => s.IRATTIPUS.IRATTIPUS1.Contains((string)f.Minta));
+                        qry = qry.Where(s => s.IrattipuskodNavigation.Irattipus1.Contains((string)f.Minta));
                         break;
                     case Szempont.Kuldo:
-                        qry = qry.Where(s => s.KULDO.Contains((string)f.Minta));
+                        qry = qry.Where(s => s.Kuldo.Contains((string)f.Minta));
                         break;
                     default:
                         throw new Exception($"Lekezeletlen {f.Szempont} Szempont!");
@@ -51,29 +55,33 @@ namespace ossServer.Controllers.Irat
                 {
                     case Szempont.Kod:
                         qry = elsoSorrend
-                          ? qry.OrderByDescending(s => s.IRATKOD)
-                          : ((IOrderedQueryable<IRAT>)qry).ThenByDescending(s => s.IRATKOD);
+                          ? qry.OrderByDescending(s => s.Iratkod)
+                          : ((IOrderedQueryable<Models.Irat>)qry).ThenByDescending(s => s.Iratkod);
                         break;
                     case Szempont.Keletkezett:
                         qry = elsoSorrend
-                          ? qry.OrderByDescending(s => s.KELETKEZETT)
-                          : ((IOrderedQueryable<IRAT>)qry).ThenByDescending(s => s.KELETKEZETT);
+                          ? qry.OrderByDescending(s => s.Keletkezett)
+                          : ((IOrderedQueryable<Models.Irat>)qry).ThenByDescending(s => s.Keletkezett);
                         break;
                     case Szempont.Ugyfel:
                         qry = elsoSorrend
-                          ? qry.OrderBy(s => s.UGYFEL.NEV)
-                          : ((IOrderedQueryable<IRAT>)qry).ThenBy(s => s.UGYFEL.NEV);
+                          ? qry.OrderBy(s => s.UgyfelkodNavigation.Nev)
+                          : ((IOrderedQueryable<Models.Irat>)qry).ThenBy(s => s.UgyfelkodNavigation.Nev);
                         break;
                     case Szempont.Targy:
-                        qry = elsoSorrend ? qry.OrderBy(s => s.TARGY) : ((IOrderedQueryable<IRAT>)qry).ThenBy(s => s.TARGY);
+                        qry = elsoSorrend 
+                          ? qry.OrderBy(s => s.Targy) 
+                          : ((IOrderedQueryable<Models.Irat>)qry).ThenBy(s => s.Targy);
                         break;
                     case Szempont.Irattipus:
                         qry = elsoSorrend
-                          ? qry.OrderBy(s => s.IRATTIPUS)
-                          : ((IOrderedQueryable<IRAT>)qry).ThenBy(s => s.IRATTIPUS);
+                          ? qry.OrderBy(s => s.IrattipuskodNavigation.Irattipus1)
+                          : ((IOrderedQueryable<Models.Irat>)qry).ThenBy(s => s.IrattipuskodNavigation.Irattipus1);
                         break;
                     case Szempont.Kuldo:
-                        qry = elsoSorrend ? qry.OrderBy(s => s.KULDO) : ((IOrderedQueryable<IRAT>)qry).ThenBy(s => s.KULDO);
+                        qry = elsoSorrend 
+                          ? qry.OrderBy(s => s.Kuldo) 
+                          : ((IOrderedQueryable<Models.Irat>)qry).ThenBy(s => s.Kuldo);
                         break;
                     default:
                         throw new Exception($"Lekezeletlen {f.Szempont} Szempont!");
@@ -81,49 +89,49 @@ namespace ossServer.Controllers.Irat
                 elsoSorrend = false;
             }
 
-            return (IOrderedQueryable<IRAT>)qry;
+            return (IOrderedQueryable<Models.Irat>)qry;
         }
 
-        internal static int Add(OSSContext model, IRAT entity)
+        public static int Add(ossContext context, Models.Irat entity)
         {
-            Register.Creation(model, entity);
-            model.IRAT.Add(entity);
-            model.SaveChanges();
+            Register.Creation(context, entity);
+            context.Irat.Add(entity);
+            context.SaveChanges();
 
-            return entity.IRATKOD;
+            return entity.Iratkod;
         }
 
-        internal static void Lock(OSSContext model, int pKey, DateTime utoljaraModositva)
+        public async static void Lock(ossContext context, int pKey, DateTime utoljaraModositva)
         {
-            if (!model.LockIRAT(pKey, utoljaraModositva))
-                throw new Exception(Messages.AdatMegvaltozottNemLehetModositani);
+            await context.ExecuteLockFunction("lockirat", "iratkod", pKey, utoljaraModositva);
         }
 
-        internal static IRAT Get(OSSContext model, int pKey)
+        public static Models.Irat Get(ossContext context, int pKey)
         {
-            var result = model.IRAT
-              .Include("IRATTIPUS").Include("UGYFEL")
-              .Where(s => s.PARTICIOKOD == model.Session.PARTICIOKOD)
-              .Where(s => s.IRATKOD == pKey)
+            var result = context.Irat
+              .Include(r => r.IrattipuskodNavigation)
+              .Include(r1 => r1.UgyfelkodNavigation)
+              .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
+              .Where(s => s.Iratkod == pKey)
               .ToList();
             if (result.Count != 1)
-                throw new Exception(string.Format(Messages.AdatNemTalalhato, $"{nameof(IRAT.IRATKOD)}={pKey}"));
+                throw new Exception(string.Format(Messages.AdatNemTalalhato, $"{nameof(Models.Irat.Iratkod)}={pKey}"));
             return result.First();
         }
 
-        internal static void CheckReferences(OSSContext model, int pKey)
+        public static void CheckReferences(ossContext context, int pKey)
         {
             var result = new Dictionary<string, int>();
 
-            var n = model.BIZONYLATKAPCSOLAT.Count(s => s.IRATKOD == pKey);
+            var n = context.Bizonylatkapcsolat.Count(s => s.Iratkod == pKey);
             if (n > 0)
                 result.Add("BIZONYLATKAPCSOLAT.IRATKOD", n);
 
-            n = model.PROJEKTKAPCSOLAT.Count(s => s.IRATKOD == pKey);
+            n = context.Projektkapcsolat.Count(s => s.Iratkod == pKey);
             if (n > 0)
                 result.Add("PROJEKTKAPCSOLAT.IRATKOD", n);
 
-            n = model.DOKUMENTUM.Count(s => s.IRATKOD == pKey);
+            n = context.Dokumentum.Count(s => s.Iratkod == pKey);
             if (n > 0)
                 result.Add("DOKUMENTUM.IRATKOD", n);
 
@@ -137,26 +145,25 @@ namespace ossServer.Controllers.Irat
             }
         }
 
-        internal static void Delete(OSSContext model, IRAT entity)
+        public static void Delete(ossContext context, Models.Irat entity)
         {
-            model.IRAT.Remove(entity);
-            model.SaveChanges();
+            context.Irat.Remove(entity);
+            context.SaveChanges();
         }
 
-        internal static int Update(OSSContext model, IRAT entity)
+        public static int Update(ossContext context, Models.Irat entity)
         {
-            Register.Modification(model, entity);
-            model.SaveChanges();
+            Register.Modification(context, entity);
+            context.SaveChanges();
 
-            return entity.IRATKOD;
+            return entity.Iratkod;
         }
 
-        internal static void FotozasCheck(OSSContext model, int Particiokod, int Iratkod, string Kikuldesikod)
+        public static void FotozasCheck(ossContext context, int Particiokod, int Iratkod, 
+            string Kikuldesikod)
         {
-            var list = model.IRAT.Where(s => s.PARTICIOKOD == Particiokod &&
-                                          s.IRATKOD == Iratkod &&
-                                          s.KIKULDESIKOD == Kikuldesikod)
-                                          .ToList();
+            var list = context.Irat.Where(s => s.Particiokod == Particiokod &&
+                s.Iratkod == Iratkod && s.Kikuldesikod == Kikuldesikod).ToList();
             if (list.Count != 1)
                 throw new Exception("Nem fotózhat - hibás paraméterek!");
         }

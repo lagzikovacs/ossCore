@@ -1,214 +1,108 @@
-﻿using System;
+﻿using ossServer.Controllers.Csoport;
+using ossServer.Controllers.Dokumentum;
+using ossServer.Controllers.Session;
+using ossServer.Controllers.Ugyfel;
+using ossServer.Enums;
+using ossServer.Models;
+using ossServer.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Irat
 {
     public class IratBll
     {
-        public int Add(IratDto dto)
+        public static int Add(ossContext context, string sid, IratDto dto)
         {
-            using (var model = OSSContext.NewContext(_sid))
-                try
-                {
-                    model.Open(true);
-                    CsoportDal.Joge(model, JogKod.IRAT);
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.IRAT);
 
-                    var entity = ObjectUtils.Convert<IratDto, IRAT>(dto);
-                    var result = IratDal.Add(model, entity);
-
-                    if (model.Session.LOGOL)
-                    {
-                        EsemenynaploBll.Bejegyzes(model, EsemenynaploBejegyzesek.IratUj);
-                        OssHub.Uzenet(model.Session.FELHASZNALO, EsemenynaploBejegyzesek.IratUj);
-                    }
-
-                    model.Commit();
-
-                    return result;
-                }
-                catch (Exception ex)
-                {
-                    model.Rollback();
-                    throw OSSContext.FaultException(ex);
-                }
-                finally
-                {
-                    model.Close();
-                }
+            var entity = ObjectUtils.Convert<IratDto, Models.Irat>(dto);
+            return IratDal.Add(context, entity);
         }
 
-        public IratDto CreateNew()
+        public static IratDto CreateNew(ossContext context, string sid)
         {
-            return new IratDto { KELETKEZETT = DateTime.Now.Date, IRANY = "Belső" };
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.IRAT);
+
+            return new IratDto { Keletkezett = DateTime.Now.Date, Irany = "Belső" };
         }
 
-        public void Delete(IratDto dto)
+        public static void Delete(ossContext context, string sid, IratDto dto)
         {
-            using (var model = OSSContext.NewContext(_sid))
-                try
-                {
-                    model.Open(true);
-                    CsoportDal.Joge(model, JogKod.IRATMOD);
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.IRATMOD);
 
-                    IratDal.Lock(model, dto.IRATKOD, dto.MODOSITVA);
-                    IratDal.CheckReferences(model, dto.IRATKOD);
-                    var entity = IratDal.Get(model, dto.IRATKOD);
-                    IratDal.Delete(model, entity);
-
-                    if (model.Session.LOGOL)
-                    {
-                        EsemenynaploBll.Bejegyzes(model, EsemenynaploBejegyzesek.IratTorlese);
-                        OssHub.Uzenet(model.Session.FELHASZNALO, EsemenynaploBejegyzesek.IratTorlese);
-                    }
-
-                    model.Commit();
-                }
-                catch (Exception ex)
-                {
-                    model.Rollback();
-                    throw OSSContext.FaultException(ex);
-                }
-                finally
-                {
-                    model.Close();
-                }
+            IratDal.Lock(context, dto.Iratkod, dto.Modositva);
+            IratDal.CheckReferences(context, dto.Iratkod);
+            var entity = IratDal.Get(context, dto.Iratkod);
+            IratDal.Delete(context, entity);
         }
 
-        public IratDto Get(int key)
+        private static IratDto Calc(Models.Irat entity)
         {
-            using (var model = OSSContext.NewContext(_sid))
-                try
-                {
-                    model.Open(true);
-                    CsoportDal.Joge(model, JogKod.IRAT);
+            var result = ObjectUtils.Convert<Models.Irat, IratDto>(entity);
 
-                    var entity = IratDal.Get(model, key);
-                    var result = ObjectUtils.Convert<IRAT, IratDto>(entity);
-
-                    result.IRATTIPUS = entity.IRATTIPUS.IRATTIPUS1;
-                    if (entity.UGYFEL != null)
-                    {
-                        result.UGYFELNEV = entity.UGYFEL.NEV;
-                        result.UGYFELCIM = UgyfelUtils.Cim(entity.UGYFEL);
-                    }
-
-                    if (model.Session.LOGOL)
-                        EsemenynaploBll.Bejegyzes(model, EsemenynaploBejegyzesek.IratLekerdezese);
-
-                    model.Commit();
-
-                    return result;
-                }
-                catch (Exception ex)
-                {
-                    model.Rollback();
-                    throw OSSContext.FaultException(ex);
-                }
-                finally
-                {
-                    model.Close();
-                }
-        }
-
-        public static List<IratDto> Select(OSSContext model, int rekordTol, int lapMeret, List<SzMT> szmt, out int osszesRekord)
-        {
-            CsoportDal.Joge(model, JogKod.IRAT);
-
-            var qry = IratDal.GetQuery(model, szmt);
-            osszesRekord = qry.Count();
-            var entities = qry.Skip(rekordTol).Take(lapMeret).ToList();
-            var result = new List<IratDto>();
-
-            foreach (var entity in entities)
+            result.Irattipus = entity.IrattipuskodNavigation.Irattipus1;
+            if (entity.UgyfelkodNavigation != null)
             {
-                var dto = ObjectUtils.Convert<IRAT, IratDto>(entity);
-
-                dto.IRATTIPUS = entity.IRATTIPUS.IRATTIPUS1;
-                if (entity.UGYFEL != null)
-                {
-                    dto.UGYFELNEV = entity.UGYFEL.NEV;
-                    dto.UGYFELCIM = UgyfelUtils.Cim(entity.UGYFEL);
-                }
-
-                result.Add(dto);
+                result.Ugyfelnev = entity.UgyfelkodNavigation.Nev;
+                result.Ugyfelcim = UgyfelBll.Cim(entity.UgyfelkodNavigation);
             }
-
-            if (model.Session.LOGOL)
-                EsemenynaploBll.Bejegyzes(model, EsemenynaploBejegyzesek.IratLekerdezese);
 
             return result;
         }
-        public List<IratDto> Select(int rekordTol, int lapMeret, List<SzMT> fi, out int osszesRekord)
+
+        public static IratDto Get(ossContext context, string sid, int key)
         {
-            using (var model = OSSContext.NewContext(_sid))
-                try
-                {
-                    model.Open(true);
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.IRAT);
 
-                    var result = Select(model, rekordTol, lapMeret, fi, out osszesRekord);
-
-                    model.Commit();
-
-                    return result;
-                }
-                catch (Exception ex)
-                {
-                    model.Rollback();
-                    throw OSSContext.FaultException(ex);
-                }
-                finally
-                {
-                    model.Close();
-                }
+            var entity = IratDal.Get(context, key);
+            return Calc(entity);
         }
 
-        public int Update(IratDto dto)
+        public static List<IratDto> Select(ossContext context, string sid, int rekordTol, int lapMeret, 
+            List<SzMT> szmt, out int osszesRekord)
         {
-            using (var model = OSSContext.NewContext(_sid))
-                try
-                {
-                    model.Open(true);
-                    CsoportDal.Joge(model, JogKod.IRATMOD);
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.IRAT);
 
-                    IratDal.Lock(model, dto.IRATKOD, dto.MODOSITVA);
-                    var entity = IratDal.Get(model, dto.IRATKOD);
-                    ObjectUtils.Update(dto, entity);
-                    var result = IratDal.Update(model, entity);
+            var qry = IratDal.GetQuery(context, szmt);
+            osszesRekord = qry.Count();
+            var entities = qry.Skip(rekordTol).Take(lapMeret).ToList();
 
-                    if (model.Session.LOGOL)
-                    {
-                        EsemenynaploBll.Bejegyzes(model, EsemenynaploBejegyzesek.IratModositasa);
-                        OssHub.Uzenet(model.Session.FELHASZNALO, EsemenynaploBejegyzesek.IratModositasa);
-                    }
+            var result = new List<IratDto>();
+            foreach (var entity in entities)
+                result.Add(Calc(entity));
 
-                    model.Commit();
+            return result;
+        }
 
-                    return result;
-                }
-                catch (Exception ex)
-                {
-                    model.Rollback();
-                    throw OSSContext.FaultException(ex);
-                }
-                finally
-                {
-                    model.Close();
-                }
+        public static int Update(ossContext context, string sid, IratDto dto)
+        {
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.IRATMOD);
+
+            IratDal.Lock(context, dto.Iratkod, dto.Modositva);
+            var entity = IratDal.Get(context, dto.Iratkod);
+            ObjectUtils.Update(dto, entity);
+            return IratDal.Update(context, entity);
         }
 
 
         //sql tranzakcióban működik, kis fájlok legyenek
-        internal static FajlBuf Letoltes(OSSContext model, int iratKod)
+        public static FajlBuf Letoltes(ossContext context, string sid, int iratKod)
         {
-            IratDal.Get(model, iratKod);
-            var lstDokumentum = DokumentumDal.Select(model, iratKod);
+            IratDal.Get(context, iratKod);
+            var lstDokumentum = DokumentumDal.Select(context, iratKod);
             if (lstDokumentum.Count != 1)
                 throw new Exception("Nincs pontosan egy dokumentum!");
 
-            var entityDokumentum = DokumentumBll.Letoltes(model, lstDokumentum[0].DOKUMENTUMKOD);
-            var fb = DokumentumBll.LetoltesFajl(entityDokumentum, 0, lstDokumentum[0].MERET);
+            var entityDokumentum = DokumentumBll.Letoltes(context, sid, lstDokumentum[0].Dokumentumkod);
+            var fb = DokumentumBll.LetoltesFajl(entityDokumentum, 0, lstDokumentum[0].Meret);
 
             return fb;
         }

@@ -1,160 +1,151 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using ossServer.BaseResults;
+using ossServer.Models;
+using ossServer.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ossServer.Controllers.Irat
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class IratController : ControllerBase
     {
+        private readonly ossContext _context;
+
+        public IratController(ossContext context)
+        {
+            _context = context;
+        }
+
         [HttpPost]
-        [Route("api/" + Name + "/" + nameof(Add))]
-        public async Task<Int32Result> Add([FromUri] string sid, [FromBody] IratDto dto)
+        public async Task<Int32Result> Add([FromQuery] string sid, [FromBody] IratDto dto)
         {
             var result = new Int32Result();
-            var task = new Task<Int32Result>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
-                  if (dto == null)
-                      throw new ArgumentNullException(nameof(dto));
 
-                  result.Result = new IratBll(sid).Add(dto);
-              })
-            );
-            task.Start();
-            return await task;
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    result.Result = IratBll.Add(_context, sid, dto);
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sid"></param>
-        /// <returns></returns>
         [HttpPost]
-        [Route("api/" + Name + "/" + nameof(CreateNew))]
-        public async Task<IratResult> CreateNew([FromUri] string sid)
+        public async Task<IratResult> CreateNew([FromQuery] string sid)
         {
             var result = new IratResult();
-            var task = new Task<IratResult>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
 
-                  result.Result = new List<IratDto> { new IratBll(sid).CreateNew() };
-              })
-            );
-            task.Start();
-            return await task;
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    result.Result = new List<IratDto> { IratBll.CreateNew(_context, sid) };
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sid"></param>
-        /// <param name="dto"></param>
-        /// <returns></returns>
         [HttpPost]
-        [Route("api/" + Name + "/" + nameof(Delete))]
-        public async Task<EmptyResult> Delete([FromUri] string sid, [FromBody] IratDto dto)
+        public async Task<BaseResults.EmptyResult> Delete([FromQuery] string sid, [FromBody] IratDto dto)
         {
-            var result = new EmptyResult();
-            var task = new Task<EmptyResult>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
-                  if (dto == null)
-                      throw new ArgumentNullException(nameof(dto));
+            var result = new BaseResults.EmptyResult();
 
-                  new IratBll(sid).Delete(dto);
-              })
-            );
-            task.Start();
-            return await task;
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    IratBll.Delete(_context, sid, dto);
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sid"></param>
-        /// <param name="key"></param>
-        /// <returns></returns>
         [HttpPost]
-        [Route("api/" + Name + "/" + nameof(Get))]
-        public async Task<IratResult> Get([FromUri] string sid, [FromBody] int key)
+        public async Task<IratResult> Get([FromQuery] string sid, [FromBody] int key)
         {
             var result = new IratResult();
-            var task = new Task<IratResult>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
 
-                  result.Result = new List<IratDto> { new IratBll(sid).Get(key) };
-              })
-            );
-            task.Start();
-            return await task;
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    result.Result = new List<IratDto> { IratBll.Get(_context, sid, key) };
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sid"></param>
-        /// <param name="dto"></param>
-        /// <returns></returns>
         [HttpPost]
-        [Route("api/" + Name + "/" + nameof(Update))]
-        public async Task<Int32Result> Update([FromUri] string sid, [FromBody] IratDto dto)
+        public async Task<Int32Result> Update([FromQuery] string sid, [FromBody] IratDto dto)
         {
             var result = new Int32Result();
-            var task = new Task<Int32Result>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
-                  if (dto == null)
-                      throw new ArgumentNullException(nameof(dto));
 
-                  result.Result = new IratBll(sid).Update(dto);
-              })
-            );
-            task.Start();
-            return await task;
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    result.Result = IratBll.Update(_context, sid, dto);
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sid"></param>
-        /// <param name="par"></param>
-        /// <returns></returns>
         [HttpPost]
-        [Route("api/" + Name + "/" + nameof(Select))]
-        public async Task<IratResult> Select([FromUri] string sid, [FromBody] IratParam par)
+        public async Task<IratResult> Select([FromQuery] string sid, [FromBody] IratParam par)
         {
             var result = new IratResult();
-            var task = new Task<IratResult>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
-                  if (par == null)
-                      throw new ArgumentNullException(nameof(par));
 
-                  result.Result = new IratBll(sid).Select(par.RekordTol, par.LapMeret, par.Fi, out var osszesRekord);
-                  result.OsszesRekord = osszesRekord;
-              })
-            );
-            task.Start();
-            return await task;
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    result.Result = IratBll.Select(_context, sid, par.RekordTol, par.LapMeret, 
+                        par.Fi, out var osszesRekord);
+                    result.OsszesRekord = osszesRekord;
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
         }
     }
 }

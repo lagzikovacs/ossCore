@@ -67,9 +67,7 @@ namespace ossServer.Controllers.Ugyfel
             CsoportDal.Joge(context, JogKod.UGYFELEK);
 
             var entity = UgyfelDal.Get(context, key);
-            var result = Calc(entity);
-
-            return result;
+            return Calc(entity);
         }
 
         public static List<UgyfelDto> Read(ossContext context, string sid, string maszk)
