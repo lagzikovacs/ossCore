@@ -39,14 +39,23 @@ namespace ossServer.Controllers.Ugyfel
             UgyfelDal.Delete(context, entity);
         }
 
-        private static static UgyfelDto Calc(Models.Ugyfel entity)
+        public static string Cim(Models.Ugyfel entity)
+        {
+            var result = "";
+            if (entity.HelysegkodNavigation != null)
+                result = $"{entity.Iranyitoszam} {entity.HelysegkodNavigation.Helysegnev}, {entity.Kozterulet} {entity.Kozterulettipus} {entity.Hazszam}";
+
+            return result;
+        }
+
+        private static UgyfelDto Calc(Models.Ugyfel entity)
         {
             var result = ObjectUtils.Convert<Models.Ugyfel, UgyfelDto>(entity);
 
-            if (entity.HELYSEG != null)
+            if (entity.HelysegkodNavigation != null)
             {
-                result.HELYSEGNEV = entity.HELYSEG.HELYSEGNEV;
-                result.CIM = UgyfelUtils.Cim(entity);
+                result.Helysegnev = entity.HelysegkodNavigation.Helysegnev;
+                result.Cim = Cim(entity);
             }
 
             return result;

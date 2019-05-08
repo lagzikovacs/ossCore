@@ -29,6 +29,7 @@ namespace ossServer.Controllers.Ugyfel
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
+                    result.Result = UgyfelBll.Add(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -39,20 +40,6 @@ namespace ossServer.Controllers.Ugyfel
                 }
 
             return result;
-
-            var task = new Task<Int32Result>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
-                  if (dto == null)
-                      throw new ArgumentNullException(nameof(dto));
-
-                  result.Result = new UgyfelBll(sid).Add(dto);
-              })
-            );
-            task.Start();
-            return await task;
         }
 
         [HttpPost]
@@ -63,6 +50,7 @@ namespace ossServer.Controllers.Ugyfel
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
+                    result.Result = new List<UgyfelDto> { UgyfelBll.CreateNew(_context, sid) };
 
                     tr.Commit();
                 }
@@ -73,18 +61,6 @@ namespace ossServer.Controllers.Ugyfel
                 }
 
             return result;
-
-            var task = new Task<UgyfelResult>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
-
-                  result.Result = new List<UgyfelDto> { new UgyfelBll(sid).CreateNew() };
-              })
-            );
-            task.Start();
-            return await task;
         }
 
         [HttpPost]
@@ -95,6 +71,7 @@ namespace ossServer.Controllers.Ugyfel
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
+                    UgyfelBll.Delete(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -105,20 +82,6 @@ namespace ossServer.Controllers.Ugyfel
                 }
 
             return result;
-
-            var task = new Task<EmptyResult>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
-                  if (dto == null)
-                      throw new ArgumentNullException(nameof(dto));
-
-                  new UgyfelBll(sid).Delete(dto);
-              })
-            );
-            task.Start();
-            return await task;
         }
 
         [HttpPost]
@@ -129,6 +92,7 @@ namespace ossServer.Controllers.Ugyfel
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
+                    result.Result = new List<UgyfelDto> { UgyfelBll.Get(_context, sid, key) };
 
                     tr.Commit();
                 }
@@ -139,18 +103,6 @@ namespace ossServer.Controllers.Ugyfel
                 }
 
             return result;
-
-            var task = new Task<UgyfelResult>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
-
-                  result.Result = new List<UgyfelDto> { new UgyfelBll(sid).Get(key) };
-              })
-            );
-            task.Start();
-            return await task;
         }
 
         [HttpPost]
@@ -161,6 +113,7 @@ namespace ossServer.Controllers.Ugyfel
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
+                    result.Result = UgyfelBll.Read(_context, sid, maszk);
 
                     tr.Commit();
                 }
@@ -171,20 +124,6 @@ namespace ossServer.Controllers.Ugyfel
                 }
 
             return result;
-
-            var task = new Task<UgyfelResult>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
-                  if (maszk == null)
-                      throw new ArgumentNullException(nameof(maszk));
-
-                  result.Result = new UgyfelBll(sid).Read(maszk);
-              })
-            );
-            task.Start();
-            return await task;
         }
 
         [HttpPost]
@@ -195,6 +134,7 @@ namespace ossServer.Controllers.Ugyfel
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
+                    result.Result = UgyfelBll.Update(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -205,20 +145,6 @@ namespace ossServer.Controllers.Ugyfel
                 }
 
             return result;
-
-            var task = new Task<Int32Result>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
-                  if (dto == null)
-                      throw new ArgumentNullException(nameof(dto));
-
-                  result.Result = new UgyfelBll(sid).Update(dto);
-              })
-            );
-            task.Start();
-            return await task;
         }
 
         [HttpPost]
@@ -229,6 +155,9 @@ namespace ossServer.Controllers.Ugyfel
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
+                    result.Result = UgyfelBll.Select(_context, sid, par.RekordTol, par.LapMeret, 
+                        par.Fi, out var osszesRekord);
+                    result.OsszesRekord = osszesRekord;
 
                     tr.Commit();
                 }
@@ -239,21 +168,6 @@ namespace ossServer.Controllers.Ugyfel
                 }
 
             return result;
-
-            var task = new Task<UgyfelResult>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
-                  if (par == null)
-                      throw new ArgumentNullException(nameof(par));
-
-                  result.Result = new UgyfelBll(sid).Select(par.RekordTol, par.LapMeret, par.Fi, out var osszesRekord);
-                  result.OsszesRekord = osszesRekord;
-              })
-            );
-            task.Start();
-            return await task;
         }
 
         [HttpPost]
@@ -264,6 +178,7 @@ namespace ossServer.Controllers.Ugyfel
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
+                    UgyfelBll.ZoomCheck(_context, sid, par.Ugyfelkod, par.Ugyfelnev);
 
                     tr.Commit();
                 }
@@ -274,20 +189,6 @@ namespace ossServer.Controllers.Ugyfel
                 }
 
             return result;
-
-            var task = new Task<EmptyResult>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
-                  if (par == null)
-                      throw new ArgumentNullException(nameof(par));
-
-                  new UgyfelBll(sid).ZoomCheck(par.Ugyfelkod, par.Ugyfelnev);
-              })
-            );
-            task.Start();
-            return await task;
         }
     }
 }

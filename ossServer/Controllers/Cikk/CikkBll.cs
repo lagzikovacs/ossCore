@@ -37,7 +37,7 @@ namespace ossServer.Controllers.Cikk
             CikkDal.Delete(context, entity);
         }
 
-        private static CikkDto EntityToDto(Models.Cikk entity)
+        private static CikkDto Calc(Models.Cikk entity)
         {
             var dto = ObjectUtils.Convert<Models.Cikk, CikkDto>(entity);
 
@@ -61,7 +61,7 @@ namespace ossServer.Controllers.Cikk
             CsoportDal.Joge(context, JogKod.CIKK);
 
             var entity = CikkDal.Get(context, key);
-            return EntityToDto(entity);
+            return Calc(entity);
         }
 
         public static List<CikkDto> Read(ossContext context, string sid, string maszk)
@@ -73,7 +73,7 @@ namespace ossServer.Controllers.Cikk
 
             var result = new List<CikkDto>();
             foreach (var entity in entities)
-                result.Add(EntityToDto(entity));
+                result.Add(Calc(entity));
 
             return result;
         }
@@ -103,7 +103,7 @@ namespace ossServer.Controllers.Cikk
 
             var result = new List<CikkDto>();
             foreach (var entity in entities)
-                result.Add(EntityToDto(entity));
+                result.Add(Calc(entity));
 
             return result;
         }
