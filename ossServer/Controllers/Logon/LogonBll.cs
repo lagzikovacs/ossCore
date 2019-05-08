@@ -1,4 +1,5 @@
 ﻿using ossServer.Controllers.Csoport;
+using ossServer.Controllers.Esemenynaplo;
 using ossServer.Controllers.Primitiv.Felhasznalo;
 using ossServer.Controllers.Session;
 using ossServer.Models;
@@ -16,11 +17,11 @@ namespace ossServer.Controllers.Logon
             var sid = SessionBll.CreateNew(context, ip, winHost, winUser,
               felhasznalo.Felhasznalokod, felhasznalo.Nev, azonosito, felhasznalo.Logonlog);
 
-            //if (context.CurrentSession.Logol)
-            //{
-            //    EsemenynaploBll.Bejegyzes(context, EsemenynaploBejegyzesek.Bejelentkezes);
-            //    OssHub.Uzenet(context.Session.FELHASZNALO, EsemenynaploBejegyzesek.Bejelentkezes);
-            //}
+            if (context.CurrentSession.Logol)
+            {
+                EsemenynaploBll.Bejegyzes(context, EsemenynaploBejegyzesek.Bejelentkezes);
+                //OssHub.Uzenet(context.Session.FELHASZNALO, EsemenynaploBejegyzesek.Bejelentkezes);
+            }
 
             return sid;
         }
@@ -39,9 +40,6 @@ namespace ossServer.Controllers.Logon
                 result.Add(dto);
             }
 
-            //if (context.CurrentSession.Logol)
-            //    EsemenynaploBll.Bejegyzes(context, EsemenynaploBejegyzesek.LehetsegesSzerepkorok);
-
             return result;
         }
 
@@ -50,8 +48,8 @@ namespace ossServer.Controllers.Logon
             SessionBll.Check(context, sid, false);
             SessionBll.UpdateRole(context, sid, particioKod, csoportKod);
 
-            //if (context.CurrentSession.Logol)
-            //    EsemenynaploBll.Bejegyzes(model, EsemenynaploBejegyzesek.SzerepkorValasztas);
+            if (context.CurrentSession.Logol)
+                EsemenynaploBll.Bejegyzes(context, EsemenynaploBejegyzesek.SzerepkorValasztas);
         }
 
         public static void Kijelentkezes(ossContext context, string sid)
@@ -61,7 +59,7 @@ namespace ossServer.Controllers.Logon
 
             if (context.CurrentSession.Logol)
             {
-                //EsemenynaploBll.Bejegyzes(model, EsemenynaploBejegyzesek.Kijelentkezes);
+                EsemenynaploBll.Bejegyzes(context, EsemenynaploBejegyzesek.Kijelentkezes);
                 //OssHub.Uzenet(model.Session.FELHASZNALO, EsemenynaploBejegyzesek.Kijelentkezes);
             }
         }
