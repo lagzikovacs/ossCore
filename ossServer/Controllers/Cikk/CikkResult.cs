@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using ossServer.BaseResults;
+using System.Collections.Generic;
 
 namespace ossServer.Controllers.Cikk
 {
-    public class CikkResult
+    public class CikkResult : EmptyResult
     {
         public int OsszesRekord { get; set; }
         public List<CikkDto> Result { get; set; }
