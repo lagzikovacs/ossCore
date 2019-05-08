@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ossServer.BaseResults;
+using ossServer.Enums;
 using ossServer.Models;
 using ossServer.Utils;
 
@@ -29,6 +30,7 @@ namespace ossServer.Controllers.Cikk
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
+                    result.Result = CikkBll.Add(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -39,20 +41,6 @@ namespace ossServer.Controllers.Cikk
                 }
 
             return result;
-
-            var task = new Task<Int32Result>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
-                  if (dto == null)
-                      throw new ArgumentNullException(nameof(dto));
-
-                  result.Result = new CikkBll(sid).Add(dto);
-              })
-            );
-            task.Start();
-            return await task;
         }
 
         [HttpPost]
@@ -63,6 +51,7 @@ namespace ossServer.Controllers.Cikk
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
+                    result.Result = new List<CikkDto> { CikkBll.CreateNew(_context, sid) };
 
                     tr.Commit();
                 }
@@ -73,18 +62,6 @@ namespace ossServer.Controllers.Cikk
                 }
 
             return result;
-
-            var task = new Task<CikkResult>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
-
-                  result.Result = new List<CikkDto> { new CikkDto() };
-              })
-            );
-            task.Start();
-            return await task;
         }
 
         [HttpPost]
@@ -95,6 +72,7 @@ namespace ossServer.Controllers.Cikk
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
+                    CikkBll.Delete(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -105,20 +83,6 @@ namespace ossServer.Controllers.Cikk
                 }
 
             return result;
-
-            var task = new Task<EmptyResult>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
-                  if (dto == null)
-                      throw new ArgumentNullException(nameof(dto));
-
-                  new CikkBll(sid).Delete(dto);
-              })
-            );
-            task.Start();
-            return await task;
         }
 
         [HttpPost]
@@ -129,6 +93,7 @@ namespace ossServer.Controllers.Cikk
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
+                    result.Result = new List<CikkDto> { CikkBll.Get(_context, sid, key) };
 
                     tr.Commit();
                 }
@@ -139,18 +104,6 @@ namespace ossServer.Controllers.Cikk
                 }
 
             return result;
-
-            var task = new Task<CikkResult>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
-
-                  result.Result = new List<CikkDto> { new CikkBll(sid).Get(key) };
-              })
-            );
-            task.Start();
-            return await task;
         }
 
         [HttpPost]
@@ -161,7 +114,7 @@ namespace ossServer.Controllers.Cikk
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-
+                    result.Result = CikkBll.Read(_context, sid, maszk);
                     tr.Commit();
                 }
                 catch (Exception ex)
@@ -171,20 +124,6 @@ namespace ossServer.Controllers.Cikk
                 }
 
             return result;
-
-            var task = new Task<CikkResult>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
-                  if (maszk == null)
-                      throw new ArgumentNullException(nameof(maszk));
-
-                  result.Result = new CikkBll(sid).Read(maszk);
-              })
-            );
-            task.Start();
-            return await task;
         }
 
         [HttpPost]
@@ -195,6 +134,7 @@ namespace ossServer.Controllers.Cikk
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
+                    result.Result = CikkBll.Update(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -205,20 +145,6 @@ namespace ossServer.Controllers.Cikk
                 }
 
             return result;
-
-            var task = new Task<Int32Result>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
-                  if (dto == null)
-                      throw new ArgumentNullException(nameof(dto));
-
-                  result.Result = new CikkBll(sid).Update(dto);
-              })
-            );
-            task.Start();
-            return await task;
         }
 
         [HttpPost]
@@ -229,6 +155,9 @@ namespace ossServer.Controllers.Cikk
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
+                    result.Result = CikkBll.Select(_context, sid, par.RekordTol, par.LapMeret, 
+                        par.Fi, out var osszesRekord);
+                    result.OsszesRekord = osszesRekord;
 
                     tr.Commit();
                 }
@@ -239,21 +168,6 @@ namespace ossServer.Controllers.Cikk
                 }
 
             return result;
-
-            var task = new Task<CikkResult>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
-                  if (par == null)
-                      throw new ArgumentNullException(nameof(par));
-
-                  result.Result = new CikkBll(sid).Select(par.RekordTol, par.LapMeret, par.Fi, out var osszesRekord);
-                  result.OsszesRekord = osszesRekord;
-              })
-            );
-            task.Start();
-            return await task;
         }
 
         [HttpPost]
@@ -264,6 +178,8 @@ namespace ossServer.Controllers.Cikk
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
+                    result.Result = CikkBll.Mozgas(_context, sid, par.CikkKod, 
+                        (BizonylatTipus)par.BizonylatTipusKod);
 
                     tr.Commit();
                 }
@@ -274,20 +190,6 @@ namespace ossServer.Controllers.Cikk
                 }
 
             return result;
-
-            var task = new Task<CikkMozgasResult>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
-                  if (par == null)
-                      throw new ArgumentNullException(nameof(par));
-
-                  result.Result = new CikkBll(sid).Mozgas(par.CikkKod, (BizonylatTipus)par.BizonylatTipusKod);
-              })
-            );
-            task.Start();
-            return await task;
         }
 
         [HttpPost]
@@ -298,6 +200,7 @@ namespace ossServer.Controllers.Cikk
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
+                    CikkBll.ZoomCheck(_context, sid, par.CikkKod, par.Cikk);
 
                     tr.Commit();
                 }
@@ -308,20 +211,6 @@ namespace ossServer.Controllers.Cikk
                 }
 
             return result;
-
-            var task = new Task<EmptyResult>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
-                  if (par == null)
-                      throw new ArgumentNullException(nameof(par));
-
-                  new CikkBll(sid).ZoomCheck(par.CikkKod, par.Cikk);
-              })
-            );
-            task.Start();
-            return await task;
         }
     }
 }

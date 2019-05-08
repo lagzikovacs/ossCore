@@ -37,26 +37,31 @@ namespace ossServer.Controllers.Cikk
             CikkDal.Delete(context, entity);
         }
 
+        private static CikkDto EntityToDto(Models.Cikk entity)
+        {
+            var dto = ObjectUtils.Convert<Models.Cikk, CikkDto>(entity);
+
+            dto.Afakulcs = entity.AfakulcskodNavigation.Afakulcs1;
+            dto.Afamerteke = entity.AfakulcskodNavigation.Afamerteke;
+            dto.Me = entity.MekodNavigation.Me;
+
+            if (entity.TermekdijkodNavigation != null)
+            {
+                dto.Termekdijkt = entity.TermekdijkodNavigation.Termekdijkt;
+                dto.Termekdijmegnevezes = entity.TermekdijkodNavigation.Termekdijmegnevezes;
+                dto.Termekdijegysegar = entity.TermekdijkodNavigation.Termekdijegysegar;
+            }
+
+            return dto;
+        }
+
         public static CikkDto Get(ossContext context, string sid, int key)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.CIKK);
 
             var entity = CikkDal.Get(context, key);
-            var result = ObjectUtils.Convert<Models.Cikk, CikkDto>(entity);
-
-            result.Afakulcs = entity.AFAKULCS.AFAKULCS1;
-            result.Afamerteke = entity.AFAKULCS.AFAMERTEKE;
-            result.Me = entity.MENNYISEGIEGYSEG.ME;
-
-            if (entity.TERMEKDIJ != null)
-            {
-                result.TERMEKDIJKT = entity.TERMEKDIJ.TERMEKDIJKT;
-                result.TERMEKDIJMEGNEVEZES = entity.TERMEKDIJ.TERMEKDIJMEGNEVEZES;
-                result.TERMEKDIJEGYSEGAR = entity.TERMEKDIJ.TERMEKDIJEGYSEGAR;
-            }
-
-            return result;
+            return EntityToDto(entity);
         }
 
         public static List<CikkDto> Read(ossContext context, string sid, string maszk)
@@ -65,24 +70,10 @@ namespace ossServer.Controllers.Cikk
             CsoportDal.Joge(context, JogKod.CIKK);
 
             var entities = CikkDal.Read(context, maszk);
+
             var result = new List<CikkDto>();
-
             foreach (var entity in entities)
-            {
-                var dto = ObjectUtils.Convert<Cikk, CikkDto>(entity);
-                dto.AFAKULCS = entity.AFAKULCS.AFAKULCS1;
-                dto.AFAMERTEKE = entity.AFAKULCS.AFAMERTEKE;
-                dto.ME = entity.MENNYISEGIEGYSEG.ME;
-
-                if (entity.TERMEKDIJ != null)
-                {
-                    dto.TERMEKDIJKT = entity.TERMEKDIJ.TERMEKDIJKT;
-                    dto.TERMEKDIJMEGNEVEZES = entity.TERMEKDIJ.TERMEKDIJMEGNEVEZES;
-                    dto.TERMEKDIJEGYSEGAR = entity.TERMEKDIJ.TERMEKDIJEGYSEGAR;
-                }
-
-                result.Add(dto);
-            }
+                result.Add(EntityToDto(entity));
 
             return result;
         }
@@ -109,24 +100,10 @@ namespace ossServer.Controllers.Cikk
             var qry = CikkDal.GetQuery(context, szmt);
             osszesRekord = qry.Count();
             var entities = qry.Skip(rekordTol).Take(lapMeret).ToList();
+
             var result = new List<CikkDto>();
-
             foreach (var entity in entities)
-            {
-                var dto = ObjectUtils.Convert<CIKK, CikkDto>(entity);
-                dto.AFAKULCS = entity.AFAKULCS.AFAKULCS1;
-                dto.AFAMERTEKE = entity.AFAKULCS.AFAMERTEKE;
-                dto.ME = entity.MENNYISEGIEGYSEG.ME;
-
-                if (entity.TERMEKDIJ != null)
-                {
-                    dto.TERMEKDIJKT = entity.TERMEKDIJ.TERMEKDIJKT;
-                    dto.TERMEKDIJMEGNEVEZES = entity.TERMEKDIJ.TERMEKDIJMEGNEVEZES;
-                    dto.TERMEKDIJEGYSEGAR = entity.TERMEKDIJ.TERMEKDIJEGYSEGAR;
-                }
-
-                result.Add(dto);
-            }
+                result.Add(EntityToDto(entity));
 
             return result;
         }
