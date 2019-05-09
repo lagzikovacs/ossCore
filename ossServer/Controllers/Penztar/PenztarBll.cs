@@ -9,7 +9,7 @@ namespace ossServer.Controllers.Penztar
 {
     public class PenztarBll
     {
-        public int Add(ossContext context, string sid, PenztarDto dto)
+        public static int Add(ossContext context, string sid, PenztarDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PENZTARMOD);
@@ -19,7 +19,7 @@ namespace ossServer.Controllers.Penztar
             return PenztarDal.Add(context, entity);
         }
 
-        public PenztarDto CreateNew(ossContext context, string sid)
+        public static PenztarDto CreateNew(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PENZTARMOD);
@@ -27,7 +27,7 @@ namespace ossServer.Controllers.Penztar
             return new PenztarDto { Nyitva = true };
         }
 
-        public void Delete(ossContext context, string sid, PenztarDto dto)
+        public static void Delete(ossContext context, string sid, PenztarDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PENZTARMOD);
@@ -38,7 +38,7 @@ namespace ossServer.Controllers.Penztar
             PenztarDal.Delete(context, entity);
         }
 
-        public PenztarDto Get(ossContext context, string sid, int key)
+        public static PenztarDto Get(ossContext context, string sid, int key)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PENZTAR);
@@ -47,21 +47,21 @@ namespace ossServer.Controllers.Penztar
             return ObjectUtils.Convert<Models.Penztar, PenztarDto>(entity);
         }
 
-        public List<PenztarDto> Read(ossContext context, string sid, string maszk)
+        public static List<PenztarDto> Read(ossContext context, string sid, string maszk)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PENZTAR);
 
             return PenztarDal.Read(context, maszk);
         }
-        public List<PenztarDto> Read(ossContext context, string sid, int penztarkod)
+        public static List<PenztarDto> Read(ossContext context, string sid, int penztarkod)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PENZTAR);
 
             return PenztarDal.Read(context, penztarkod);
         }
-        public List<PenztarDto> ReadByCurrencyOpened(ossContext context, string sid, int penznemkod)
+        public static List<PenztarDto> ReadByCurrencyOpened(ossContext context, string sid, int penznemkod)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PENZTAR);
@@ -69,7 +69,7 @@ namespace ossServer.Controllers.Penztar
             return PenztarDal.ReadByCurrencyOpened(context, penznemkod);
         }
 
-        public int Update(ossContext context, string sid, PenztarDto dto)
+        public static int Update(ossContext context, string sid, PenztarDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PENZTARMOD);
