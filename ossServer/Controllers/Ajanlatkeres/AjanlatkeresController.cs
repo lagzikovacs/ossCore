@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ossServer.BaseResults;
 using ossServer.Models;
 using ossServer.Utils;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Ajanlatkeres
 {
@@ -29,7 +27,7 @@ namespace ossServer.Controllers.Ajanlatkeres
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    AjanlatkeresBll.WebesAjanlatkeres(par);
+                    AjanlatkeresBll.WebesAjanlatkeres(_context, par);
 
                     tr.Commit();
                 }
@@ -50,7 +48,7 @@ namespace ossServer.Controllers.Ajanlatkeres
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = AjanlatkeresBll.Add(dto);
+                    result.Result = AjanlatkeresBll.Add(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -71,7 +69,7 @@ namespace ossServer.Controllers.Ajanlatkeres
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<AjanlatkeresDto> { AjanlatkeresBll.CreateNew() };
+                    result.Result = new List<AjanlatkeresDto> { AjanlatkeresBll.CreateNew(_context, sid) };
 
                     tr.Commit();
                 }
@@ -85,14 +83,15 @@ namespace ossServer.Controllers.Ajanlatkeres
         }
 
         [HttpPost]
-        public async Task<BaseResults.EmptyResult> Delete([FromQuery] string sid, [FromBody] AjanlatkeresDto dto)
+        public async Task<BaseResults.EmptyResult> Delete([FromQuery] string sid, 
+            [FromBody] AjanlatkeresDto dto)
         {
             var result = new BaseResults.EmptyResult();
 
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    AjanlatkeresBll.Delete(dto);
+                    AjanlatkeresBll.Delete(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -113,7 +112,7 @@ namespace ossServer.Controllers.Ajanlatkeres
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<AjanlatkeresDto> { AjanlatkeresBll.Get(key) };
+                    result.Result = new List<AjanlatkeresDto> { AjanlatkeresBll.Get(_context, sid, key) };
 
                     tr.Commit();
                 }
@@ -134,7 +133,8 @@ namespace ossServer.Controllers.Ajanlatkeres
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = AjanlatkeresBll.Select(par.RekordTol, par.LapMeret, par.Fi, out var osszesRekord);
+                    result.Result = AjanlatkeresBll.Select(_context, sid, par.RekordTol, par.LapMeret, 
+                        par.Fi, out var osszesRekord);
                     result.OsszesRekord = osszesRekord;
 
                     tr.Commit();
@@ -156,7 +156,7 @@ namespace ossServer.Controllers.Ajanlatkeres
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = AjanlatkeresBll.Update(dto);
+                    result.Result = AjanlatkeresBll.Update(_context, sid, dto);
 
                     tr.Commit();
                 }

@@ -2,7 +2,7 @@
 {
     public class WebesAjanlatkeresParam
     {
-        public int PARTICIOKOD { get; set; }
+        public int Particiokod { get; set; }
         public string Nev { get; set; }
         public string Cim { get; set; }
         public string Email { get; set; }

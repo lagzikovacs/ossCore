@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using ossServer.Enums;
+using ossServer.Models;
+using ossServer.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,10 +11,10 @@ namespace ossServer.Controllers.Ajanlatkeres
 {
     public class AjanlatkeresDal
     {
-        internal static IOrderedQueryable<AJANLATKERES> GetQuery(OSSContext model, List<SzMT> szmt)
+        internal static IOrderedQueryable<Models.Ajanlatkeres> GetQuery(ossContext context, List<SzMT> szmt)
         {
-            var qry = model.AJANLATKERES.AsNoTracking()
-              .Where(s => s.PARTICIOKOD == model.Session.PARTICIOKOD);
+            var qry = context.Ajanlatkeres.AsNoTracking()
+              .Where(s => s.Particiokod == context.CurrentSession.Particiokod);
 
             foreach (var f in szmt)
             {
@@ -18,23 +22,23 @@ namespace ossServer.Controllers.Ajanlatkeres
                 {
                     case Szempont.Kod:
                         qry = int.TryParse((string)f.Minta, out var ugynokkod)
-                          ? qry.Where(s => s.AJANLATKERESKOD <= ugynokkod)
-                          : qry.Where(s => s.AJANLATKERESKOD >= 0);
+                          ? qry.Where(s => s.Ajanlatkereskod <= ugynokkod)
+                          : qry.Where(s => s.Ajanlatkereskod >= 0);
                         break;
                     case Szempont.Ugynoknev:
-                        qry = qry.Where(s => s.UGYNOKNEV.Contains((string)f.Minta));
+                        qry = qry.Where(s => s.Ugynoknev.Contains((string)f.Minta));
                         break;
                     case Szempont.Cim:
-                        qry = qry.Where(s => s.NEV.Contains((string)f.Minta));
+                        qry = qry.Where(s => s.Nev.Contains((string)f.Minta));
                         break;
                     case Szempont.Telepules:
-                        qry = qry.Where(s => s.CIM.Contains((string)f.Minta));
+                        qry = qry.Where(s => s.Cim.Contains((string)f.Minta));
                         break;
                     case Szempont.Email:
-                        qry = qry.Where(s => s.EMAIL.Contains((string)f.Minta));
+                        qry = qry.Where(s => s.Email.Contains((string)f.Minta));
                         break;
                     case Szempont.Telefonszam:
-                        qry = qry.Where(s => s.TELEFONSZAM.Contains((string)f.Minta));
+                        qry = qry.Where(s => s.Telefonszam.Contains((string)f.Minta));
                         break;
                     default:
                         throw new Exception($"Lekezeletlen {f.Szempont} Szempont!");
@@ -48,31 +52,31 @@ namespace ossServer.Controllers.Ajanlatkeres
                 {
                     case Szempont.Kod:
                         qry = elsoSorrend
-                          ? qry.OrderByDescending(s => s.AJANLATKERESKOD)
-                          : ((IOrderedQueryable<AJANLATKERES>)qry).ThenByDescending(s => s.AJANLATKERESKOD);
+                          ? qry.OrderByDescending(s => s.Ajanlatkereskod)
+                          : ((IOrderedQueryable<Models.Ajanlatkeres>)qry).ThenByDescending(s => s.Ajanlatkereskod);
                         break;
                     case Szempont.Ugynoknev:
                         qry = elsoSorrend
-                          ? qry.OrderBy(s => s.UGYNOKNEV)
-                          : ((IOrderedQueryable<AJANLATKERES>)qry).ThenBy(s => s.UGYNOKNEV);
+                          ? qry.OrderBy(s => s.Ugynoknev)
+                          : ((IOrderedQueryable<Models.Ajanlatkeres>)qry).ThenBy(s => s.Ugynoknev);
                         break;
                     case Szempont.Nev:
-                        qry = elsoSorrend ? qry.OrderBy(s => s.NEV) : ((IOrderedQueryable<AJANLATKERES>)qry).ThenBy(s => s.NEV);
+                        qry = elsoSorrend ? qry.OrderBy(s => s.Nev) : ((IOrderedQueryable<Models.Ajanlatkeres>)qry).ThenBy(s => s.Nev);
                         break;
                     case Szempont.Cim:
                         qry = elsoSorrend
-                          ? qry.OrderBy(s => s.CIM)
-                          : ((IOrderedQueryable<AJANLATKERES>)qry).ThenBy(s => s.CIM);
+                          ? qry.OrderBy(s => s.Cim)
+                          : ((IOrderedQueryable<Models.Ajanlatkeres>)qry).ThenBy(s => s.Cim);
                         break;
                     case Szempont.Email:
                         qry = elsoSorrend
-                          ? qry.OrderBy(s => s.EMAIL)
-                          : ((IOrderedQueryable<AJANLATKERES>)qry).ThenBy(s => s.EMAIL);
+                          ? qry.OrderBy(s => s.Email)
+                          : ((IOrderedQueryable<Models.Ajanlatkeres>)qry).ThenBy(s => s.Email);
                         break;
                     case Szempont.Telefonszam:
                         qry = elsoSorrend
-                          ? qry.OrderBy(s => s.TELEFONSZAM)
-                          : ((IOrderedQueryable<AJANLATKERES>)qry).ThenBy(s => s.TELEFONSZAM);
+                          ? qry.OrderBy(s => s.Telefonszam)
+                          : ((IOrderedQueryable<Models.Ajanlatkeres>)qry).ThenBy(s => s.Telefonszam);
                         break;
                     default:
                         throw new Exception($"Lekezeletlen {f.Szempont} Szempont!");
@@ -80,54 +84,53 @@ namespace ossServer.Controllers.Ajanlatkeres
                 elsoSorrend = false;
             }
 
-            return (IOrderedQueryable<AJANLATKERES>)qry;
+            return (IOrderedQueryable<Models.Ajanlatkeres>)qry;
         }
-        internal static int AddWeb(OSSContext model, AJANLATKERES entity)
+        internal static int AddWeb(ossContext context, Models.Ajanlatkeres entity)
         {
-            model.AJANLATKERES.Add(entity);
-            model.SaveChanges();
+            context.Ajanlatkeres.Add(entity);
+            context.SaveChanges();
 
-            return entity.AJANLATKERESKOD;
-        }
-
-        internal static int Add(OSSContext model, AJANLATKERES entity)
-        {
-            Register.Creation(model, entity);
-            model.AJANLATKERES.Add(entity);
-            model.SaveChanges();
-
-            return entity.AJANLATKERESKOD;
+            return entity.Ajanlatkereskod;
         }
 
-        public static void Lock(OSSContext model, int pKey, DateTime utoljaraModositva)
+        internal static int Add(ossContext context, Models.Ajanlatkeres entity)
         {
-            if (!model.LockAJANLATKERES(pKey, utoljaraModositva))
-                throw new Exception(Messages.AdatMegvaltozottNemLehetModositani);
+            Register.Creation(context, entity);
+            context.Ajanlatkeres.Add(entity);
+            context.SaveChanges();
+
+            return entity.Ajanlatkereskod;
         }
 
-        public static AJANLATKERES Get(OSSContext model, int pKey)
+        public async static void Lock(ossContext context, int pKey, DateTime utoljaraModositva)
         {
-            var result = model.AJANLATKERES
-              .Where(s => s.PARTICIOKOD == model.Session.PARTICIOKOD)
-              .Where(s => s.AJANLATKERESKOD == pKey)
+            await context.ExecuteLockFunction("lockajanlatkeres", "ajanlatkereskod", pKey, utoljaraModositva);
+        }
+
+        public static Models.Ajanlatkeres Get(ossContext context, int pKey)
+        {
+            var result = context.Ajanlatkeres
+              .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
+              .Where(s => s.Ajanlatkereskod == pKey)
               .ToList();
             if (result.Count != 1)
-                throw new Exception(string.Format(Messages.AdatNemTalalhato, $"{nameof(AJANLATKERES.AJANLATKERESKOD)}={pKey}"));
+                throw new Exception(string.Format(Messages.AdatNemTalalhato, $"{nameof(Models.Ajanlatkeres.Ajanlatkereskod)}={pKey}"));
             return result.First();
         }
 
-        public static void Delete(OSSContext model, AJANLATKERES entity)
+        public static void Delete(ossContext context, Models.Ajanlatkeres entity)
         {
-            model.AJANLATKERES.Remove(entity);
-            model.SaveChanges();
+            context.Ajanlatkeres.Remove(entity);
+            context.SaveChanges();
         }
 
-        public static int Update(OSSContext model, AJANLATKERES entity)
+        public static int Update(ossContext context, Models.Ajanlatkeres entity)
         {
-            Register.Modification(model, entity);
-            model.SaveChanges();
+            Register.Modification(context, entity);
+            context.SaveChanges();
 
-            return entity.AJANLATKERESKOD;
+            return entity.Ajanlatkereskod;
         }
     }
 }
