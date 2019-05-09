@@ -1,7 +1,9 @@
-﻿using ossServer.Controllers.Csoport;
+﻿using Microsoft.AspNetCore.SignalR;
+using ossServer.Controllers.Csoport;
 using ossServer.Controllers.Esemenynaplo;
 using ossServer.Controllers.Primitiv.Felhasznalo;
 using ossServer.Controllers.Session;
+using ossServer.Hubs;
 using ossServer.Models;
 using ossServer.Utils;
 using System.Collections.Generic;
@@ -10,8 +12,8 @@ namespace ossServer.Controllers.Logon
 {
     public class LogonBll
     {
-        public static string Bejelentkezes(ossContext context, string azonosito, string jelszo,
-          string ip, string winHost, string winUser)
+        public static string Bejelentkezes(ossContext context, IHubContext<OssHub> hubcontext, 
+            string azonosito, string jelszo, string ip, string winHost, string winUser)
         {
             var felhasznalo = FelhasznaloDal.Get(context, azonosito, jelszo);
             var sid = SessionBll.CreateNew(context, ip, winHost, winUser,
@@ -20,7 +22,7 @@ namespace ossServer.Controllers.Logon
             if (context.CurrentSession.Logol)
             {
                 EsemenynaploBll.Bejegyzes(context, EsemenynaploBejegyzesek.Bejelentkezes);
-                //OssHub.Uzenet(context.Session.FELHASZNALO, EsemenynaploBejegyzesek.Bejelentkezes);
+                HubUtils.Uzenet(hubcontext, context.CurrentSession.Felhasznalo, EsemenynaploBejegyzesek.Bejelentkezes);
             }
 
             return sid;

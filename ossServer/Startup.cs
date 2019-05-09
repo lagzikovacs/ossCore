@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Serialization;
+using ossServer.Hubs;
 using ossServer.Models;
 
 namespace ossServer
@@ -36,7 +31,7 @@ namespace ossServer
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
-                  builder => builder.AllowAnyOrigin()
+                  builder => builder.SetIsOriginAllowed((host) => true) // Core 2.2
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials());
@@ -50,6 +45,11 @@ namespace ossServer
 
                     options.SerializerSettings.ContractResolver = new DefaultContractResolver { NamingStrategy = new OssNamingStrategy() };
                 });
+
+            services.AddSignalR(options =>
+            {
+                options.EnableDetailedErrors = true;
+            });
         }
 
         public class OssNamingStrategy : NamingStrategy
@@ -76,6 +76,11 @@ namespace ossServer
             app.UseCors("CorsPolicy");
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<OssHub>("/osshub");
+            });
             app.UseMvc();
         }
     }

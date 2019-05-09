@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using ossServer.BaseResults;
+using ossServer.Hubs;
 using ossServer.Models;
 using ossServer.Utils;
 using System;
@@ -12,10 +14,12 @@ namespace ossServer.Controllers.Logon
     public class LogonController : ControllerBase
     {
         private readonly ossContext _context;
+        private readonly IHubContext<OssHub> _hubcontext;
 
-        public LogonController(ossContext context)
+        public LogonController(ossContext context, IHubContext<OssHub> hubcontext)
         {
             _context = context;
+            _hubcontext = hubcontext;
         }
 
         [HttpPost]
@@ -26,7 +30,7 @@ namespace ossServer.Controllers.Logon
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = LogonBll.Bejelentkezes(_context, par.Azonosito, par.Jelszo, 
+                    result.Result = LogonBll.Bejelentkezes(_context, _hubcontext, par.Azonosito, par.Jelszo, 
                         par.Ip, par.WinHost, par.WinUser);
 
                     tr.Commit();

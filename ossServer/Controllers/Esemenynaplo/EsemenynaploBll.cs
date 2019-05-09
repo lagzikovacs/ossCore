@@ -35,6 +35,7 @@ namespace ossServer.Controllers.Esemenynaplo
             {
                 new EseBeJel(EsemenynaploBejegyzesek.Bejelentkezes, "Bejelentkezés"),
                 new EseBeJel(EsemenynaploBejegyzesek.Kijelentkezes, "Kijelentkezés"),
+                new EseBeJel(EsemenynaploBejegyzesek.SzerepkorValasztas, "Szerepkörválasztás"),
              };
         }
 
