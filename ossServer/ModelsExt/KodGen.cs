@@ -14,6 +14,11 @@ namespace ossServer.Models
     {
         public int KodGen(KodNev KodNev)
         {
+            return KodGen(KodNev.ToString());
+        }
+
+        public int KodGen(string KodNev)
+        {
             var cmd = Database.GetDbConnection().CreateCommand();
 
             cmd.Transaction = Database.CurrentTransaction.GetDbTransaction();
