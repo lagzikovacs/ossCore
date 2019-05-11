@@ -12,8 +12,8 @@ namespace ossServer.Controllers.ProjektKapcsolat
         public static List<Models.Projektkapcsolat> ReadByProjektKod(ossContext context, int projektKod)
         {
             return context.Projektkapcsolat
-                .Include(r => r.IratkodNavigation)
-                .Include(r1 => r1.BizonylatkodNavigation)
+                .Include(r => r.IratkodNavigation).ThenInclude(r => r.IrattipuskodNavigation)
+                .Include(r => r.BizonylatkodNavigation)
                 .Where(s => s.Projektkod == projektKod)
                 .OrderByDescending(s => s.Projektkapcsolatkod).ToList();
         }
@@ -21,8 +21,8 @@ namespace ossServer.Controllers.ProjektKapcsolat
         public static List<Models.Projektkapcsolat> ReadByBizonylatKod(ossContext context, int bizonylatKod)
         {
             return context.Projektkapcsolat
-                .Include(r => r.IratkodNavigation)
-                .Include(r1 => r1.BizonylatkodNavigation)
+                .Include(r => r.IratkodNavigation).ThenInclude(r => r.IrattipuskodNavigation)
+                .Include(r => r.BizonylatkodNavigation)
                 .Where(s => s.Bizonylatkod == bizonylatKod)
                 .OrderByDescending(s => s.Projektkapcsolatkod).ToList();
         }
@@ -30,8 +30,8 @@ namespace ossServer.Controllers.ProjektKapcsolat
         public static List<Models.Projektkapcsolat> ReadByIratKod(ossContext context, int iratKod)
         {
             return context.Projektkapcsolat
-                .Include(r => r.IratkodNavigation)
-                .Include(r1 => r1.BizonylatkodNavigation)
+                .Include(r => r.IratkodNavigation).ThenInclude(r => r.IrattipuskodNavigation)
+                .Include(r => r.BizonylatkodNavigation)
                 .Where(s => s.Iratkod == iratKod)
                 .OrderByDescending(s => s.Projektkapcsolatkod).ToList();
         }
