@@ -1,6 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ossServer.BaseResults;
+using ossServer.Enums;
 using ossServer.Models;
+using ossServer.Utils;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Ajanlat
@@ -20,45 +24,52 @@ namespace ossServer.Controllers.Ajanlat
         public async Task<AjanlatParamResult> CreateNew([FromQuery] string sid)
         {
             var result = new AjanlatParamResult();
-            var task = new Task<AjanlatParamResult>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
 
-                  result.Result = new AjanlatBll(sid).CreateNew();
-              })
-            );
-            task.Start();
-            return await task;
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    result.Result = AjanlatBll.CreateNew(_context, sid);
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
         }
 
         [HttpPost]
-        public async Task<Int32Result> AjanlatKeszites([FromQuery] string sid, [FromBody] AjanlatParam ap)
+        public async Task<Int32Result> AjanlatKeszites([FromQuery] string sid, 
+            [FromBody] AjanlatParam ap)
         {
             var result = new Int32Result();
-            var task = new Task<Int32Result>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
-                  if (ap == null)
-                      throw new ArgumentNullException(nameof(ap));
 
-            // TODO: ez csak hack...
-            var fi = new List<SzMT> {
-            new SzMT {Szempont = Szempont.Ervenyes, Minta = ap.Ervenyes},
-            new SzMT {Szempont = Szempont.Tajolas, Minta = ap.Tajolas},
-            new SzMT {Szempont = Szempont.Termeles, Minta = ap.Termeles},
-            new SzMT {Szempont = Szempont.Megjegyzes, Minta = ap.Megjegyzes},
-            new SzMT {Szempont = Szempont.SzuksegesAramerosseg, Minta = ap.SzuksegesAramerosseg},
-                };
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    // TODO: ez csak hack...
+                    var fi = new List<SzMT> {
+                        new SzMT {Szempont = Szempont.Ervenyes, Minta = ap.Ervenyes},
+                        new SzMT {Szempont = Szempont.Tajolas, Minta = ap.Tajolas},
+                        new SzMT {Szempont = Szempont.Termeles, Minta = ap.Termeles},
+                        new SzMT {Szempont = Szempont.Megjegyzes, Minta = ap.Megjegyzes},
+                        new SzMT {Szempont = Szempont.SzuksegesAramerosseg, Minta = ap.SzuksegesAramerosseg},
+                            };
 
-                  result.Result = new AjanlatBll(sid).AjanlatKesztites(ap.ProjektKod, ap.AjanlatBuf, fi);
-              })
-            );
-            task.Start();
-            return await task;
+                    result.Result = AjanlatBll.AjanlatKesztites(_context, sid, 
+                        ap.ProjektKod, ap.AjanlatBuf, fi);
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
         }
 
         [HttpPost]
@@ -66,19 +77,21 @@ namespace ossServer.Controllers.Ajanlat
             [FromBody] AjanlatParam ap)
         {
             var result = new AjanlatParamResult();
-            var task = new Task<AjanlatParamResult>(() =>
-              CEUtils.CatchException(result, () =>
-              {
-                  if (sid == null)
-                      throw new ArgumentNullException(nameof(sid));
-                  if (ap == null)
-                      throw new ArgumentNullException(nameof(ap));
 
-                  result.Result = new AjanlatBll(sid).AjanlatCalc(ap);
-              })
-            );
-            task.Start();
-            return await task;
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    result.Result = AjanlatBll.AjanlatCalc(_context, sid, ap);
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
         }
     }
 }
