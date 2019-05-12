@@ -14,7 +14,7 @@ namespace ossServer.Controllers.Irat
         {
             var qry = context.Irat.AsNoTracking()
               .Include(r => r.IrattipuskodNavigation)
-              .Include(r1 => r1.UgyfelkodNavigation)
+              .Include(r => r.UgyfelkodNavigation).ThenInclude(r => r.HelysegkodNavigation)
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod);
 
             foreach (var f in szmt)

@@ -14,6 +14,7 @@ namespace ossServer.Controllers.ProjektKapcsolat
             return context.Projektkapcsolat
                 .Include(r => r.IratkodNavigation).ThenInclude(r => r.IrattipuskodNavigation)
                 .Include(r => r.BizonylatkodNavigation)
+                .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
                 .Where(s => s.Projektkod == projektKod)
                 .OrderByDescending(s => s.Projektkapcsolatkod).ToList();
         }
@@ -23,6 +24,7 @@ namespace ossServer.Controllers.ProjektKapcsolat
             return context.Projektkapcsolat
                 .Include(r => r.IratkodNavigation).ThenInclude(r => r.IrattipuskodNavigation)
                 .Include(r => r.BizonylatkodNavigation)
+                .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
                 .Where(s => s.Bizonylatkod == bizonylatKod)
                 .OrderByDescending(s => s.Projektkapcsolatkod).ToList();
         }
@@ -32,6 +34,7 @@ namespace ossServer.Controllers.ProjektKapcsolat
             return context.Projektkapcsolat
                 .Include(r => r.IratkodNavigation).ThenInclude(r => r.IrattipuskodNavigation)
                 .Include(r => r.BizonylatkodNavigation)
+                .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
                 .Where(s => s.Iratkod == iratKod)
                 .OrderByDescending(s => s.Projektkapcsolatkod).ToList();
         }
@@ -48,9 +51,11 @@ namespace ossServer.Controllers.ProjektKapcsolat
         public static Models.Projektkapcsolat Get(ossContext context, int pKey)
         {
             var result = context.Projektkapcsolat
-              .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
-              .Where(s => s.Projektkapcsolatkod == pKey)
-              .ToList();
+                .Include(r => r.IratkodNavigation).ThenInclude(r => r.IrattipuskodNavigation)
+                .Include(r => r.BizonylatkodNavigation)
+                .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
+                .Where(s => s.Projektkapcsolatkod == pKey)
+                .ToList();
             if (result.Count != 1)
                 throw new Exception(string.Format(Messages.AdatNemTalalhato,
                   $"{nameof(Projektkapcsolat.Projektkapcsolatkod)}={pKey}"));

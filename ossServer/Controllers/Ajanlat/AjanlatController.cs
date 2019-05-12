@@ -51,16 +51,18 @@ namespace ossServer.Controllers.Ajanlat
                 try
                 {
                     // TODO: ez csak hack...
-                    var fi = new List<SzMT> {
+                    var fi = new List<SzMT>
+                    {
                         new SzMT {Szempont = Szempont.Ervenyes, Minta = ap.Ervenyes},
                         new SzMT {Szempont = Szempont.Tajolas, Minta = ap.Tajolas},
                         new SzMT {Szempont = Szempont.Termeles, Minta = ap.Termeles},
                         new SzMT {Szempont = Szempont.Megjegyzes, Minta = ap.Megjegyzes},
                         new SzMT {Szempont = Szempont.SzuksegesAramerosseg, Minta = ap.SzuksegesAramerosseg},
-                            };
+                    };
 
                     result.Result = AjanlatBll.AjanlatKesztites(_context, sid, 
                         ap.ProjektKod, ap.AjanlatBuf, fi);
+
                     tr.Commit();
                 }
                 catch (Exception ex)

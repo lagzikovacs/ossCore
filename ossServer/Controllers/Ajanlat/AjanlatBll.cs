@@ -184,7 +184,7 @@ namespace ossServer.Controllers.Ajanlat
 
                 DokumentumBll.Feltoltes(context, sid, fajlBuf);
             }
-
+            
             return ProjektKapcsolatBll.AddIratToProjekt(context, sid, projektKod, ujIratKod);
         }
 
