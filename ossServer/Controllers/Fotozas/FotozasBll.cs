@@ -19,7 +19,7 @@ namespace ossServer.Controllers.Fotozas
 {
     public class FotozasBll
     {
-        private static string edKey = "mézesmázos töklekvár";
+        private static readonly string edKey = "mézesmázos töklekvár";
 
         private static string Link(FotozasParam Fp)
         {
