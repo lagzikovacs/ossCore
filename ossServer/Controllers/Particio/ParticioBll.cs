@@ -13,23 +13,35 @@ namespace ossServer.Controllers.Particio
 
         private static void EncryptDto(ParticioDto dto)
         {
-            dto.NavFelhasznaloazonosito = StringCipher.Encrypt(dto.NavFelhasznaloazonosito, edkey);
-            dto.NavFelhasznalojelszo = StringCipher.Encrypt(dto.NavFelhasznalojelszo, edkey);
-            dto.NavAlairokulcs = StringCipher.Encrypt(dto.NavAlairokulcs, edkey);
-            dto.NavCserekulcs = StringCipher.Encrypt(dto.NavCserekulcs, edkey);
+            if (!string.IsNullOrEmpty(dto.NavFelhasznaloazonosito))
+                dto.NavFelhasznaloazonosito = StringCipher.Encrypt(dto.NavFelhasznaloazonosito, edkey);
+            if (!string.IsNullOrEmpty(dto.NavFelhasznalojelszo))
+                dto.NavFelhasznalojelszo = StringCipher.Encrypt(dto.NavFelhasznalojelszo, edkey);
+            if (!string.IsNullOrEmpty(dto.NavAlairokulcs))
+                dto.NavAlairokulcs = StringCipher.Encrypt(dto.NavAlairokulcs, edkey);
+            if (!string.IsNullOrEmpty(dto.NavCserekulcs))
+                dto.NavCserekulcs = StringCipher.Encrypt(dto.NavCserekulcs, edkey);
 
-            dto.SmtpFelhasznaloazonosito = StringCipher.Encrypt(dto.SmtpFelhasznaloazonosito, edkey);
-            dto.SmtpFelhasznalojelszo = StringCipher.Encrypt(dto.SmtpFelhasznalojelszo, edkey);
+            if (!string.IsNullOrEmpty(dto.SmtpFelhasznaloazonosito))
+                dto.SmtpFelhasznaloazonosito = StringCipher.Encrypt(dto.SmtpFelhasznaloazonosito, edkey);
+            if (!string.IsNullOrEmpty(dto.SmtpFelhasznalojelszo))
+                dto.SmtpFelhasznalojelszo = StringCipher.Encrypt(dto.SmtpFelhasznalojelszo, edkey);
         }
         private static void DecryptDto(ParticioDto dto)
         {
-            dto.NavFelhasznaloazonosito = StringCipher.Decrypt(dto.NavFelhasznaloazonosito, edkey);
-            dto.NavFelhasznalojelszo = StringCipher.Decrypt(dto.NavFelhasznalojelszo, edkey);
-            dto.NavAlairokulcs = StringCipher.Decrypt(dto.NavAlairokulcs, edkey);
-            dto.NavCserekulcs = StringCipher.Decrypt(dto.NavCserekulcs, edkey);
+            if (!string.IsNullOrEmpty(dto.NavFelhasznaloazonosito))
+                dto.NavFelhasznaloazonosito = StringCipher.Decrypt(dto.NavFelhasznaloazonosito, edkey);
+            if (!string.IsNullOrEmpty(dto.NavFelhasznalojelszo))
+                dto.NavFelhasznalojelszo = StringCipher.Decrypt(dto.NavFelhasznalojelszo, edkey);
+            if (!string.IsNullOrEmpty(dto.NavAlairokulcs))
+                dto.NavAlairokulcs = StringCipher.Decrypt(dto.NavAlairokulcs, edkey);
+            if (!string.IsNullOrEmpty(dto.NavCserekulcs))
+                dto.NavCserekulcs = StringCipher.Decrypt(dto.NavCserekulcs, edkey);
 
-            dto.SmtpFelhasznaloazonosito = StringCipher.Decrypt(dto.SmtpFelhasznaloazonosito, edkey);
-            dto.SmtpFelhasznalojelszo = StringCipher.Decrypt(dto.SmtpFelhasznalojelszo, edkey);
+            if (!string.IsNullOrEmpty(dto.SmtpFelhasznaloazonosito))
+                dto.SmtpFelhasznaloazonosito = StringCipher.Decrypt(dto.SmtpFelhasznaloazonosito, edkey);
+            if (!string.IsNullOrEmpty(dto.SmtpFelhasznalojelszo))
+                dto.SmtpFelhasznalojelszo = StringCipher.Decrypt(dto.SmtpFelhasznalojelszo, edkey);
         }
 
         //TODO ez csak minimális ellenőrzés
@@ -76,7 +88,8 @@ namespace ossServer.Controllers.Particio
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PARTICIO);
 
-            CheckDto(dto);
+            // csak akkor, ha NAV feltöltés van
+            // CheckDto(dto);
             EncryptDto(dto);
 
             ParticioDal.Lock(context, dto.Particiokod, dto.Modositva);
