@@ -82,7 +82,7 @@ namespace ossServer.Controllers.Ugyfel
         public static Models.Ugyfel Get(ossContext context, int pKey)
         {
             var result = context.Ugyfel
-              .Include("HELYSEG")
+              .Include(r => r.HelysegkodNavigation)
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.Ugyfelkod == pKey).ToList();
             if (result.Count != 1)
@@ -147,7 +147,7 @@ namespace ossServer.Controllers.Ugyfel
         public static List<Models.Ugyfel> Read(ossContext context, string maszk)
         {
             return context.Ugyfel.AsNoTracking()
-              .Include("HELYSEG")
+              .Include(r => r.HelysegkodNavigation)
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod && s.Nev.Contains(maszk))
               .OrderBy(s => s.Nev)
               .ToList();
