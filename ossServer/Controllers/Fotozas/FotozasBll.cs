@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using ossServer.Controllers.Csoport;
 using ossServer.Controllers.Dokumentum;
@@ -22,6 +23,7 @@ namespace ossServer.Controllers.Fotozas
 
         private static string Link(FotozasParam Fp)
         {
+            // a cím elejét a kliens tudja
             return "fotozas?fp=" + 
                 HttpUtility.UrlEncode(StringCipher.Encrypt(JsonConvert.SerializeObject(Fp), edKey));
         }
@@ -68,7 +70,8 @@ namespace ossServer.Controllers.Fotozas
             return Link(Up);
         }
 
-        public static FotozasDto Check(ossContext context, IHubContext<OssHub> hubcontext, string linkparam)
+        public static FotozasDto Check(ossContext context, IHubContext<OssHub> hubcontext,
+            IConfiguration config, string linkparam)
         {
             string uh = "Ügyféltér hiba {0} - értesítse a GridSolar sales-t!";
 
@@ -89,9 +92,9 @@ namespace ossServer.Controllers.Fotozas
 
             try
             {
-                // TODO jöhetnének konfig fájlból
                 result.sid = LogonBll.Bejelentkezes(context, hubcontext, 
-                    "fotozas", Crypt.MD5Hash("internacionale"), "", "", "");
+                    config.GetValue<string>("Fotozas:user"),
+                    Crypt.MD5Hash(config.GetValue<string>("Fotozas:password")), "", "", "");
             }
             catch
             {

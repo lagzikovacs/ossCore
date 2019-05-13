@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Configuration;
 using ossServer.BaseResults;
 using ossServer.Controllers.Irat;
 using ossServer.Hubs;
@@ -16,11 +17,13 @@ namespace ossServer.Controllers.Fotozas
     {
         private readonly ossContext _context;
         private readonly IHubContext<OssHub> _hubcontext;
+        private readonly IConfiguration _config;
 
-        public FotozasController(ossContext context, IHubContext<OssHub> hubcontext)
+        public FotozasController(ossContext context, IHubContext<OssHub> hubcontext, IConfiguration config)
         {
             _context = context;
             _hubcontext = hubcontext;
+            _config = config;
         }
 
         [HttpPost]
@@ -74,7 +77,7 @@ namespace ossServer.Controllers.Fotozas
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = FotozasBll.Check(_context, _hubcontext, linkparam);
+                    result.Result = FotozasBll.Check(_context, _hubcontext, _config, linkparam);
 
                     tr.Commit();
                 }
