@@ -12,7 +12,6 @@ using ossServer.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Web;
 
 namespace ossServer.Controllers.Fotozas
@@ -23,10 +22,8 @@ namespace ossServer.Controllers.Fotozas
 
         private static string Link(FotozasParam Fp)
         {
-            // TODO valahogyan paraméterként
-            //return "https://docport.hu/oss/fotozas?fp=" +
-            return "http://localhost:4200/fotozas?fp=" +
-            HttpUtility.UrlEncode(StringCipher.Encrypt(JsonConvert.SerializeObject(Fp), edKey));
+            return "fotozas?fp=" + 
+                HttpUtility.UrlEncode(StringCipher.Encrypt(JsonConvert.SerializeObject(Fp), edKey));
         }
 
         public static string CreateNewLink(ossContext context, string sid, IratDto dto)
