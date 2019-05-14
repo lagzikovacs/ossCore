@@ -6,6 +6,7 @@
         AJANLATKERESMOD,
         AJANLATKESZITES,
         BEJOVOSZAMLA,
+        BIZONYLAT,
         BIZONYLATMOD,
         CIKK,
         CIKKMOD,
