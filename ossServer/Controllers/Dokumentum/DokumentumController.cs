@@ -120,7 +120,8 @@ namespace ossServer.Controllers.Dokumentum
 
                     try
                     {
-                        result.Result = DokumentumBll.LetoltesFajl(entityDokumentum, par.KezdoPozicio, par.Olvasando);
+                        result.Result = DokumentumBll.LetoltesFajl(entityDokumentum, 
+                            par.KezdoPozicio, par.Olvasando);
                     }
                     catch (Exception ex)
                     {

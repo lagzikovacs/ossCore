@@ -13,7 +13,7 @@ namespace ossServer.Controllers.UgyfelterLog
         internal static IOrderedQueryable<Ugyfelterlog> GetQuery(ossContext model, List<SzMT> szmt)
         {
             var qry = model.Ugyfelterlog.AsNoTracking()
-              .Include(r => r.UgyfelkodNavigation)
+              .Include(r => r.UgyfelkodNavigation).ThenInclude(r => r.HelysegkodNavigation)
               .Where(s => s.Particiokod == model.CurrentSession.Particiokod);
 
             foreach (var f in szmt)
