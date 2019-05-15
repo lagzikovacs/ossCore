@@ -425,10 +425,11 @@ namespace ossServer.Controllers.Bizonylat
             }
 
             //ellenőrizni a tartalmat
-            var invoice = OnlineszamlaBll.GetInvoice(context, stornozo.Bizonylatkod);
-            var hibak = invoice.ValidateErrors();
-            if (hibak.Any())
-                throw new Exception(string.Join(Environment.NewLine, hibak));
+            // TODO
+            //var invoice = OnlineszamlaBll.GetInvoice(context, stornozo.Bizonylatkod);
+            //var hibak = invoice.ValidateErrors();
+            //if (hibak.Any())
+            //    throw new Exception(string.Join(Environment.NewLine, hibak));
 
             //hozzáadni a feltöltendők listájához
             OnlineszamlaDal.Add(context, stornozo.Bizonylatkod);
@@ -476,10 +477,11 @@ namespace ossServer.Controllers.Bizonylat
                 (BizonylatTipus)entity.Bizonylattipuskod == BizonylatTipus.ElolegSzamla)
             {
                 //ellenőrizni a tartalmat
-                var invoice = OnlineszamlaBll.GetInvoice(context, entity.BIZONYLATKOD);
-                var hibak = invoice.ValidateErrors();
-                if (hibak.Any())
-                    throw new Exception(string.Join(Environment.NewLine, hibak));
+                // TODO
+                //var invoice = OnlineszamlaBll.GetInvoice(context, entity.BIZONYLATKOD);
+                //var hibak = invoice.ValidateErrors();
+                //if (hibak.Any())
+                //    throw new Exception(string.Join(Environment.NewLine, hibak));
 
                 //hozzáadni a feltöltendők listájához
                 OnlineszamlaDal.Add(context, entity.Bizonylatkod);
@@ -516,199 +518,199 @@ namespace ossServer.Controllers.Bizonylat
             return BizonylatDal.Update(context, entity);
         }
 
-        public static int GetBizonylatEredetiPeldany(OSSContext context)
+        public static int GetBizonylatEredetiPeldany(ossContext context)
         {
             var entityParticio = ParticioDal.Get(context);
-            var result = entityParticio.BIZONYLAT_EREDETIPELDANYOK_SZAMA ?? throw new Exception(string.Format(Messages.ParticioHiba, "BIZONYLAT_EREDETIPELDANYOK_SZAMA"));
+            var result = entityParticio.BizonylatEredetipeldanyokSzama ?? throw new Exception(string.Format(Messages.ParticioHiba, "BizonylatEredetipeldanyokSzama"));
 
             if (result <= 0 || result > 3)
-                throw new Exception($"BIZONYLAT_EREDETIPELDANYOK_SZAMA: Hibás érték, legyen 1, 2 vagy 3, most {result} !");
+                throw new Exception($"BizonylatEredetipeldanyokSzama: Hibás érték, legyen 1, 2 vagy 3, most {result} !");
 
             return result;
         }
 
-        public static int GetBizonylatMasolat(OSSContext context)
+        public static int GetBizonylatMasolat(ossContext context)
         {
             var entityParticio = ParticioDal.Get(context);
-            var result = entityParticio.BIZONYLAT_MASOLATOK_SZAMA ?? throw new Exception(string.Format(Messages.ParticioHiba, "BIZONYLAT_MASOLATOK_SZAMA"));
+            var result = entityParticio.BizonylatMasolatokSzama ?? throw new Exception(string.Format(Messages.ParticioHiba, "BizonylatMasolatokSzama"));
 
             if (result <= 0 || result > 3)
-                throw new Exception($"BIZONYLAT_MASOLATOK_SZAMA: Hibás érték, legyen 1, 2 vagy 3, most {result} !");
+                throw new Exception($"BizonylatMasolatokSzama: Hibás érték, legyen 1, 2 vagy 3, most {result} !");
 
             return result;
         }
 
-        internal static void BizonylatPrinterSetup(BizonylatPrinter printer, BIZONYLAT entityBizonylat,
-          byte[] szamlakep)
-        {
-            printer.BizonylatTipus = (BizonylatTipus)entityBizonylat.BIZONYLATTIPUSKOD;
+        //internal static void BizonylatPrinterSetup(BizonylatPrinter printer, BIZONYLAT entityBizonylat,
+        //  byte[] szamlakep)
+        //{
+        //    printer.BizonylatTipus = (BizonylatTipus)entityBizonylat.BIZONYLATTIPUSKOD;
 
-            var kimeno = printer.BizonylatTipus != BizonylatTipus.BejovoSzamla &&
-                         printer.BizonylatTipus != BizonylatTipus.Megrendeles;
+        //    var kimeno = printer.BizonylatTipus != BizonylatTipus.BejovoSzamla &&
+        //                 printer.BizonylatTipus != BizonylatTipus.Megrendeles;
 
-            var szallitocim = $"{entityBizonylat.SZALLITOIRANYITOSZAM} {entityBizonylat.SZALLITOHELYSEGNEV}, {entityBizonylat.SZALLITOUTCAHAZSZAM}";
-            var szallitoadoszam = $"{entityBizonylat.SZALLITOADOTORZSSZAM}-{entityBizonylat.SZALLITOADOAFAKOD}-{entityBizonylat.SZALLITOADOMEGYEKOD}";
+        //    var szallitocim = $"{entityBizonylat.SZALLITOIRANYITOSZAM} {entityBizonylat.SZALLITOHELYSEGNEV}, {entityBizonylat.SZALLITOUTCAHAZSZAM}";
+        //    var szallitoadoszam = $"{entityBizonylat.SZALLITOADOTORZSSZAM}-{entityBizonylat.SZALLITOADOAFAKOD}-{entityBizonylat.SZALLITOADOMEGYEKOD}";
 
-            var vevocim = $"{entityBizonylat.UGYFELIRANYITOSZAM} {entityBizonylat.UGYFELHELYSEGNEV}, {entityBizonylat.UGYFELKOZTERULET} {entityBizonylat.UGYFELKOZTERULETTIPUS} {entityBizonylat.UGYFELHAZSZAM}";
+        //    var vevocim = $"{entityBizonylat.UGYFELIRANYITOSZAM} {entityBizonylat.UGYFELHELYSEGNEV}, {entityBizonylat.UGYFELKOZTERULET} {entityBizonylat.UGYFELKOZTERULETTIPUS} {entityBizonylat.UGYFELHAZSZAM}";
 
-            printer.SzallitoNev = kimeno ? entityBizonylat.SZALLITONEV : entityBizonylat.UGYFELNEV;
-            printer.SzallitoCim = kimeno ? szallitocim : vevocim;
-            printer.SzallitoAdoszam = kimeno ? szallitoadoszam : entityBizonylat.UGYFELADOSZAM;
-            printer.SzallitoBankszamla1 = kimeno ? entityBizonylat.SZALLITOBANKSZAMLA1 : "";
-            printer.SzallitoBankszamla2 = kimeno ? entityBizonylat.SZALLITOBANKSZAMLA2 : "";
+        //    printer.SzallitoNev = kimeno ? entityBizonylat.SZALLITONEV : entityBizonylat.UGYFELNEV;
+        //    printer.SzallitoCim = kimeno ? szallitocim : vevocim;
+        //    printer.SzallitoAdoszam = kimeno ? szallitoadoszam : entityBizonylat.UGYFELADOSZAM;
+        //    printer.SzallitoBankszamla1 = kimeno ? entityBizonylat.SZALLITOBANKSZAMLA1 : "";
+        //    printer.SzallitoBankszamla2 = kimeno ? entityBizonylat.SZALLITOBANKSZAMLA2 : "";
 
-            printer.VevoNev = kimeno ? entityBizonylat.UGYFELNEV : entityBizonylat.SZALLITONEV;
-            printer.VevoCim = kimeno ? vevocim : szallitocim;
-            printer.VevoAdoszam = kimeno ? entityBizonylat.UGYFELADOSZAM : szallitoadoszam;
+        //    printer.VevoNev = kimeno ? entityBizonylat.UGYFELNEV : entityBizonylat.SZALLITONEV;
+        //    printer.VevoCim = kimeno ? vevocim : szallitocim;
+        //    printer.VevoAdoszam = kimeno ? entityBizonylat.UGYFELADOSZAM : szallitoadoszam;
 
-            printer.BizonylatKelte = entityBizonylat.BIZONYLATKELTE.ToShortDateString();
-            printer.TeljesitesKelte = entityBizonylat.TELJESITESKELTE.ToShortDateString();
-            printer.FizetesiMod = entityBizonylat.FIZETESIMOD;
-            printer.FizetesiHatarido = entityBizonylat.FIZETESIHATARIDO.ToShortDateString();
-            printer.Bizonylatszam = entityBizonylat.BIZONYLATSZAM;
+        //    printer.BizonylatKelte = entityBizonylat.BIZONYLATKELTE.ToShortDateString();
+        //    printer.TeljesitesKelte = entityBizonylat.TELJESITESKELTE.ToShortDateString();
+        //    printer.FizetesiMod = entityBizonylat.FIZETESIMOD;
+        //    printer.FizetesiHatarido = entityBizonylat.FIZETESIHATARIDO.ToShortDateString();
+        //    printer.Bizonylatszam = entityBizonylat.BIZONYLATSZAM;
 
-            printer.MegjegyzesFej = entityBizonylat.MEGJEGYZESFEJ;
+        //    printer.MegjegyzesFej = entityBizonylat.MEGJEGYZESFEJ;
 
-            printer.Netto = entityBizonylat.NETTO.ToString("#,##0.00");
-            printer.Afa = entityBizonylat.AFA.ToString("#,##0.00");
-            printer.Brutto = entityBizonylat.BRUTTO.ToString("#,##0.00");
-            printer.Termekdij = entityBizonylat.TERMEKDIJ.ToString("#,##0.00");
+        //    printer.Netto = entityBizonylat.NETTO.ToString("#,##0.00");
+        //    printer.Afa = entityBizonylat.AFA.ToString("#,##0.00");
+        //    printer.Brutto = entityBizonylat.BRUTTO.ToString("#,##0.00");
+        //    printer.Termekdij = entityBizonylat.TERMEKDIJ.ToString("#,##0.00");
 
-            printer.Penznem = entityBizonylat.PENZNEM;
-            printer.Arfolyam = entityBizonylat.ARFOLYAM.ToString("#,##0.00");
-            printer.Azaz = entityBizonylat.AZAZ;
+        //    printer.Penznem = entityBizonylat.PENZNEM;
+        //    printer.Arfolyam = entityBizonylat.ARFOLYAM.ToString("#,##0.00");
+        //    printer.Azaz = entityBizonylat.AZAZ;
 
-            printer.TermekdijNulla = entityBizonylat.TERMEKDIJ == 0;
-            printer.AfaFt = Calc.RealRound(entityBizonylat.AFA * entityBizonylat.ARFOLYAM, 1).ToString("#,##0.00");
+        //    printer.TermekdijNulla = entityBizonylat.TERMEKDIJ == 0;
+        //    printer.AfaFt = Calc.RealRound(entityBizonylat.AFA * entityBizonylat.ARFOLYAM, 1).ToString("#,##0.00");
 
-            printer.Keszitette = entityBizonylat.LETREHOZTA;
+        //    printer.Keszitette = entityBizonylat.LETREHOZTA;
 
-            printer.LstTetel.Clear();
-            foreach (var tetel in entityBizonylat.BIZONYLATTETEL)
-            {
-                var t = new BizonylatPrinterTetel
-                {
-                    Megnevezes = tetel.MEGNEVEZES,
-                    Megjegyzes = tetel.MEGJEGYZES,
-                    Mennyiseg = tetel.MENNYISEG.ToString("#,##0.00"),
-                    Me = tetel.ME,
-                    Egysegar = tetel.EGYSEGAR.ToString("#,##0.00"),
+        //    printer.LstTetel.Clear();
+        //    foreach (var tetel in entityBizonylat.BIZONYLATTETEL)
+        //    {
+        //        var t = new BizonylatPrinterTetel
+        //        {
+        //            Megnevezes = tetel.MEGNEVEZES,
+        //            Megjegyzes = tetel.MEGJEGYZES,
+        //            Mennyiseg = tetel.MENNYISEG.ToString("#,##0.00"),
+        //            Me = tetel.ME,
+        //            Egysegar = tetel.EGYSEGAR.ToString("#,##0.00"),
 
-                    AfaKulcs = tetel.AFAKULCS,
-                    Netto = tetel.NETTO.ToString("#,##0.00"),
-                    Afa = tetel.AFA.ToString("#,##0.00"),
-                    Brutto = tetel.BRUTTO.ToString("#,##0.00"),
-                };
+        //            AfaKulcs = tetel.AFAKULCS,
+        //            Netto = tetel.NETTO.ToString("#,##0.00"),
+        //            Afa = tetel.AFA.ToString("#,##0.00"),
+        //            Brutto = tetel.BRUTTO.ToString("#,##0.00"),
+        //        };
 
-                if (tetel.TERMEKDIJAS)
-                    t.Termekdij =
-                      $"KT {tetel.TERMEKDIJKT} termékdíj a bruttó árból: {tetel.MENNYISEG:#,##0.00} {tetel.ME} x {tetel.TOMEGKG:#,##0.00} kg x {tetel.TERMEKDIJEGYSEGAR:#,##0.00} HUF/kg = {tetel.TERMEKDIJ:#,##0.00} HUF";
+        //        if (tetel.TERMEKDIJAS)
+        //            t.Termekdij =
+        //              $"KT {tetel.TERMEKDIJKT} termékdíj a bruttó árból: {tetel.MENNYISEG:#,##0.00} {tetel.ME} x {tetel.TOMEGKG:#,##0.00} kg x {tetel.TERMEKDIJEGYSEGAR:#,##0.00} HUF/kg = {tetel.TERMEKDIJ:#,##0.00} HUF";
 
-                printer.LstTetel.Add(t);
-            }
+        //        printer.LstTetel.Add(t);
+        //    }
 
-            printer.LstAfa.Clear();
-            foreach (var afa in entityBizonylat.BIZONYLATAFA)
-                printer.LstAfa.Add(new BizonylatPrinterAfa
-                {
-                    AfaKulcs = afa.AFAKULCS,
-                    Netto = afa.NETTO.ToString("#,##0.00"),
-                    Afa = afa.AFA.ToString("#,##0.00"),
-                    Brutto = afa.BRUTTO.ToString("#,##0.00"),
-                });
+        //    printer.LstAfa.Clear();
+        //    foreach (var afa in entityBizonylat.BIZONYLATAFA)
+        //        printer.LstAfa.Add(new BizonylatPrinterAfa
+        //        {
+        //            AfaKulcs = afa.AFAKULCS,
+        //            Netto = afa.NETTO.ToString("#,##0.00"),
+        //            Afa = afa.AFA.ToString("#,##0.00"),
+        //            Brutto = afa.BRUTTO.ToString("#,##0.00"),
+        //        });
 
-            printer.LstTermekdij.Clear();
-            foreach (var termekdij in entityBizonylat.BIZONYLATTERMEKDIJ)
-            {
-                printer.LstTermekdij.Add(new BizonylatPrinterTermekdij
-                {
-                    TermekdijKT = termekdij.TERMEKDIJKT,
-                    OssztomegKg = termekdij.OSSZTOMEGKG.ToString("#,##0.00"),
-                    TermekdijEgysegar = termekdij.TERMEKDIJEGYSEGAR.ToString("#,##0.00"),
-                    Termekdij = termekdij.TERMEKDIJ.ToString("#,##0.00"),
-                });
-            }
-            printer.Szamlakep = szamlakep;
-        }
+        //    printer.LstTermekdij.Clear();
+        //    foreach (var termekdij in entityBizonylat.BIZONYLATTERMEKDIJ)
+        //    {
+        //        printer.LstTermekdij.Add(new BizonylatPrinterTermekdij
+        //        {
+        //            TermekdijKT = termekdij.TERMEKDIJKT,
+        //            OssztomegKg = termekdij.OSSZTOMEGKG.ToString("#,##0.00"),
+        //            TermekdijEgysegar = termekdij.TERMEKDIJEGYSEGAR.ToString("#,##0.00"),
+        //            Termekdij = termekdij.TERMEKDIJ.ToString("#,##0.00"),
+        //        });
+        //    }
+        //    printer.Szamlakep = szamlakep;
+        //}
 
-        public static byte[] BizonylatNyomtatas(List<SzMT> fi)
-        {
-            const string minta = "!!! MINTA !!!";
+        //public static byte[] BizonylatNyomtatas(List<SzMT> fi)
+        //{
+        //    const string minta = "!!! MINTA !!!";
 
-            using (var context = OSSContext.NewContext(_sid))
-                try
-                {
-                    context.Open(true);
+        //    using (var context = OSSContext.NewContext(_sid))
+        //        try
+        //        {
+        //            context.Open(true);
 
-                    var bizonylatKod = SzMTUtils.GetInt(fi, Szempont.BizonylatKod);
+        //            var bizonylatKod = SzMTUtils.GetInt(fi, Szempont.BizonylatKod);
 
-                    var entityBizonylat = BizonylatDal.GetComplex(context, bizonylatKod);
-                    BizonylatDal.Lock(context, bizonylatKod, entityBizonylat.Modositva);
+        //            var entityBizonylat = BizonylatDal.GetComplex(context, bizonylatKod);
+        //            BizonylatDal.Lock(context, bizonylatKod, entityBizonylat.Modositva);
 
-                    var entityParticio = ParticioDal.Get(context);
-                    var iratKod = entityParticio.BIZONYLAT_BIZONYLATKEP_IRATKOD != null ?
-                      (int)entityParticio.BIZONYLAT_BIZONYLATKEP_IRATKOD : throw new Exception(string.Format(Messages.ParticioHiba, "BIZONYLAT_BIZONYLATKEP_IRATKOD"));
+        //            var entityParticio = ParticioDal.Get(context);
+        //            var iratKod = entityParticio.BIZONYLAT_BIZONYLATKEP_IRATKOD != null ?
+        //              (int)entityParticio.BIZONYLAT_BIZONYLATKEP_IRATKOD : throw new Exception(string.Format(Messages.ParticioHiba, "BIZONYLAT_BIZONYLATKEP_IRATKOD"));
 
-                    var szamlakep = IratBll.Letoltes(context, iratKod);
-                    var nyomtatasTipus = SzMTUtils.GetBizonylatNyomtatasTipus(fi, Szempont.NyomtatasTipus);
-                    var v = VerzioDal.Get(context);
+        //            var szamlakep = IratBll.Letoltes(context, iratKod);
+        //            var nyomtatasTipus = SzMTUtils.GetBizonylatNyomtatasTipus(fi, Szempont.NyomtatasTipus);
+        //            var v = VerzioDal.Get(context);
 
-                    var printer = new BizonylatPrinter();
-                    BizonylatPrinterSetup(printer, entityBizonylat, szamlakep.b);
-                    printer.BizonylatFejlec = Bl[entityBizonylat.Bizonylattipuskod].BizonylatFejlec;
-                    printer.Verzio = v;
-                    if (nyomtatasTipus == BizonylatNyomtatasTipus.Minta)
-                        printer.BizonylatFejlec = minta + " - " + printer.BizonylatFejlec;
+        //            var printer = new BizonylatPrinter();
+        //            BizonylatPrinterSetup(printer, entityBizonylat, szamlakep.b);
+        //            printer.BizonylatFejlec = Bl[entityBizonylat.Bizonylattipuskod].BizonylatFejlec;
+        //            printer.Verzio = v;
+        //            if (nyomtatasTipus == BizonylatNyomtatasTipus.Minta)
+        //                printer.BizonylatFejlec = minta + " - " + printer.BizonylatFejlec;
 
-                    int peldanyszam;
-                    BIZONYLAT entity;
+        //            int peldanyszam;
+        //            BIZONYLAT entity;
 
-                    switch (nyomtatasTipus)
-                    {
-                        case BizonylatNyomtatasTipus.Minta:
-                            printer.UjPeldany("1", minta);
-                            break;
-                        case BizonylatNyomtatasTipus.Eredeti:
-                            peldanyszam = GetBizonylatEredetiPeldany(context);
-                            for (var i = 1; i <= peldanyszam; i++)
-                                printer.UjPeldany(i.ToString(), "Eredeti");
+        //            switch (nyomtatasTipus)
+        //            {
+        //                case BizonylatNyomtatasTipus.Minta:
+        //                    printer.UjPeldany("1", minta);
+        //                    break;
+        //                case BizonylatNyomtatasTipus.Eredeti:
+        //                    peldanyszam = GetBizonylatEredetiPeldany(context);
+        //                    for (var i = 1; i <= peldanyszam; i++)
+        //                        printer.UjPeldany(i.ToString(), "Eredeti");
 
-                            if (entityBizonylat.Nyomtatottpeldanyokszama == 0)
-                            {
-                                entity = BizonylatDal.Get(context, bizonylatKod);
-                                entity.NYOMTATOTTPELDANYOKSZAMA = peldanyszam;
-                                BizonylatDal.Update(context, entity);
-                            }
-                            break;
-                        case BizonylatNyomtatasTipus.Másolat:
-                            if (entityBizonylat.Nyomtatottpeldanyokszama == 0)
-                                throw new Exception("Még nem készült eredeti példány!");
-                            peldanyszam = GetBizonylatMasolat(context);
-                            var sorszamTol = entityBizonylat.Nyomtatottpeldanyokszama + 1;
-                            var sorszamIg = sorszamTol + peldanyszam - 1;
-                            for (var i = sorszamTol; i <= sorszamIg; i++)
-                                printer.UjPeldany(i.ToString(), "Másolat");
+        //                    if (entityBizonylat.Nyomtatottpeldanyokszama == 0)
+        //                    {
+        //                        entity = BizonylatDal.Get(context, bizonylatKod);
+        //                        entity.NYOMTATOTTPELDANYOKSZAMA = peldanyszam;
+        //                        BizonylatDal.Update(context, entity);
+        //                    }
+        //                    break;
+        //                case BizonylatNyomtatasTipus.Másolat:
+        //                    if (entityBizonylat.Nyomtatottpeldanyokszama == 0)
+        //                        throw new Exception("Még nem készült eredeti példány!");
+        //                    peldanyszam = GetBizonylatMasolat(context);
+        //                    var sorszamTol = entityBizonylat.Nyomtatottpeldanyokszama + 1;
+        //                    var sorszamIg = sorszamTol + peldanyszam - 1;
+        //                    for (var i = sorszamTol; i <= sorszamIg; i++)
+        //                        printer.UjPeldany(i.ToString(), "Másolat");
 
-                            entity = BizonylatDal.Get(context, bizonylatKod);
-                            entity.NYOMTATOTTPELDANYOKSZAMA = sorszamIg;
-                            BizonylatDal.Update(context, entity);
-                            break;
-                    }
+        //                    entity = BizonylatDal.Get(context, bizonylatKod);
+        //                    entity.NYOMTATOTTPELDANYOKSZAMA = sorszamIg;
+        //                    BizonylatDal.Update(context, entity);
+        //                    break;
+        //            }
 
-                    context.Commit();
+        //            context.Commit();
 
-                    return printer.Print();
-                }
-                catch (Exception ex)
-                {
-                    context.Rollback();
-                    throw OSSContext.FaultException(ex);
-                }
-                finally
-                {
-                    context.Close();
-                }
-        }
+        //            return printer.Print();
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            context.Rollback();
+        //            throw OSSContext.FaultException(ex);
+        //        }
+        //        finally
+        //        {
+        //            context.Close();
+        //        }
+        //}
 
         public static string SzamlaFormaiEllenorzese(ossContext context, string sid, int bizonylatKod)
         {
