@@ -6,12 +6,12 @@ using System.Collections.Generic;
 
 namespace ossServer.Controllers.Riport
 {
-    public class KimenoSzamlaTask : ServerTaskBase
+    public class BejovoSzamlaTask : ServerTaskBase
     {
         private readonly DateTime _teljesitesKeltetol;
         private readonly DateTime _teljesitesKelteig;
 
-        public KimenoSzamlaTask(string sid, List<SzMT> szmt) : base(sid)
+        public BejovoSzamlaTask(string sid, List<SzMT> szmt) : base(sid)
         {
             _teljesitesKeltetol = (DateTime)szmt[0].Minta;
             _teljesitesKelteig = (DateTime)szmt[1].Minta;
@@ -26,7 +26,7 @@ namespace ossServer.Controllers.Riport
                 using (var tr = _context.Database.BeginTransaction())
                     try
                     {
-                        var result = new RiportBll().KimenoSzamla(_context, _sid,
+                        var result = new RiportBll().BejovoSzamla(_context, _sid,
                             _teljesitesKeltetol, _teljesitesKelteig);
 
                         tr.Commit();

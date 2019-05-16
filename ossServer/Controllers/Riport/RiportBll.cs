@@ -14,6 +14,8 @@ namespace ossServer.Controllers.Riport
 {
     public class RiportBll
     {
+        private static readonly string licKey = "ERDD-TN5J-YKX9-H1KX";
+
         private void Fejlec(int sor, int oszlop, string f)
         {
             _sheet.Cells[sor, oszlop].Value = f;
@@ -35,13 +37,13 @@ namespace ossServer.Controllers.Riport
             //    _sheet.Columns[i].AutoFit(1, _sheet.Rows[rowStart], _sheet.Rows[_sheet.Rows.Count - 1]);
         }
 
-        public byte[] KimenoSzamlaLst(ossContext context, string sid, 
+        public byte[] KimenoSzamla(ossContext context, string sid, 
             DateTime teljesitesKeltetol, DateTime teljesitesKelteig)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.LEKERDEZES);
 
-            SpreadsheetInfo.SetLicense("ERDD-TN5J-YKX9-H1KX");
+            SpreadsheetInfo.SetLicense(licKey);
 
             var bizonylatkodok = RiportDal.KimenoSzamlakBizonylatkodok(context, teljesitesKeltetol, teljesitesKelteig);
 
@@ -107,8 +109,14 @@ namespace ossServer.Controllers.Riport
             return EndReport();
         }
 
-        public byte[] BejovoSzamla(ossContext context, DateTime teljesitesKeltetol, DateTime teljesitesKelteig)
+        public byte[] BejovoSzamla(ossContext context, string sid, 
+            DateTime teljesitesKeltetol, DateTime teljesitesKelteig)
         {
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.LEKERDEZES);
+
+            SpreadsheetInfo.SetLicense(licKey);
+
             var bizonylatkodok = RiportDal.BejovoSzamlakBizonylatkodok(context, teljesitesKeltetol, teljesitesKelteig);
 
             BeginReport("Bejövő számlák");
@@ -172,8 +180,14 @@ namespace ossServer.Controllers.Riport
             return EndReport();
         }
 
-        public byte[] KovetelesekLst(ossContext context, DateTime ezenANapon, bool lejart)
+        public byte[] Kovetelesek(ossContext context, string sid, 
+            DateTime ezenANapon, bool lejart)
         {
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.LEKERDEZES);
+
+            SpreadsheetInfo.SetLicense(licKey);
+
             var bizonylatkodok = RiportDal.KovetelesekBizonylatkodok(context, ezenANapon, lejart);
 
             BeginReport("Követelések");
@@ -237,8 +251,14 @@ namespace ossServer.Controllers.Riport
             return EndReport();
         }
 
-        public byte[] TartozasokLst(ossContext context, DateTime ezenANapon, bool lejart)
+        public byte[] Tartozasok(ossContext context, string sid, 
+            DateTime ezenANapon, bool lejart)
         {
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.LEKERDEZES);
+
+            SpreadsheetInfo.SetLicense(licKey);
+
             var bizonylatkodok = RiportDal.TartozasokBizonylatkodok(context, ezenANapon, lejart);
 
             BeginReport("Tartozások");
@@ -302,9 +322,14 @@ namespace ossServer.Controllers.Riport
             return EndReport();
         }
 
-        public byte[] BeszerzesLst(ossContext context, DateTime teljesitesKeltetol,
-          DateTime teljesitesKelteig, bool reszletekIs)
+        public byte[] Beszerzes(ossContext context, string sid, 
+            DateTime teljesitesKeltetol, DateTime teljesitesKelteig, bool reszletekIs)
         {
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.LEKERDEZES);
+
+            SpreadsheetInfo.SetLicense(licKey);
+
             var riporttetelek = RiportDal.BeszerzesRiporttetelek(context, teljesitesKeltetol, teljesitesKelteig);
 
             var nev = "Beszerzés";
@@ -373,8 +398,14 @@ namespace ossServer.Controllers.Riport
             return EndReport();
         }
 
-        public byte[] KeszletLst(ossContext context, DateTime ezenIdopontig)
+        public byte[] Keszlet(ossContext context, string sid, 
+            DateTime ezenIdopontig)
         {
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.LEKERDEZES);
+
+            SpreadsheetInfo.SetLicense(licKey);
+
             var lstDto = RiportDal.KeszletErtekNelkul(context, ezenIdopontig);
 
             const string nev = "Készlet";
@@ -435,9 +466,14 @@ namespace ossServer.Controllers.Riport
             return EndReport();
         }
 
-        public byte[] PenztarTetelLst(ossContext context, int penztarKod, DateTime datumTol,
-          DateTime datumIg)
+        public byte[] PenztarTetel(ossContext context, string sid, 
+            int penztarKod, DateTime datumTol, DateTime datumIg)
         {
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.LEKERDEZES);
+
+            SpreadsheetInfo.SetLicense(licKey);
+
             var penztar = PenztarDal.Get(context, penztarKod);
 
             BeginReport("Pénztártételek");
@@ -480,8 +516,14 @@ namespace ossServer.Controllers.Riport
             return EndReport();
         }
 
-        public byte[] ProjektLst(ossContext context, int statusz, string nev)
+        public byte[] Projekt(ossContext context, string sid, 
+            int statusz, string nev)
         {
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.LEKERDEZES);
+
+            SpreadsheetInfo.SetLicense(licKey);
+
             BeginReport("Projektek");
 
             var rowStart = 3;

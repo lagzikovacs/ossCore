@@ -56,7 +56,7 @@ namespace ossServer.Controllers.Riport
         }
 
         [HttpPost]
-        public StringResult KimenoSzamlaLstTaskStart([FromQuery] string sid, 
+        public StringResult KimenoSzamlaTaskStart([FromQuery] string sid, 
             [FromBody] List<SzMT> fi)
         {
             var result = new StringResult();
@@ -64,6 +64,66 @@ namespace ossServer.Controllers.Riport
             try
             {
                 var taskm = new KimenoSzamlaTask(sid, fi);
+                taskm.Start();
+                result.Result = taskm._tasktoken;
+            }
+            catch (Exception ex)
+            {
+                result.Error = ex.InmostMessage();
+            }
+
+            return result;
+        }
+
+        [HttpPost]
+        public StringResult BejovoSzamlaTaskStart([FromQuery] string sid,
+            [FromBody] List<SzMT> fi)
+        {
+            var result = new StringResult();
+
+            try
+            {
+                var taskm = new BejovoSzamlaTask(sid, fi);
+                taskm.Start();
+                result.Result = taskm._tasktoken;
+            }
+            catch (Exception ex)
+            {
+                result.Error = ex.InmostMessage();
+            }
+
+            return result;
+        }
+
+        [HttpPost]
+        public StringResult KovetelesekTaskStart([FromQuery] string sid,
+            [FromBody] List<SzMT> fi)
+        {
+            var result = new StringResult();
+
+            try
+            {
+                var taskm = new KovetelesekTask(sid, fi);
+                taskm.Start();
+                result.Result = taskm._tasktoken;
+            }
+            catch (Exception ex)
+            {
+                result.Error = ex.InmostMessage();
+            }
+
+            return result;
+        }
+
+        [HttpPost]
+        public StringResult TartozasokTaskStart([FromQuery] string sid,
+            [FromBody] List<SzMT> fi)
+        {
+            var result = new StringResult();
+
+            try
+            {
+                var taskm = new TartozasokTask(sid, fi);
                 taskm.Start();
                 result.Result = taskm._tasktoken;
             }
