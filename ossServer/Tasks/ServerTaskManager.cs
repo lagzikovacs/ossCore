@@ -19,7 +19,7 @@ namespace ossServer.Tasks
         {
             if (SessionHandlers.TryGetValue(taskId, out var result))
             {
-                if (result.Sid != sid)
+                if (result._sid != sid)
                     throw new Exception("Tasks.Get");
 
                 return result;

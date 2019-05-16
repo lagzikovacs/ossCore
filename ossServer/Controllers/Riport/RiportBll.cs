@@ -1,6 +1,9 @@
 ﻿using GemBox.Spreadsheet;
+using ossServer.Controllers.Csoport;
 using ossServer.Controllers.Penztar;
+using ossServer.Controllers.Session;
 using ossServer.Controllers.Ugyfel;
+using ossServer.Enums;
 using ossServer.Models;
 using ossServer.Utils;
 using System;
@@ -32,8 +35,14 @@ namespace ossServer.Controllers.Riport
             //    _sheet.Columns[i].AutoFit(1, _sheet.Rows[rowStart], _sheet.Rows[_sheet.Rows.Count - 1]);
         }
 
-        public byte[] KimenoSzamlaLst(ossContext context, DateTime teljesitesKeltetol, DateTime teljesitesKelteig)
+        public byte[] KimenoSzamlaLst(ossContext context, string sid, 
+            DateTime teljesitesKeltetol, DateTime teljesitesKelteig)
         {
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.LEKERDEZES);
+
+            SpreadsheetInfo.SetLicense("ERDD-TN5J-YKX9-H1KX");
+
             var bizonylatkodok = RiportDal.KimenoSzamlakBizonylatkodok(context, teljesitesKeltetol, teljesitesKelteig);
 
             BeginReport("Kimenő számlák");

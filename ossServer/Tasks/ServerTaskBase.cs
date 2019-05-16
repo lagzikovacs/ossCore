@@ -8,100 +8,81 @@ namespace ossServer.Tasks
 {
     public abstract class ServerTaskBase
     {
-        public string TaskToken { get; }
-
-        public string Sid { get; }
-
-        protected CancellationToken CancellationToken = new CancellationToken();
-
-        protected ServerTaskResultDto Result { get; set; }
-
-        public DateTime ExpireOn { get; private set; }
-
-
-        public bool Expired => ExpireOn < DateTime.Now;
-        public bool Cancelled;
-
+        internal string _sid { get; }
+        internal string _tasktoken { get; }
+        protected ServerTaskResult _result { get; set; }
+        protected CancellationToken _cancellationtoken = new CancellationToken();
+        protected bool _cancelled;
 
         protected ServerTaskBase(string sid)
         {
-            Sid = sid;
-            TaskToken = Guid.NewGuid().ToString("N");
+            _sid = sid;
+
+            _tasktoken = Guid.NewGuid().ToString("N");
+            _result = new ServerTaskResult();
         }
 
         public void Start()
         {
-            ServerTaskManager.Add(TaskToken, this);
+            ServerTaskManager.Add(_tasktoken, this);
 
-            System.Threading.Tasks.Task.Factory.StartNew(InternalRun, CancellationToken);
-        }
-
-        public void GiveAMinute()
-        {
-            ExpireOn = DateTime.Now.AddMinutes(1);
+            System.Threading.Tasks.Task.Factory.StartNew(InternalRun, _cancellationtoken);
         }
 
         private void InternalRun()
         {
-            lock (Result)
-                Result.Status = ServerTaskStates.Running;
-
-            GiveAMinute();
+            lock (_result)
+                _result.Status = ServerTaskStates.Running;
 
             var exception = Run();
 
-            lock (Result)
+            lock (_result)
             {
                 if (exception == null)
                 {
-                    Result.Status = Cancelled ? ServerTaskStates.Cancelled : ServerTaskStates.Completed;
+                    _result.Status = _cancelled ? ServerTaskStates.Cancelled : ServerTaskStates.Completed;
                 }
                 else
                 {
-                    Result.Status = ServerTaskStates.Error;
-                    Result.Error = exception.InmostMessage();
+                    _result.Status = ServerTaskStates.Error;
+                    _result.Error = exception.InmostMessage();
                 }
             }
 
-            // Várunk 1 percet a művelet befejeztével, ennyi ideje van hogy megszerezze az eredményt a kliens.
+            // Várunk 1 percet a művelet befejeztével, 
+            // ennyi ideje van hogy megszerezze az eredményt a kliens.
             Thread.Sleep(new TimeSpan(0, 0, 1, 0));
-
-            ServerTaskManager.TryRemove(TaskToken);
+            // utána eldobjuk a taskot
+            ServerTaskManager.TryRemove(_tasktoken);
         }
 
         protected abstract Exception Run();
 
-        public ServerTaskResultDto Check()
+        public ServerTaskResult Check()
         {
-            lock (Result)
+            lock (_result)
             {
-                switch (Result.Status)
+                switch (_result.Status)
                 {
                     case ServerTaskStates.Queued:
                     case ServerTaskStates.Running:
-                        GiveAMinute();
                         break;
                     case ServerTaskStates.Error:
                     case ServerTaskStates.Completed:
-                        ServerTaskManager.TryRemove(TaskToken);
+                        ServerTaskManager.TryRemove(_tasktoken);
                         break;
                 }
-                return Result;
+
+                return _result;
             }
         }
 
         public void Cancel()
         {
-            lock (Result)
+            lock (_result)
             {
-                Cancelled = true;
+                _cancelled = true;
             }
-        }
-
-        public void IsExpired()
-        {
-            if (Expired) //ez hiba, el kell dobni mindent
-                throw new Exception("Expired!");
         }
     }
 }

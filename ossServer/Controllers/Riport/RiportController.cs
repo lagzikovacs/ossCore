@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using ossServer.BaseResults;
+using ossServer.Models;
+using ossServer.Tasks;
+using ossServer.Utils;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ossServer.Controllers.Riport
 {
@@ -11,11 +12,67 @@ namespace ossServer.Controllers.Riport
     [ApiController]
     public class RiportController : ControllerBase
     {
-        private IServiceProvider _services;
-
-        public RiportController(IServiceProvider services)
+        [HttpPost]
+        public RiportResult TaskCheck([FromQuery] string sid, [FromBody] string taskToken)
         {
-            _services = services;
+            var result = new RiportResult();
+
+            try
+            {
+                var taskm = ServerTaskManager.Get(taskToken, sid);
+                var taskresult = taskm.Check();
+
+                result.Status = taskresult.Status;
+                result.Error = taskresult.Error;
+
+                if (taskresult.Status == ServerTaskStates.Completed)
+                    result.Riport = taskresult.Result;
+            }
+            catch (Exception ex)
+            {
+                result.Error = ex.InmostMessage();
+            }
+
+            return result;
+        }
+
+        [HttpPost]
+        public BaseResults.EmptyResult TaskCancel([FromQuery] string sid, 
+            [FromBody] string taskToken)
+        {
+            var result = new BaseResults.EmptyResult();
+
+            try
+            {
+                var taskm = ServerTaskManager.Get(taskToken, sid);
+                taskm.Cancel();
+            }
+            catch (Exception ex)
+            {
+                result.Error = ex.InmostMessage();
+            }
+
+            return result;
+        }
+
+        [HttpPost]
+        public StringResult KimenoSzamlaLstTaskStart([FromQuery] string sid, 
+            [FromBody] List<SzMT> fi)
+        {
+            var result = new StringResult();
+
+            try
+            {
+                var taskm = new KimenoSzamlaTask(sid, fi);
+                taskm.Start();
+                result.Result = taskm._tasktoken;
+            }
+            catch (Exception ex)
+            {
+                result.Error = ex.InmostMessage();
+            }
+
+            return result;
         }
     }
 }
