@@ -134,5 +134,81 @@ namespace ossServer.Controllers.Riport
 
             return result;
         }
+
+        [HttpPost]
+        public StringResult BeszerzesTaskStart([FromQuery] string sid, [FromBody] List<SzMT> fi)
+        {
+            var result = new StringResult();
+
+            try
+            {
+                var taskm = new BeszerzesTask(sid, fi);
+                taskm.Start();
+                result.Result = taskm._tasktoken;
+            }
+            catch (Exception ex)
+            {
+                result.Error = ex.InmostMessage();
+            }
+
+            return result;
+        }
+
+        [HttpPost]
+        public StringResult KeszletTaskStart([FromQuery] string sid, [FromBody] List<SzMT> fi)
+        {
+            var result = new StringResult();
+
+            try
+            {
+                var taskm = new KeszletTask(sid, fi);
+                taskm.Start();
+                result.Result = taskm._tasktoken;
+            }
+            catch (Exception ex)
+            {
+                result.Error = ex.InmostMessage();
+            }
+
+            return result;
+        }
+
+        [HttpPost]
+        public StringResult PenztarTetelTaskStart([FromQuery] string sid, [FromBody] List<SzMT> fi)
+        {
+            var result = new StringResult();
+
+            try
+            {
+                var taskm = new PenztarTetelTask(sid, fi);
+                taskm.Start();
+                result.Result = taskm._tasktoken;
+            }
+            catch (Exception ex)
+            {
+                result.Error = ex.InmostMessage();
+            }
+
+            return result;
+        }
+
+        [HttpPost]
+        public StringResult ProjektTaskStart([FromQuery] string sid, [FromBody] List<SzMT> fi)
+        {
+            var result = new StringResult();
+
+            try
+            {
+                var taskm = new ProjektTask(sid, fi);
+                taskm.Start();
+                result.Result = taskm._tasktoken;
+            }
+            catch (Exception ex)
+            {
+                result.Error = ex.InmostMessage();
+            }
+
+            return result;
+        }
     }
 }
