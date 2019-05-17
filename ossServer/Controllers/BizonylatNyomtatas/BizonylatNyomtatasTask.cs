@@ -1,20 +1,21 @@
-﻿using ossServer.Models;
+﻿using ossServer.Enums;
+using ossServer.Models;
 using ossServer.Tasks;
 using ossServer.Utils;
 using System;
 using System.Collections.Generic;
 
-namespace ossServer.Controllers.Riport
+namespace ossServer.Controllers.BizonylatNyomtatas
 {
-    public class TartozasokTask : ServerTaskBase
+    public class BizonylatNyomtatasTask : ServerTaskBase
     {
-        private readonly DateTime _ezenANapon;
-        private readonly bool _lejart;
+        private readonly int _bizonylatkod;
+        private readonly BizonylatNyomtatasTipus _nyomtatasTipus;
 
-        public TartozasokTask(string sid, List<SzMT> szmt) : base(sid)
+        public BizonylatNyomtatasTask(string sid, List<SzMT> szmt) : base(sid)
         {
-            _ezenANapon = (DateTime)szmt[0].Minta;
-            _lejart = false;
+            _bizonylatkod = SzMTUtils.GetInt(szmt, Szempont.BizonylatKod);
+            _nyomtatasTipus = SzMTUtils.GetBizonylatNyomtatasTipus(szmt, Szempont.NyomtatasTipus);
         }
 
         protected override Exception Run()
@@ -26,8 +27,8 @@ namespace ossServer.Controllers.Riport
                 using (var tr = _context.Database.BeginTransaction())
                     try
                     {
-                        var result = new RiportBll().Tartozasok(_context, _sid,
-                            _ezenANapon, _lejart);
+                        var result = BizonylatNyomtatasBll.Nyomtatas(_context, _sid, 
+                            _bizonylatkod, _nyomtatasTipus);
 
                         tr.Commit();
 
