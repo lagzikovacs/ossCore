@@ -6,12 +6,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="Controllers\NGM\VI30232014\.idea\modules.xml" />
+    <Content Include="Controllers\NGM\VI30232014\.idea\workspace.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="GemBox.Document" Version="29.0.0.1158" />
     <PackageReference Include="GemBox.Spreadsheet" Version="43.0.0.1127" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.4" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Controllers\NGM\VI30232014\.idea\VI30232014.iml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\NGM\VI30232014\.idea\inspectionProfiles\" />
   </ItemGroup>
 
 </Project>
