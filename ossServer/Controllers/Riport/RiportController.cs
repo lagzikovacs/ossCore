@@ -56,14 +56,14 @@ namespace ossServer.Controllers.Riport
         }
 
         [HttpPost]
-        public StringResult KimenoSzamlaTaskStart([FromQuery] string sid, 
-            [FromBody] List<SzMT> fi)
+        public StringResult KimenoSzamlaTaskStart([FromServices] KimenoSzamlaTask taskm, 
+            [FromQuery] string sid, [FromBody] List<SzMT> fi)
         {
             var result = new StringResult();
 
             try
             {
-                var taskm = new KimenoSzamlaTask(sid, fi);
+                taskm.Setup(sid, fi);
                 taskm.Start();
                 result.Result = taskm._tasktoken;
             }
@@ -76,14 +76,14 @@ namespace ossServer.Controllers.Riport
         }
 
         [HttpPost]
-        public StringResult BejovoSzamlaTaskStart([FromQuery] string sid,
-            [FromBody] List<SzMT> fi)
+        public StringResult BejovoSzamlaTaskStart([FromServices] BejovoSzamlaTask taskm,
+            [FromQuery] string sid, [FromBody] List<SzMT> fi)
         {
             var result = new StringResult();
 
             try
             {
-                var taskm = new BejovoSzamlaTask(sid, fi);
+                taskm.Setup(sid, fi);
                 taskm.Start();
                 result.Result = taskm._tasktoken;
             }
@@ -96,14 +96,14 @@ namespace ossServer.Controllers.Riport
         }
 
         [HttpPost]
-        public StringResult KovetelesekTaskStart([FromQuery] string sid,
-            [FromBody] List<SzMT> fi)
+        public StringResult KovetelesekTaskStart([FromServices] KovetelesekTask taskm,
+            [FromQuery] string sid, [FromBody] List<SzMT> fi)
         {
             var result = new StringResult();
 
             try
             {
-                var taskm = new KovetelesekTask(sid, fi);
+                taskm.Setup(sid, fi);
                 taskm.Start();
                 result.Result = taskm._tasktoken;
             }
@@ -116,14 +116,14 @@ namespace ossServer.Controllers.Riport
         }
 
         [HttpPost]
-        public StringResult TartozasokTaskStart([FromQuery] string sid,
-            [FromBody] List<SzMT> fi)
+        public StringResult TartozasokTaskStart([FromServices] TartozasokTask taskm,
+            [FromQuery] string sid, [FromBody] List<SzMT> fi)
         {
             var result = new StringResult();
 
             try
             {
-                var taskm = new TartozasokTask(sid, fi);
+                taskm.Setup(sid, fi);
                 taskm.Start();
                 result.Result = taskm._tasktoken;
             }
@@ -136,13 +136,14 @@ namespace ossServer.Controllers.Riport
         }
 
         [HttpPost]
-        public StringResult BeszerzesTaskStart([FromQuery] string sid, [FromBody] List<SzMT> fi)
+        public StringResult BeszerzesTaskStart([FromServices] BeszerzesTask taskm,
+            [FromQuery] string sid, [FromBody] List<SzMT> fi)
         {
             var result = new StringResult();
 
             try
             {
-                var taskm = new BeszerzesTask(sid, fi);
+                taskm.Setup(sid, fi);
                 taskm.Start();
                 result.Result = taskm._tasktoken;
             }
@@ -155,13 +156,14 @@ namespace ossServer.Controllers.Riport
         }
 
         [HttpPost]
-        public StringResult KeszletTaskStart([FromQuery] string sid, [FromBody] List<SzMT> fi)
+        public StringResult KeszletTaskStart([FromServices] KeszletTask taskm,
+            [FromQuery] string sid, [FromBody] List<SzMT> fi)
         {
             var result = new StringResult();
 
             try
             {
-                var taskm = new KeszletTask(sid, fi);
+                taskm.Setup(sid, fi);
                 taskm.Start();
                 result.Result = taskm._tasktoken;
             }
@@ -174,13 +176,14 @@ namespace ossServer.Controllers.Riport
         }
 
         [HttpPost]
-        public StringResult PenztarTetelTaskStart([FromQuery] string sid, [FromBody] List<SzMT> fi)
+        public StringResult PenztarTetelTaskStart([FromServices] PenztarTetelTask taskm,
+            [FromQuery] string sid, [FromBody] List<SzMT> fi)
         {
             var result = new StringResult();
 
             try
             {
-                var taskm = new PenztarTetelTask(sid, fi);
+                taskm.Setup(sid, fi);
                 taskm.Start();
                 result.Result = taskm._tasktoken;
             }
@@ -193,13 +196,14 @@ namespace ossServer.Controllers.Riport
         }
 
         [HttpPost]
-        public StringResult ProjektTaskStart([FromQuery] string sid, [FromBody] List<SzMT> fi)
+        public StringResult ProjektTaskStart([FromServices] ProjektTask taskm,
+            [FromQuery] string sid, [FromBody] List<SzMT> fi)
         {
             var result = new StringResult();
 
             try
             {
-                var taskm = new ProjektTask(sid, fi);
+                taskm.Setup(sid, fi);
                 taskm.Start();
                 result.Result = taskm._tasktoken;
             }

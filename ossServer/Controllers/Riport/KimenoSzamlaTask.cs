@@ -1,4 +1,5 @@
-﻿using ossServer.Models;
+﻿using Microsoft.Extensions.DependencyInjection;
+using ossServer.Models;
 using ossServer.Tasks;
 using ossServer.Utils;
 using System;
@@ -8,11 +9,18 @@ namespace ossServer.Controllers.Riport
 {
     public class KimenoSzamlaTask : ServerTaskBase
     {
-        private readonly DateTime _teljesitesKeltetol;
-        private readonly DateTime _teljesitesKelteig;
-
-        public KimenoSzamlaTask(string sid, List<SzMT> szmt) : base(sid)
+        private DateTime _teljesitesKeltetol;
+        private DateTime _teljesitesKelteig;
+        
+        public KimenoSzamlaTask(IServiceScopeFactory scopeFactory) : base(scopeFactory)
         {
+
+        }
+
+        public void Setup(string sid, List<SzMT> szmt)
+        {
+            _sid = sid;
+
             _teljesitesKeltetol = (DateTime)szmt[0].Minta;
             _teljesitesKelteig = (DateTime)szmt[1].Minta;
         }
@@ -21,26 +29,29 @@ namespace ossServer.Controllers.Riport
         {
             Exception exception = null;
 
-            using (var _context = new ossContext())
+            using (var scope = _scopeFactory.CreateScope())
             {
-                using (var tr = _context.Database.BeginTransaction())
-                    try
-                    {
-                        var result = new RiportBll().KimenoSzamla(_context, _sid,
-                            _teljesitesKeltetol, _teljesitesKelteig);
-
-                        tr.Commit();
-
-                        lock (_result)
+                using (var _context = scope.ServiceProvider.GetRequiredService<ossContext>())
+                {
+                    using (var tr = _context.Database.BeginTransaction())
+                        try
                         {
-                            _result.Result = result;
+                            var result = new RiportBll().KimenoSzamla(_context, _sid,
+                                _teljesitesKeltetol, _teljesitesKelteig);
+
+                            tr.Commit();
+
+                            lock (_result)
+                            {
+                                _result.Result = result;
+                            }
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        tr.Rollback();
-                        exception = ex;
-                    }
+                        catch (Exception ex)
+                        {
+                            tr.Rollback();
+                            exception = ex;
+                        }
+                }
             }
 
             return exception;

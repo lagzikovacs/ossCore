@@ -1,4 +1,5 @@
-﻿using ossServer.Enums;
+﻿using Microsoft.Extensions.DependencyInjection;
+using ossServer.Enums;
 using ossServer.Models;
 using ossServer.Tasks;
 using ossServer.Utils;
@@ -9,11 +10,18 @@ namespace ossServer.Controllers.BizonylatNyomtatas
 {
     public class BizonylatNyomtatasTask : ServerTaskBase
     {
-        private readonly int _bizonylatkod;
-        private readonly BizonylatNyomtatasTipus _nyomtatasTipus;
+        private int _bizonylatkod;
+        private BizonylatNyomtatasTipus _nyomtatasTipus;
 
-        public BizonylatNyomtatasTask(string sid, List<SzMT> szmt) : base(sid)
+        public BizonylatNyomtatasTask(IServiceScopeFactory scopeFactory) : base(scopeFactory)
         {
+
+        }
+
+        public void Setup(string sid, List<SzMT> szmt)
+        {
+            _sid = sid;
+
             _bizonylatkod = SzMTUtils.GetInt(szmt, Szempont.BizonylatKod);
             _nyomtatasTipus = SzMTUtils.GetBizonylatNyomtatasTipus(szmt, Szempont.NyomtatasTipus);
         }
@@ -22,26 +30,29 @@ namespace ossServer.Controllers.BizonylatNyomtatas
         {
             Exception exception = null;
 
-            using (var _context = new ossContext())
+            using (var scope = _scopeFactory.CreateScope())
             {
-                using (var tr = _context.Database.BeginTransaction())
-                    try
-                    {
-                        var result = BizonylatNyomtatasBll.Nyomtatas(_context, _sid, 
-                            _bizonylatkod, _nyomtatasTipus);
-
-                        tr.Commit();
-
-                        lock (_result)
+                using (var _context = new ossContext())
+                {
+                    using (var tr = _context.Database.BeginTransaction())
+                        try
                         {
-                            _result.Result = result;
+                            var result = BizonylatNyomtatasBll.Nyomtatas(_context, _sid,
+                                _bizonylatkod, _nyomtatasTipus);
+
+                            tr.Commit();
+
+                            lock (_result)
+                            {
+                                _result.Result = result;
+                            }
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        tr.Rollback();
-                        exception = ex;
-                    }
+                        catch (Exception ex)
+                        {
+                            tr.Rollback();
+                            exception = ex;
+                        }
+                }
             }
 
             return exception;

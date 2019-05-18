@@ -64,14 +64,14 @@ namespace ossServer.Controllers.BizonylatNyomtatas
         }
 
         [HttpPost]
-        public StringResult TaskStart([FromQuery] string sid,
-            [FromBody] List<SzMT> fi)
+        public StringResult TaskStart([FromServices] BizonylatNyomtatasTask taskm,
+            [FromQuery] string sid, [FromBody] List<SzMT> fi)
         {
             var result = new StringResult();
 
             try
             {
-                var taskm = new BizonylatNyomtatasTask(sid, fi);
+                taskm.Setup(sid, fi);
                 taskm.Start();
                 result.Result = taskm._tasktoken;
             }

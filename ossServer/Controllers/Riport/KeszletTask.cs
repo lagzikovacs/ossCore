@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
 using ossServer.Models;
 using ossServer.Tasks;
 using ossServer.Utils;
@@ -8,10 +9,17 @@ namespace ossServer.Controllers.Riport
 {
     public class KeszletTask : ServerTaskBase
     {
-        private readonly DateTime _idopont;
+        private DateTime _idopont;
 
-        public KeszletTask(string sid, List<SzMT> szmt) : base(sid)
+        public KeszletTask(IServiceScopeFactory scopeFactory) : base(scopeFactory)
         {
+            
+        }
+
+        public void Setup(string sid, List<SzMT> szmt)
+        {
+            _sid = sid;
+
             _idopont = (DateTime)szmt[0].Minta;
         }
 
@@ -19,26 +27,29 @@ namespace ossServer.Controllers.Riport
         {
             Exception exception = null;
 
-            using (var _context = new ossContext())
+            using (var scope = _scopeFactory.CreateScope())
             {
-                using (var tr = _context.Database.BeginTransaction())
-                    try
-                    {
-                        var result = new RiportBll().Keszlet(_context, _sid,
-                            _idopont);
-
-                        tr.Commit();
-
-                        lock (_result)
+                using (var _context = scope.ServiceProvider.GetRequiredService<ossContext>())
+                {
+                    using (var tr = _context.Database.BeginTransaction())
+                        try
                         {
-                            _result.Result = result;
+                            var result = new RiportBll().Keszlet(_context, _sid,
+                                _idopont);
+
+                            tr.Commit();
+
+                            lock (_result)
+                            {
+                                _result.Result = result;
+                            }
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        tr.Rollback();
-                        exception = ex;
-                    }
+                        catch (Exception ex)
+                        {
+                            tr.Rollback();
+                            exception = ex;
+                        }
+                }
             }
 
             return exception;

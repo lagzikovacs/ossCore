@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
 using ossServer.Models;
 using ossServer.Tasks;
 using ossServer.Utils;
@@ -8,12 +9,19 @@ namespace ossServer.Controllers.Riport
 {
     public class PenztarTetelTask : ServerTaskBase
     {
-        private readonly int _penztarKod;
-        private readonly DateTime _datumTol;
-        private readonly DateTime _datumIg;
+        private int _penztarKod;
+        private DateTime _datumTol;
+        private DateTime _datumIg;
 
-        public PenztarTetelTask(string sid, List<SzMT> szmt) : base(sid)
+        public PenztarTetelTask(IServiceScopeFactory scopeFactory) : base(scopeFactory)
         {
+
+        }
+
+        public void Setup(string sid, List<SzMT> szmt)
+        {
+            _sid = sid;
+
             _penztarKod = int.Parse(szmt[0].Minta.ToString());
             _datumTol = (DateTime)szmt[1].Minta;
             _datumIg = (DateTime)szmt[2].Minta;
@@ -23,26 +31,29 @@ namespace ossServer.Controllers.Riport
         {
             Exception exception = null;
 
-            using (var _context = new ossContext())
+            using (var scope = _scopeFactory.CreateScope())
             {
-                using (var tr = _context.Database.BeginTransaction())
-                    try
-                    {
-                        var result = new RiportBll().PenztarTetel(_context, _sid,
-                            _penztarKod, _datumTol, _datumIg);
-
-                        tr.Commit();
-
-                        lock (_result)
+                using (var _context = scope.ServiceProvider.GetRequiredService<ossContext>())
+                {
+                    using (var tr = _context.Database.BeginTransaction())
+                        try
                         {
-                            _result.Result = result;
+                            var result = new RiportBll().PenztarTetel(_context, _sid,
+                                _penztarKod, _datumTol, _datumIg);
+
+                            tr.Commit();
+
+                            lock (_result)
+                            {
+                                _result.Result = result;
+                            }
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        tr.Rollback();
-                        exception = ex;
-                    }
+                        catch (Exception ex)
+                        {
+                            tr.Rollback();
+                            exception = ex;
+                        }
+                }
             }
 
             return exception;

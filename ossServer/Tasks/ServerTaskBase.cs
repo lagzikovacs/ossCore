@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using ossServer.Models;
+﻿using Microsoft.Extensions.DependencyInjection;
 using ossServer.Utils;
 using System;
 using System.Threading;
@@ -8,15 +7,16 @@ namespace ossServer.Tasks
 {
     public abstract class ServerTaskBase
     {
-        internal string _sid { get; }
+        protected IServiceScopeFactory _scopeFactory;
+        internal string _sid { get; set; }
         internal string _tasktoken { get; }
         protected ServerTaskResult _result { get; set; }
         protected CancellationToken _cancellationtoken = new CancellationToken();
         protected bool _cancelled;
 
-        protected ServerTaskBase(string sid)
+        protected ServerTaskBase(IServiceScopeFactory scopeFactory)
         {
-            _sid = sid;
+            _scopeFactory = scopeFactory;
 
             _tasktoken = Guid.NewGuid().ToString("N");
             _result = new ServerTaskResult();
@@ -26,7 +26,7 @@ namespace ossServer.Tasks
         {
             ServerTaskManager.Add(_tasktoken, this);
 
-            System.Threading.Tasks.Task.Factory.StartNew(InternalRun, _cancellationtoken);
+            var t = System.Threading.Tasks.Task.Factory.StartNew(InternalRun, _cancellationtoken);
         }
 
         private void InternalRun()
