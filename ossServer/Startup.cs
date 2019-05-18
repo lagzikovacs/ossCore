@@ -52,6 +52,7 @@ namespace ossServer
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddJsonOptions(options => {
                     options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
+                    options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.IsoDateTimeConverter());
                     options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Include;
 
                     options.SerializerSettings.ContractResolver = new DefaultContractResolver { NamingStrategy = new OssNamingStrategy() };
