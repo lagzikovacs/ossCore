@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using ossServer.BaseResults;
 using ossServer.Models;
 using ossServer.Utils;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Dokumentum
 {
@@ -16,10 +15,12 @@ namespace ossServer.Controllers.Dokumentum
     public class DokumentumController : ControllerBase
     {
         private readonly ossContext _context;
+        private readonly IConfiguration _config;
 
-        public DokumentumController(ossContext context)
+        public DokumentumController(ossContext context, IConfiguration config)
         {
             _context = context;
+            _config = config;
         }
 
         [HttpPost]
@@ -254,8 +255,18 @@ namespace ossServer.Controllers.Dokumentum
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
+                    var entity = DokumentumBll.LetoltesPDF(_context, sid, dokumentumKod);
 
                     tr.Commit();
+
+                    try
+                    {
+                        result.Result = DokumentumBll.LetoltesPDFFajl(_config, entity);
+                    }
+                    catch (Exception ef)
+                    {
+                        result.Error = ef.InmostMessage();
+                    }
                 }
                 catch (Exception ex)
                 {

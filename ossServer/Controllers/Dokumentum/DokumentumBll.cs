@@ -1,4 +1,5 @@
-﻿using ossServer.Controllers.Csoport;
+﻿using Microsoft.Extensions.Configuration;
+using ossServer.Controllers.Csoport;
 using ossServer.Controllers.Particio;
 using ossServer.Controllers.Session;
 using ossServer.Controllers.Volume;
@@ -8,6 +9,10 @@ using ossServer.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using RestSharp;
+using Newtonsoft.Json;
+using ossServer.BaseResults;
+using System.Net;
 
 namespace ossServer.Controllers.Dokumentum
 {
@@ -274,63 +279,47 @@ namespace ossServer.Controllers.Dokumentum
             FeltoltesFajl(entityDokumentum, fajlBuf);
         }
 
-        public static byte[] LetoltesPDF(ossContext context, string sid, int dokumentumKod)
+        public static Models.Dokumentum LetoltesPDF(ossContext context, string sid, int dokumentumKod)
         {
-            return null;
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.IRAT);
 
-            //SessionBll.Check(context, sid);
-            //CsoportDal.Joge(context, JogKod.IRAT);
+            return Letoltes(context, sid, dokumentumKod);
+        }
 
-            //var entityDokumentum = Letoltes(context, dokumentumKod);
-            //var ext = entityDokumentum.Ext.ToLower();
-            //if (ext != ".xls" & ext != ".xlsx" & ext != ".doc" & ext != ".docx")
-            //    throw new Exception($"A(z) {ext} fájlok nem konvertálhatók!");
+        public static byte[] LetoltesPDFFajl(IConfiguration config, Models.Dokumentum entityDokumentum)
+        {
+            var ext = entityDokumentum.Ext.ToLower();
+            string act;
 
-            //context.Commit();
+            if (ext == ".xls" | ext == ".xlsx")
+                act = "exceltopdf";
+            else if (ext == ".doc" | ext == ".docx")
+                act = "wordtopdf";
+            else
+                throw new Exception($"A(z) {ext} fájlok nem konvertálhatók!");
 
-            //var fb = LetoltesFajl(entityDokumentum, 0, entityDokumentum.Meret);
+            var fb = LetoltesFajl(entityDokumentum, 0, entityDokumentum.Meret);
+            var op = new OfficeParam { Bytes = fb.b, Ext = ext };
 
-            //ExcelFile excel;
-            //Documentcontext word;
-            //byte[] result = new byte[0];
+            var url = config.GetValue<string>("OssOffice:url");
+            var client = new RestClient
+            {
+                BaseUrl = new Uri(url + "api/office/" + act)
+            };
 
-            //if (ext == ".xls" | ext == ".xlsx")
-            //{
-            //    using (var msExcel = new MemoryStream())
-            //    {
-            //        msExcel.Write(fb.b, 0, fb.b.Length);
-            //        msExcel.Position = 0;
-            //        if (ext == ".xls")
-            //            excel = ExcelFile.Load(msExcel, GemBox.Spreadsheet.LoadOptions.XlsDefault);
-            //        else
-            //            excel = ExcelFile.Load(msExcel, GemBox.Spreadsheet.LoadOptions.XlsxDefault);
-            //    }
-            //    using (var smPdf = new MemoryStream())
-            //    {
-            //        excel.Save(smPdf, )
-            //        excel.Save(smPdf, GemBox.Spreadsheet.SaveOptions.PdfDefault);
-            //        result = smPdf.ToArray();
-            //    }
-            //}
-            //if (ext == ".doc" | ext == ".docx")
-            //{
-            //    using (var msWord = new MemoryStream())
-            //    {
-            //        msWord.Write(fb.b, 0, fb.b.Length);
-            //        msWord.Position = 0;
-            //        if (ext == ".doc")
-            //            word = Documentcontext.Load(msWord, GemBox.Document.LoadOptions.DocDefault);
-            //        else
-            //            word = Documentcontext.Load(msWord, GemBox.Document.LoadOptions.DocxDefault);
-            //    }
-            //    using (var smPdf = new MemoryStream())
-            //    {
-            //        word.Save(smPdf, GemBox.Document.SaveOptions.PdfDefault);
-            //        result = smPdf.ToArray();
-            //    }
-            //}
+            var request = new RestRequest(Method.POST);
+            request.AddParameter(JsonConvert.SerializeObject(op), ParameterType.RequestBody);
 
-            //return result;
+            var response = client.Execute(request);
+            if (response.StatusCode != HttpStatusCode.OK)
+                throw new Exception(response.Content);
+
+                var result = JsonConvert.DeserializeObject<ByteArrayResult>(response.Content);
+            if (!string.IsNullOrEmpty(result.Error))
+                throw new Exception(result.Error);
+
+            return result.Result;
         }
     }
 }
