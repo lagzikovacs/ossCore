@@ -1,4 +1,5 @@
-﻿using ossServer.Controllers.Bizonylat;
+﻿using Microsoft.Extensions.Configuration;
+using ossServer.Controllers.Bizonylat;
 using ossServer.Controllers.Csoport;
 using ossServer.Controllers.Irat;
 using ossServer.Controllers.Particio;
@@ -8,16 +9,11 @@ using ossServer.Enums;
 using ossServer.Models;
 using ossServer.Utils;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ossServer.Controllers.BizonylatNyomtatas
 {
     public class BizonylatNyomtatasBll
     {
-        public static object Bl { get; private set; }
-
         public static int GetBizonylatEredetiPeldany(ossContext context)
         {
             var entityParticio = ParticioDal.Get(context);
@@ -48,7 +44,7 @@ namespace ossServer.Controllers.BizonylatNyomtatas
             BizonylatDal.Update(context, entity);
         }
 
-        public static byte[] Nyomtatas(ossContext context, string sid,
+        public static byte[] Nyomtatas(IConfiguration config, ossContext context, string sid,
             int bizonylatKod, BizonylatNyomtatasTipus nyomtatasTipus)
         {
             const string minta = "!!! MINTA !!!";
@@ -102,7 +98,7 @@ namespace ossServer.Controllers.BizonylatNyomtatas
                     break;
             }
 
-            return printer.Print();
+            return printer.Print(config);
         }
     }
 }

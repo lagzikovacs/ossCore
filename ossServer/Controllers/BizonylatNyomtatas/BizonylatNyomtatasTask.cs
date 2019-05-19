@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using ossServer.Enums;
 using ossServer.Models;
 using ossServer.Tasks;
@@ -32,27 +33,26 @@ namespace ossServer.Controllers.BizonylatNyomtatas
 
             using (var scope = _scopeFactory.CreateScope())
             {
-                using (var _context = new ossContext())
-                {
-                    using (var tr = _context.Database.BeginTransaction())
-                        try
-                        {
-                            var result = BizonylatNyomtatasBll.Nyomtatas(_context, _sid,
-                                _bizonylatkod, _nyomtatasTipus);
+                var _config = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+                var _context = scope.ServiceProvider.GetRequiredService<ossContext>();
+                using (var tr = _context.Database.BeginTransaction())
+                    try
+                    {
+                        var result = BizonylatNyomtatasBll.Nyomtatas(_config, _context, _sid,
+                            _bizonylatkod, _nyomtatasTipus);
 
-                            tr.Commit();
+                        tr.Commit();
 
-                            lock (_result)
-                            {
-                                _result.Result = result;
-                            }
-                        }
-                        catch (Exception ex)
+                        lock (_result)
                         {
-                            tr.Rollback();
-                            exception = ex;
+                            _result.Result = result;
                         }
-                }
+                    }
+                    catch (Exception ex)
+                    {
+                        tr.Rollback();
+                        exception = ex;
+                    }
             }
 
             return exception;

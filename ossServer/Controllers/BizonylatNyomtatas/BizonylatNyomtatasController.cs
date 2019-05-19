@@ -13,13 +13,6 @@ namespace ossServer.Controllers.BizonylatNyomtatas
     [ApiController]
     public class BizonylatNyomtatasController : ControllerBase
     {
-        private readonly ossContext _context;
-
-        public BizonylatNyomtatasController(ossContext context)
-        {
-            _context = context;
-        }
-
         [HttpPost]
         public RiportResult TaskCheck([FromQuery] string sid, [FromBody] string taskToken)
         {

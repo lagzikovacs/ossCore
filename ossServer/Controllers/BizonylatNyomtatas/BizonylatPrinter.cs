@@ -1,5 +1,7 @@
 ﻿using GemBox.Document;
 using GemBox.Document.Tables;
+using Microsoft.Extensions.Configuration;
+using ossServer.Controllers.Dokumentum;
 using ossServer.Enums;
 using ossServer.Utils;
 using System.Collections.Generic;
@@ -226,18 +228,18 @@ namespace ossServer.Controllers.BizonylatNyomtatas
             }
         }
 
-        public byte[] Print()
+        public byte[] Print(IConfiguration config)
         {
-            byte[] result;
+            var op = new OfficeParam { Ext = ".docx" };
 
             using (var msPdf = new MemoryStream())
             {
                 _outputDoc.Save(msPdf, SaveOptions.DocxDefault);
-                result = new byte[msPdf.Length];
-                msPdf.Read(result, 0, (int)msPdf.Length);
+                op.Bytes = new byte[msPdf.Length];
+                msPdf.Read(op.Bytes, 0, (int)msPdf.Length);
             }
 
-            return result;
+            return OfficeUtils.ToPdf(config, op);
         }
 
         public void Setup(Models.Bizonylat entityBizonylat, byte[] szamlakep, string fejlec, string verzio)

@@ -9,10 +9,6 @@ using ossServer.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using RestSharp;
-using Newtonsoft.Json;
-using ossServer.BaseResults;
-using System.Net;
 
 namespace ossServer.Controllers.Dokumentum
 {
@@ -289,37 +285,10 @@ namespace ossServer.Controllers.Dokumentum
 
         public static byte[] LetoltesPDFFajl(IConfiguration config, Models.Dokumentum entityDokumentum)
         {
-            var ext = entityDokumentum.Ext.ToLower();
-            string act;
-
-            if (ext == ".xls" | ext == ".xlsx")
-                act = "exceltopdf";
-            else if (ext == ".doc" | ext == ".docx")
-                act = "wordtopdf";
-            else
-                throw new Exception($"A(z) {ext} fájlok nem konvertálhatók!");
-
             var fb = LetoltesFajl(entityDokumentum, 0, entityDokumentum.Meret);
-            var op = new OfficeParam { Bytes = fb.b, Ext = ext };
+            var op = new OfficeParam { Bytes = fb.b, Ext = entityDokumentum.Ext.ToLower() };
 
-            var url = config.GetValue<string>("OssOffice:url");
-            var client = new RestClient
-            {
-                BaseUrl = new Uri(url + "api/office/" + act)
-            };
-
-            var request = new RestRequest(Method.POST);
-            request.AddParameter(JsonConvert.SerializeObject(op), ParameterType.RequestBody);
-
-            var response = client.Execute(request);
-            if (response.StatusCode != HttpStatusCode.OK)
-                throw new Exception(response.Content);
-
-                var result = JsonConvert.DeserializeObject<ByteArrayResult>(response.Content);
-            if (!string.IsNullOrEmpty(result.Error))
-                throw new Exception(result.Error);
-
-            return result.Result;
+            return OfficeUtils.ToPdf(config, op);
         }
     }
 }
