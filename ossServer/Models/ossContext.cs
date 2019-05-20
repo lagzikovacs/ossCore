@@ -60,7 +60,7 @@ namespace ossServer.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=94.199.180.128, 50000;Database=oss;User ID=gsg;Password=san1man0;MultipleActiveResultSets=True");
+                optionsBuilder.UseSqlServer("Server=94.199.180.128, 50000;Database=oss;User ID=gsg;Password=san1man0;");
             }
         }
 
@@ -1842,6 +1842,8 @@ namespace ossServer.Models
                 entity.Property(e => e.ProjektAjanlatIratkod).HasColumnName("PROJEKT_AJANLAT_IRATKOD");
 
                 entity.Property(e => e.ProjektElegedettsegifelmeresIratkod).HasColumnName("PROJEKT_ELEGEDETTSEGIFELMERES_IRATKOD");
+
+                entity.Property(e => e.ProjektFeltetelesszerzodesIratkod).HasColumnName("PROJEKT_FELTETELESSZERZODES_IRATKOD");
 
                 entity.Property(e => e.ProjektKeszrejelentesDemaszIratkod).HasColumnName("PROJEKT_KESZREJELENTES_DEMASZ_IRATKOD");
 

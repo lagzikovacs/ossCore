@@ -62,7 +62,7 @@ namespace ossServer.Controllers.Iratminta
             return result;
         }
 
-        public static byte[] KeszrejelentesDemasz(ossContext context, string sid, int projektKod)
+        public static byte[] KeszrejelentesNkm(ossContext context, string sid, int projektKod)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PROJEKT);
@@ -304,7 +304,62 @@ namespace ossServer.Controllers.Iratminta
 
             return result;
         }
+        public static byte[] FeltetelesSzerzodes(ossContext context, string sid, int projektKod)
+        {
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.PROJEKT);
 
+            var entityProjekt = ProjektDal.Get(context, projektKod);
+            var entityParticio = ParticioDal.Get(context);
+            var iratKod = entityParticio.ProjektFeltetelesszerzodesIratkod != null ?
+              (int)entityParticio.ProjektFeltetelesszerzodesIratkod : throw new Exception(string.Format(Messages.ParticioHiba, "ProjektFeltetelesszerzodesIratkod"));
+            var original = IratBll.Letoltes(context, sid, iratKod);
+
+            NumberFormatInfo nfi = new CultureInfo("hu-HU", false).NumberFormat;
+            nfi.NumberGroupSeparator = ".";
+
+            var arNetto = entityProjekt.Vallalasiarnetto;
+            var elolegNetto = (int)(arNetto * (decimal)0.7) / 1000 * 1000;
+
+            ComponentInfo.SetLicense(serialKey);
+
+            DocumentModel document;
+            using (var msDocx = new MemoryStream())
+            {
+                msDocx.Write(original.b, 0, original.b.Count());
+                document = DocumentModel.Load(msDocx, GemBox.Document.LoadOptions.DocxDefault);
+            }
+
+            var mezoertekek = new
+            {
+                UGYFELNEV = entityProjekt.UgyfelkodNavigation.Nev,
+                UGYFELCIM = UgyfelBll.Cim(entityProjekt.UgyfelkodNavigation),
+                TELEFONSZAM = entityProjekt.UgyfelkodNavigation.Telefon,
+                DC = entityProjekt.Dckw.ToString(CultureInfo.CurrentCulture),
+                NAPELEM = entityProjekt.Napelem,
+                INVERTER = entityProjekt.Inverter,
+                TELEPITESICIM = entityProjekt.Telepitesicim,
+                KIVITELEZESIHATARIDO = entityProjekt.Kivitelezesihatarido.Value.ToLongDateString(),
+                MUNKATERULETATADASA = DateTime.Now.Date.AddDays(1).ToLongDateString(),
+                ARNETTO = (arNetto - 65000).ToString("#,#", nfi),
+                ARBRUTTO = Calc.RealRound((arNetto - 65000) * (decimal)1.27, 1m).ToString("#,#", nfi),
+                ELOLEGNETTO = elolegNetto.ToString("#,#", nfi),
+                ELOLEGBRUTTO = Calc.RealRound(elolegNetto * (decimal)1.27, 1m).ToString("#,#", nfi),
+                DATUM = DateTime.Now.Date.ToLongDateString()
+            };
+
+            document.MailMerge.Execute(mezoertekek);
+
+            byte[] result;
+
+            using (var msDocx = new MemoryStream())
+            {
+                document.Save(msDocx, GemBox.Document.SaveOptions.DocxDefault);
+                result = msDocx.ToArray();
+            }
+
+            return result;
+        }
         public static byte[] Szerzodes(ossContext context, string sid, int projektKod)
         {
             SessionBll.Check(context, sid);

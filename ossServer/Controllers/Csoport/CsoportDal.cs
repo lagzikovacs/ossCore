@@ -126,6 +126,10 @@ namespace ossServer.Controllers.Csoport
 
         public static void Joge(ossContext context, JogKod jogKod)
         {
+            // TODO upgrade után kivenni
+            if (jogKod == JogKod.BIZONYLAT)
+                return;
+
             if (Joge(context, jogKod.ToString()) == 0)
                 throw new Exception("Hm... acces denied!");
         }

@@ -43,6 +43,7 @@
         public int? ProjektMunkalapIratkod { get; set; }
         public int? ProjektSzallitasiszerzodesIratkod { get; set; }
         public int? ProjektSzerzodesIratkod { get; set; }
+        public int? ProjektFeltetelesszerzodesIratkod { get; set; }
         public int? VolumeUjvolumeMaxmeret { get; set; }
         public string VolumeUjvolumeEleresiut { get; set; }
 

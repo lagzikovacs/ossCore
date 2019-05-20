@@ -40,7 +40,7 @@ namespace ossServer.Controllers.Iratminta
         }
 
         [HttpPost]
-        public async Task<ByteArrayResult> KeszrejelentesDemasz([FromQuery] string sid, 
+        public async Task<ByteArrayResult> KeszrejelentesNkm([FromQuery] string sid, 
             [FromBody] int projektKod)
         {
             var result = new ByteArrayResult();
@@ -48,7 +48,7 @@ namespace ossServer.Controllers.Iratminta
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = IratmintaBll.KeszrejelentesDemasz(_context, sid, projektKod);
+                    result.Result = IratmintaBll.KeszrejelentesNkm(_context, sid, projektKod);
 
                     tr.Commit();
                 }
@@ -136,6 +136,28 @@ namespace ossServer.Controllers.Iratminta
                 try
                 {
                     result.Result = IratmintaBll.SzallitasiSzerzodes(_context, sid, projektKod);
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
+        }
+
+        [HttpPost]
+        public async Task<ByteArrayResult> FeltetelesSzerzodes([FromQuery] string sid,
+            [FromBody] int projektKod)
+        {
+            var result = new ByteArrayResult();
+
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    result.Result = IratmintaBll.FeltetelesSzerzodes(_context, sid, projektKod);
 
                     tr.Commit();
                 }
