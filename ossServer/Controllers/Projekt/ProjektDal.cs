@@ -15,7 +15,7 @@ namespace ossServer.Controllers.Projekt
         {
             var qry = context.Projekt.AsNoTracking()
               .Include(r => r.PenznemkodNavigation)
-              .Include(r1 => r1.UgyfelkodNavigation)
+              .Include(r1 => r1.UgyfelkodNavigation).ThenInclude(r => r.HelysegkodNavigation)
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod);
 
             if (statusz != 0)
@@ -196,7 +196,7 @@ namespace ossServer.Controllers.Projekt
         {
             var result = context.Projekt
               .Include(r => r.PenznemkodNavigation)
-              .Include(r1 => r1.UgyfelkodNavigation)
+              .Include(r1 => r1.UgyfelkodNavigation).ThenInclude(r => r.HelysegkodNavigation)
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.Projektkod == pKey).ToList();
             if (result.Count != 1)

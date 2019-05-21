@@ -288,7 +288,7 @@ namespace ossServer.Controllers.Riport
         public static List<Models.Projekt> Projekt(ossContext context, int statusz)
         {
             var qry = context.Projekt.AsNoTracking()
-                .Include(r => r.UgyfelkodNavigation)
+                .Include(r => r.UgyfelkodNavigation).ThenInclude(r => r.HelysegkodNavigation)
                 .Where(s => s.Particiokod == context.CurrentSession.Particiokod);
 
             if (statusz != 0)
