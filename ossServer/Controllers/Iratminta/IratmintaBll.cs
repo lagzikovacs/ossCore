@@ -343,8 +343,6 @@ namespace ossServer.Controllers.Iratminta
                 MUNKATERULETATADASA = DateTime.Now.Date.AddDays(1).ToLongDateString(),
                 ARNETTO = (arNetto - 65000).ToString("#,#", nfi),
                 ARBRUTTO = Calc.RealRound((arNetto - 65000) * (decimal)1.27, 1m).ToString("#,#", nfi),
-                ELOLEGNETTO = elolegNetto.ToString("#,#", nfi),
-                ELOLEGBRUTTO = Calc.RealRound(elolegNetto * (decimal)1.27, 1m).ToString("#,#", nfi),
                 DATUM = DateTime.Now.Date.ToLongDateString()
             };
 

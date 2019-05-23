@@ -1,9 +1,13 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using ossServer.Controllers.Bizonylat;
 using ossServer.Controllers.Csoport;
+using ossServer.Controllers.Dokumentum;
+using ossServer.Controllers.Irat;
 using ossServer.Controllers.Logon;
 using ossServer.Controllers.Projekt;
+using ossServer.Controllers.ProjektKapcsolat;
 using ossServer.Controllers.Session;
 using ossServer.Controllers.Ugyfel;
 using ossServer.Controllers.UgyfelterLog;
@@ -115,10 +119,11 @@ namespace ossServer.Controllers.Ugyfelter
 
             result.ugyfelDto = UgyfelBll.Get(context, result.sid, up.Ugyfelkod);
 
-            result.projektDto = ProjektBll.Select(context, result.sid, 0, int.MaxValue, 0,
+            result.lstProjektDto = ProjektBll.Select(context, result.sid, 0, int.MaxValue, 0,
                 new List<SzMT> { new SzMT { Szempont = Szempont.UgyfelKod, Minta = up.Ugyfelkod.ToString() } }, out _);
 
             return result;
         }
     }
 }
+
