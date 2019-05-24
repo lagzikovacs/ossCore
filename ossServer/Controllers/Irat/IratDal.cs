@@ -110,7 +110,7 @@ namespace ossServer.Controllers.Irat
         {
             var result = context.Irat
               .Include(r => r.IrattipuskodNavigation)
-              .Include(r1 => r1.UgyfelkodNavigation)
+              .Include(r1 => r1.UgyfelkodNavigation).ThenInclude(r => r.HelysegkodNavigation)
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.Iratkod == pKey)
               .ToList();

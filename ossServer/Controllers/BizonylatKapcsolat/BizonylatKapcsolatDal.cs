@@ -29,6 +29,7 @@ namespace ossServer.Controllers.BizonylatKapcsolat
         internal static Models.Bizonylatkapcsolat Get(ossContext context, int pKey)
         {
             var result = context.Bizonylatkapcsolat
+                .Include(r => r.IratkodNavigation).ThenInclude(r => r.IrattipuskodNavigation)
                 .Where(s => s.Bizonylatkapcsolatkod == pKey)
                 .ToList();
             if (result.Count != 1)
