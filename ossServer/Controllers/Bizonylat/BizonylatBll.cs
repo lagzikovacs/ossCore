@@ -285,6 +285,7 @@ namespace ossServer.Controllers.Bizonylat
             //beírni a bizonylatkódot a tételbe-áfába-termékdíjba
             foreach (var l in complexDto.LstTetelDto)
             {
+                l.Bizonylattetelkod = 0;
                 l.Bizonylatkod = bizonylatKod;
 
                 var entityTetel = ObjectUtils.Convert<BizonylatTetelDto, Models.Bizonylattetel>(l);
@@ -292,6 +293,7 @@ namespace ossServer.Controllers.Bizonylat
             }
             foreach (var l in complexDto.LstAfaDto)
             {
+                l.Bizonylatafakod = 0;
                 l.Bizonylatkod = bizonylatKod;
 
                 var entityAfa = ObjectUtils.Convert<BizonylatAfaDto, Models.Bizonylatafa>(l);
@@ -299,6 +301,7 @@ namespace ossServer.Controllers.Bizonylat
             }
             foreach (var l in complexDto.LstTermekdijDto)
             {
+                l.Bizonylattermekdijkod = 0;
                 l.Bizonylatkod = bizonylatKod;
 
                 var entityTermekdij = ObjectUtils.Convert<BizonylatTermekdijDto, Models.Bizonylattermekdij>(l);
