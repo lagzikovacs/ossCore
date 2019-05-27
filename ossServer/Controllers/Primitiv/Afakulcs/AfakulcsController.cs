@@ -167,5 +167,47 @@ namespace ossServer.Controllers.Primitiv.Afakulcs
 
             return result;
         }
+
+        [HttpPost]
+        public async Task<ColumnSettingsResult> GridSettings([FromQuery] string sid)
+        {
+            var result = new ColumnSettingsResult();
+
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    result.Result = AfakulcsBll.GridSettings(_context, sid);
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
+        }
+
+        [HttpPost]
+        public async Task<ColumnSettingsResult> ReszletekSettings([FromQuery] string sid)
+        {
+            var result = new ColumnSettingsResult();
+
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    result.Result = AfakulcsBll.ReszletekSettings(_context, sid);
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
+        }
     }
 }
