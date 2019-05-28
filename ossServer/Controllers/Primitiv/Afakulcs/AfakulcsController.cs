@@ -169,7 +169,7 @@ namespace ossServer.Controllers.Primitiv.Afakulcs
         }
 
         [HttpPost]
-        public async Task<ColumnSettingsResult> GridSettings([FromQuery] string sid)
+        public async Task<ColumnSettingsResult> GetGridSettings([FromQuery] string sid)
         {
             var result = new ColumnSettingsResult();
 
@@ -190,7 +190,7 @@ namespace ossServer.Controllers.Primitiv.Afakulcs
         }
 
         [HttpPost]
-        public async Task<ColumnSettingsResult> ReszletekSettings([FromQuery] string sid)
+        public async Task<ColumnSettingsResult> GetReszletekSettings([FromQuery] string sid)
         {
             var result = new ColumnSettingsResult();
 
