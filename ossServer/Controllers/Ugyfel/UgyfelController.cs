@@ -154,7 +154,7 @@ namespace ossServer.Controllers.Ugyfel
                 try
                 {
                     result.Result = UgyfelBll.Select(_context, sid, par.RekordTol, par.LapMeret, 
-                        par.Fi, out var osszesRekord);
+                        par.Csoport, par.Fi, out var osszesRekord);
                     result.OsszesRekord = osszesRekord;
 
                     tr.Commit();

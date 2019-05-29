@@ -5,30 +5,48 @@ using ossServer.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Ugyfel
 {
     public class UgyfelDal
     {
-        public static IOrderedQueryable<Models.Ugyfel> GetQuery(ossContext context, List<SzMT> szmt)
+        public static IOrderedQueryable<Models.Ugyfel> GetQuery(ossContext context, 
+            int csoport, List<SzMT> szmt)
         {
             var qry = context.Ugyfel.AsNoTracking()
               .Include(r => r.HelysegkodNavigation)
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod);
 
+            if (csoport != 0)
+                qry = qry.Where(s => s.Csoport == csoport);
+
             foreach (var f in szmt)
             {
                 switch (f.Szempont)
                 {
-                    case Szempont.Hirlevel:
-                        qry = qry.Where(s => s.Hirlevel);
-                        break;
                     case Szempont.Nev:
                         qry = qry.Where(s => s.Nev.Contains((string)f.Minta));
                         break;
+                    case Szempont.Ceg:
+                        qry = qry.Where(s => s.Ceg.Contains((string)f.Minta));
+                        break;
+                    case Szempont.Beosztas:
+                        qry = qry.Where(s => s.Beosztas.Contains((string)f.Minta));
+                        break;
+                    case Szempont.Telepules:
+                        qry = qry.Where(s => s.HelysegkodNavigation.Helysegnev.Contains((string)f.Minta));
+                        break;
+                    case Szempont.UgyfelTelefonszam:
+                        qry = qry.Where(s => s.Telefon.Contains((string)f.Minta));
+                        break;
                     case Szempont.UgyfelEmail:
                         qry = qry.Where(s => s.Email.Contains((string)f.Minta));
+                        break;
+                    case Szempont.Egyeblink:
+                        qry = qry.Where(s => s.Egyeblink.Contains((string)f.Minta));
+                        break;
+                    case Szempont.Ajanlo:
+                        qry = qry.Where(s => s.Ajanlotta.Contains((string)f.Minta));
                         break;
                     default:
                         throw new Exception($"Lekezeletlen {f.Szempont} Szempont!");
@@ -40,13 +58,29 @@ namespace ossServer.Controllers.Ugyfel
             {
                 switch (f.Szempont)
                 {
-                    case Szempont.Hirlevel:
-                        break;
                     case Szempont.Nev:
                         qry = elsoSorrend ? qry.OrderBy(s => s.Nev) : ((IOrderedQueryable<Models.Ugyfel>)qry).ThenBy(s => s.Nev);
                         break;
+                    case Szempont.Ceg:
+                        qry = elsoSorrend ? qry.OrderBy(s => s.Ceg) : ((IOrderedQueryable<Models.Ugyfel>)qry).ThenBy(s => s.Ceg);
+                        break;
+                    case Szempont.Beosztas:
+                        qry = elsoSorrend ? qry.OrderBy(s => s.Beosztas) : ((IOrderedQueryable<Models.Ugyfel>)qry).ThenBy(s => s.Beosztas);
+                        break;
+                    case Szempont.Telepules:
+                        qry = elsoSorrend ? qry.OrderBy(s => s.HelysegkodNavigation.Helysegnev) : ((IOrderedQueryable<Models.Ugyfel>)qry).ThenBy(s => s.HelysegkodNavigation.Helysegnev);
+                        break;
+                    case Szempont.UgyfelTelefonszam:
+                        qry = elsoSorrend ? qry.OrderBy(s => s.Telefon) : ((IOrderedQueryable<Models.Ugyfel>)qry).ThenBy(s => s.Telefon);
+                        break;
                     case Szempont.UgyfelEmail:
                         qry = elsoSorrend ? qry.OrderBy(s => s.Email) : ((IOrderedQueryable<Models.Ugyfel>)qry).ThenBy(s => s.Email);
+                        break;
+                    case Szempont.Egyeblink:
+                        qry = elsoSorrend ? qry.OrderBy(s => s.Egyeblink) : ((IOrderedQueryable<Models.Ugyfel>)qry).ThenBy(s => s.Egyeblink);
+                        break;
+                    case Szempont.Ajanlo:
+                        qry = elsoSorrend ? qry.OrderBy(s => s.Ajanlotta) : ((IOrderedQueryable<Models.Ugyfel>)qry).ThenBy(s => s.Ajanlotta);
                         break;
                     default:
                         throw new Exception($"Lekezeletlen {f.Szempont} Szempont!");

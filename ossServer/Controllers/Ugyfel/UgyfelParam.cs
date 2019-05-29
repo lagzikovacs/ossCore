@@ -7,6 +7,7 @@ namespace ossServer.Controllers.Ugyfel
     {
         public int RekordTol { get; set; }
         public int LapMeret { get; set; }
+        public int Csoport { get; set; }
         public List<SzMT> Fi { get; set; }
     }
 }

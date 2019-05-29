@@ -85,13 +85,13 @@ namespace ossServer.Controllers.Ugyfel
             return result;
         }
 
-        public static List<UgyfelDto> Select(ossContext context, string sid, int rekordTol, int lapMeret, 
-            List<SzMT> szmt, out int osszesRekord)
+        public static List<UgyfelDto> Select(ossContext context, string sid, int rekordTol, int lapMeret,
+            int csoport, List<SzMT> szmt, out int osszesRekord)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.UGYFELEK);
 
-            var qry = UgyfelDal.GetQuery(context, szmt);
+            var qry = UgyfelDal.GetQuery(context, csoport, szmt);
             osszesRekord = qry.Count();
             var entities = qry.Skip(rekordTol).Take(lapMeret).ToList();
             var result = new List<UgyfelDto>();

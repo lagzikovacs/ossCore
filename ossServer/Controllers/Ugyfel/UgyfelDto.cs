@@ -22,6 +22,7 @@ namespace ossServer.Controllers.Ugyfel
         public string Telefon { get; set; }
         public string Email { get; set; }
         public string Egyeblink { get; set; }
+        public string Ajanlotta { get; set; }
         public string Megjegyzes { get; set; }
         public bool Vasarolt { get; set; }
         public bool Hirlevel { get; set; }
