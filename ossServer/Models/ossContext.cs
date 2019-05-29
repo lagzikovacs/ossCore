@@ -2711,6 +2711,23 @@ namespace ossServer.Models
                     .HasMaxLength(20)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Beosztas)
+                    .HasColumnName("BEOSZTAS")
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Ceg)
+                    .HasColumnName("CEG")
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Csoport).HasColumnName("CSOPORT");
+
+                entity.Property(e => e.Egyeblink)
+                    .HasColumnName("EGYEBLINK")
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Email)
                     .HasColumnName("EMAIL")
                     .HasMaxLength(50)

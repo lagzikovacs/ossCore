@@ -16,7 +16,10 @@ namespace ossServer.Models
 
         public int Ugyfelkod { get; set; }
         public int Particiokod { get; set; }
+        public int Csoport { get; set; }
         public string Nev { get; set; }
+        public string Ceg { get; set; }
+        public string Beosztas { get; set; }
         public string Iranyitoszam { get; set; }
         public int? Helysegkod { get; set; }
         public string Utcahazszam { get; set; }
@@ -27,6 +30,7 @@ namespace ossServer.Models
         public string Euadoszam { get; set; }
         public string Telefon { get; set; }
         public string Email { get; set; }
+        public string Egyeblink { get; set; }
         public string Megjegyzes { get; set; }
         public bool Vasarolt { get; set; }
         public bool Hirlevel { get; set; }

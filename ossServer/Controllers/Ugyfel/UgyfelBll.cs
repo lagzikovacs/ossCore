@@ -25,7 +25,9 @@ namespace ossServer.Controllers.Ugyfel
         public static UgyfelDto CreateNew(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
-            return new UgyfelDto();
+            CsoportDal.Joge(context, JogKod.UGYFELEKMOD);
+
+            return new UgyfelDto { Csoport = 0 };
         }
 
         public static void Delete(ossContext context, string sid, UgyfelDto dto)
