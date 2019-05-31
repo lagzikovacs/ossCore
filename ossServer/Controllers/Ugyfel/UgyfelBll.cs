@@ -6,6 +6,7 @@ using ossServer.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Ugyfel
@@ -122,5 +123,23 @@ namespace ossServer.Controllers.Ugyfel
 
             UgyfelDal.ZoomCheck(context, ugyfelkod, ugyfel);
         }
+
+        // TODO
+        public static string vCard(ossContext context, string sid, int ugyfelkod)
+        {
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.UGYFELEK);
+
+            var entity = UgyfelDal.Get(context, ugyfelkod);
+
+            var b = new StringBuilder();
+            b.Append("BEGIN:VCARD\r\nVERSION:2.1\r\n");
+            b.Append("FN;ENCODING=QUOTED-PRINTABLE;CHARSET=utf-8:").Append(entity.Nev).Append("\r\n");
+            b.Append("N;ENCODING=QUOTED-PRINTABLE;CHARSET=utf-8:").Append(entity.Nev).Append(";;;\r\n");
+            b.Append("END:VCARD\r\n");
+
+            return b.ToString();
+        }
     }
 }
+

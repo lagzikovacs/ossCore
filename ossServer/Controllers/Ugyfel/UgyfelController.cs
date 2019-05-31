@@ -188,5 +188,26 @@ namespace ossServer.Controllers.Ugyfel
 
             return result;
         }
+
+        [HttpPost]
+        public async Task<StringResult> vCard([FromQuery] string sid, [FromBody] int key)
+        {
+            var result = new StringResult();
+
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    result.Result = UgyfelBll.vCard(_context, sid, key);
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
+        }
     }
 }
