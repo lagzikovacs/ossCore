@@ -48,6 +48,11 @@ namespace ossServer.Controllers.Ugyfel
                     case Szempont.Ajanlo:
                         qry = qry.Where(s => s.Ajanlotta.Contains((string)f.Minta));
                         break;
+                    case Szempont.Kod:
+                        qry = int.TryParse((string)f.Minta, out var ugyfelKod)
+                          ? qry.Where(s => s.Ugyfelkod <= ugyfelKod)
+                          : qry.Where(s => s.Ugyfelkod >= 0);
+                        break;
                     default:
                         throw new Exception($"Lekezeletlen {f.Szempont} Szempont!");
                 }
@@ -81,6 +86,11 @@ namespace ossServer.Controllers.Ugyfel
                         break;
                     case Szempont.Ajanlo:
                         qry = elsoSorrend ? qry.OrderBy(s => s.Ajanlotta) : ((IOrderedQueryable<Models.Ugyfel>)qry).ThenBy(s => s.Ajanlotta);
+                        break;
+                    case Szempont.Kod:
+                        qry = elsoSorrend
+                          ? (qry).OrderByDescending(s => s.Ugyfelkod)
+                          : ((IOrderedQueryable<Models.Ugyfel>)qry).ThenByDescending(s => s.Ugyfelkod);
                         break;
                     default:
                         throw new Exception($"Lekezeletlen {f.Szempont} Szempont!");
