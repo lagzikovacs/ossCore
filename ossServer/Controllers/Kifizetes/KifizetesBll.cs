@@ -80,5 +80,33 @@ namespace ossServer.Controllers.Kifizetes
             ObjectUtils.Update(dto, entity);
             return KifizetesDal.Update(context, entity);
         }
+
+        private static List<ColumnSettings> BaseColumns()
+        {
+            return new List<ColumnSettings>
+            {
+                new ColumnSettings {Name="Kifizeteskod", Title = "Id", Type = ColumnType.INT },
+                new ColumnSettings {Name="Datum", Title = "Dátum", Type = ColumnType.DATE },
+                new ColumnSettings {Name="Osszeg", Title = "Összeg", Type = ColumnType.NUMBER },
+                new ColumnSettings {Name="Penznem", Title = "Pénznem", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Fizetesimod", Title = "Fizetési mód", Type = ColumnType.STRING },
+            };
+        }
+
+        public static List<ColumnSettings> GridSettings(ossContext context, string sid)
+        {
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.PRIMITIVEK);
+
+            return BaseColumns();
+        }
+
+        public static List<ColumnSettings> ReszletekSettings(ossContext context, string sid)
+        {
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.PRIMITIVEK);
+
+            return ColumnSettingsUtil.AddIdobelyeg(BaseColumns());
+        }
     }
 }
