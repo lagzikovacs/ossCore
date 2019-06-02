@@ -1,4 +1,4 @@
-﻿namespace ossServer.Utils
+﻿namespace ossServer.Enums
 {
     public enum ColumnType
     {
@@ -6,6 +6,7 @@
         NUMBER = 1,
         STRING = 2,
         DATE = 3,
-        DATETIME = 4
+        DATETIME = 4,
+        BOOL = 5
     }
 }

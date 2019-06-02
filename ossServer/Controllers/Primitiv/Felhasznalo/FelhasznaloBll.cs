@@ -101,5 +101,36 @@ namespace ossServer.Controllers.Primitiv.Felhasznalo
             entity.Jelszo = ujJelszo;
             FelhasznaloDal.Update(context, entity);
         }
+
+        private static List<ColumnSettings> BaseColumns()
+        {
+            return new List<ColumnSettings>
+            {
+                new ColumnSettings {Name="Felhasznalokod", Title = "Id", Type = ColumnType.INT },
+                new ColumnSettings {Name="Azonosito", Title = "Azonosító", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Nev", Title = "Név", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Telefon", Title = "Telefon", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Email", Title = "E-mail", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Statusz", Title = "Státusz", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Statuszkelte", Title = "A státusz kelte", Type = ColumnType.DATE },
+                new ColumnSettings {Name="Logonlog", Title = "Log", Type = ColumnType.BOOL },
+            };
+        }
+
+        public static List<ColumnSettings> GridSettings(ossContext context, string sid)
+        {
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.PRIMITIVEK);
+
+            return BaseColumns();
+        }
+
+        public static List<ColumnSettings> ReszletekSettings(ossContext context, string sid)
+        {
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.PRIMITIVEK);
+
+            return ColumnSettingsUtil.AddIdobelyeg(BaseColumns());
+        }
     }
 }
