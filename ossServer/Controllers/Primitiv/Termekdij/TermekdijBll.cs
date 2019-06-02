@@ -79,9 +79,10 @@ namespace ossServer.Controllers.Primitiv.Termekdij
         {
             return new List<ColumnSettings>
             {
-                new ColumnSettings {Name="Afakulcskod", Title = "Id", Type = ColumnType.INT },
-                new ColumnSettings {Name="Afakulcs1", Title = "ÁFA kulcs", Type = ColumnType.STRING },
-                new ColumnSettings {Name="Afamerteke", Title = "ÁFA mértéke, %", Type = ColumnType.NUMBER },
+                new ColumnSettings {Name="Termekdijkod", Title = "Id", Type = ColumnType.INT },
+                new ColumnSettings {Name="Termekdijkt", Title = "Termékdíj KT", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Termekdijmegnevezes", Title = "Termékdíj megnevezés", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Termekdijegysegar", Title = "Termékdíj egységár", Type = ColumnType.NUMBER },
             };
         }
 

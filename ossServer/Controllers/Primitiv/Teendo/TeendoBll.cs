@@ -79,9 +79,8 @@ namespace ossServer.Controllers.Primitiv.Teendo
         {
             return new List<ColumnSettings>
             {
-                new ColumnSettings {Name="Afakulcskod", Title = "Id", Type = ColumnType.INT },
-                new ColumnSettings {Name="Afakulcs1", Title = "ÁFA kulcs", Type = ColumnType.STRING },
-                new ColumnSettings {Name="Afamerteke", Title = "ÁFA mértéke, %", Type = ColumnType.NUMBER },
+                new ColumnSettings {Name="Teendokod", Title = "Id", Type = ColumnType.INT },
+                new ColumnSettings {Name="Teendo1", Title = "Teendő", Type = ColumnType.STRING },
             };
         }
 
