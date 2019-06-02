@@ -157,5 +157,30 @@ namespace ossServer.Controllers.Csoport
 
             return result;
         }
+
+        private static List<ColumnSettings> BaseColumns()
+        {
+            return new List<ColumnSettings>
+            {
+                new ColumnSettings {Name="Csoportkod", Title = "Id", Type = ColumnType.INT },
+                new ColumnSettings {Name="Csoport1", Title = "Csoport", Type = ColumnType.STRING },
+            };
+        }
+
+        public static List<ColumnSettings> GridSettings(ossContext context, string sid)
+        {
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.PRIMITIVEK);
+
+            return BaseColumns();
+        }
+
+        public static List<ColumnSettings> ReszletekSettings(ossContext context, string sid)
+        {
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.PRIMITIVEK);
+
+            return ColumnSettingsUtil.AddIdobelyeg(BaseColumns());
+        }
     }
 }

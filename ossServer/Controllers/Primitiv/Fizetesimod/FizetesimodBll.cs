@@ -79,7 +79,7 @@ namespace ossServer.Controllers.Primitiv.Fizetesimod
         {
             return new List<ColumnSettings>
             {
-                new ColumnSettings {Name="Fizezesimodkod", Title = "Id", Type = ColumnType.INT },
+                new ColumnSettings {Name="Fizetesimodkod", Title = "Id", Type = ColumnType.INT },
                 new ColumnSettings {Name="Fizetesimod1", Title = "Fizetési mód", Type = ColumnType.STRING },
             };
         }
