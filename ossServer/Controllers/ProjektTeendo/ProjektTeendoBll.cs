@@ -82,5 +82,33 @@ namespace ossServer.Controllers.ProjektTeendo
             ObjectUtils.Update(dto, entity);
             return ProjektTeendoDal.Update(context, entity);
         }
+
+        private static List<ColumnSettings> BaseColumns()
+        {
+            return new List<ColumnSettings>
+            {
+                new ColumnSettings {Name="Dedikalva", Title = "Dedikálva", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Hatarido", Title = "Határidő", Type = ColumnType.DATE },
+                new ColumnSettings {Name="Elvegezve", Title = "Elvégezve", Type = ColumnType.DATE },
+                new ColumnSettings {Name="Teendo", Title = "Teendő", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Leiras", Title = "Leirás", Type = ColumnType.STRING },
+            };
+        }
+
+        public static List<ColumnSettings> GridSettings(ossContext context, string sid)
+        {
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.PRIMITIVEK);
+
+            return BaseColumns();
+        }
+
+        public static List<ColumnSettings> ReszletekSettings(ossContext context, string sid)
+        {
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.PRIMITIVEK);
+
+            return ColumnSettingsUtil.AddIdobelyeg(BaseColumns());
+        }
     }
 }
