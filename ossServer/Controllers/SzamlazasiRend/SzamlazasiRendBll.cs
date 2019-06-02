@@ -88,5 +88,31 @@ namespace ossServer.Controllers.SzamlazasiRend
             ObjectUtils.Update(dto, entity);
             return SzamlazasiRendDal.Update(context, entity);
         }
+
+        private static List<ColumnSettings> BaseColumns()
+        {
+            return new List<ColumnSettings>
+            {
+                new ColumnSettings {Name="Osszeg", Title = "Összeg", Type = ColumnType.NUMBER },
+                new ColumnSettings {Name="Penznem", Title = "Pénznem", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Megjegyzes", Title = "Megjegyzés", Type = ColumnType.STRING },
+            };
+        }
+
+        public static List<ColumnSettings> GridSettings(ossContext context, string sid)
+        {
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.PRIMITIVEK);
+
+            return BaseColumns();
+        }
+
+        public static List<ColumnSettings> ReszletekSettings(ossContext context, string sid)
+        {
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.PRIMITIVEK);
+
+            return ColumnSettingsUtil.AddIdobelyeg(BaseColumns());
+        }
     }
 }

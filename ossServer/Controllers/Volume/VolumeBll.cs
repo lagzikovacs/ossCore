@@ -26,5 +26,34 @@ namespace ossServer.Controllers.Volume
 
             return DokumentumDal.DokumentumkodByVolume(context, volumeKod);
         }
+
+        private static List<ColumnSettings> BaseColumns()
+        {
+            return new List<ColumnSettings>
+            {
+                new ColumnSettings {Name="Volumekod", Title = "Id", Type = ColumnType.INT },
+                new ColumnSettings {Name="Volumeno", Title = "No", Type = ColumnType.INT },
+                new ColumnSettings {Name="Maxmeret", Title = "Max. méret", Type = ColumnType.INT },
+                new ColumnSettings {Name="Jelenlegimeret", Title = "Jelenlegi méret", Type = ColumnType.INT },
+                new ColumnSettings {Name="Allapot", Title = "Állapot", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Allapotkelte", Title = "Az állapot kelte", Type = ColumnType.DATETIME },
+            };
+        }
+
+        public static List<ColumnSettings> GridSettings(ossContext context, string sid)
+        {
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.PRIMITIVEK);
+
+            return BaseColumns();
+        }
+
+        public static List<ColumnSettings> ReszletekSettings(ossContext context, string sid)
+        {
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.PRIMITIVEK);
+
+            return BaseColumns();
+        }
     }
 }
