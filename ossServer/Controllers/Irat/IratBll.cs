@@ -106,5 +106,36 @@ namespace ossServer.Controllers.Irat
 
             return fb;
         }
+
+        private static List<ColumnSettings> BaseColumns()
+        {
+            return new List<ColumnSettings>
+            {
+                new ColumnSettings {Name="Iratkod", Title = "Id", Type = ColumnType.INT },
+                new ColumnSettings {Name="Irany", Title = "Irány", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Keletkezett", Title = "Keletkezett", Type = ColumnType.DATE },
+                new ColumnSettings {Name="Irattipus", Title = "Irattipus", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Ugyfelnev", Title = "Ügyfélnév", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Ugyfelcim", Title = "Ügyfélcím", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Kuldo", Title = "Küldő", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Targy", Title = "Tárgy", Type = ColumnType.STRING },
+            };
+        }
+
+        public static List<ColumnSettings> GridSettings(ossContext context, string sid)
+        {
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.PRIMITIVEK);
+
+            return BaseColumns();
+        }
+
+        public static List<ColumnSettings> ReszletekSettings(ossContext context, string sid)
+        {
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.PRIMITIVEK);
+
+            return ColumnSettingsUtil.AddIdobelyeg(BaseColumns());
+        }
     }
 }

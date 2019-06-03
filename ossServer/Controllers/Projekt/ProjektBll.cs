@@ -108,5 +108,50 @@ namespace ossServer.Controllers.Projekt
             ObjectUtils.Update(dto, entity);
             return ProjektDal.Update(context, entity);
         }
+
+        private static List<ColumnSettings> BaseColumns()
+        {
+            return new List<ColumnSettings>
+            {
+                new ColumnSettings {Name="Projektkod", Title = "Id", Type = ColumnType.INT },
+                new ColumnSettings {Name="Statusz", Title = "Stsz", Type = ColumnType.INT },
+                new ColumnSettings {Name="Muszakiallapot", Title = "Műszaki állapot", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Ugyfelnev", Title = "Ügyfél", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Ugyfelcim", Title = "Cím", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Ugyfeltelefonszam", Title = "Telefon", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Ugyfelemail", Title = "Email", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Telepitesicim", Title = "Telepítési cím", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Projektjellege", Title = "A projekt jellege", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Inverter", Title = "Inverter", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Inverterallapot", Title = "", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Napelem", Title = "Napelem", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Napelemallapot", Title = "", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Dckw", Title = "DC, kW", Type = ColumnType.NUMBER },
+                new ColumnSettings {Name="Ackva", Title = "AC, kVA", Type = ColumnType.NUMBER },
+                new ColumnSettings {Name="Vallalasiarnetto", Title = "Vállalási ár, netto", Type = ColumnType.NUMBER },
+                new ColumnSettings {Name="Penznem", Title = "Pénznem", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Munkalapszam", Title = "Munkalapszám", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Keletkezett", Title = "Keletkezett", Type = ColumnType.DATE },
+                new ColumnSettings {Name="Megrendelve", Title = "Megrendelve", Type = ColumnType.DATE },
+                new ColumnSettings {Name="Kivitelezesihatarido", Title = "Kivitelezési határidő", Type = ColumnType.DATE },
+                new ColumnSettings {Name="Megjegyzes", Title = "Megjegyzés", Type = ColumnType.STRING },
+            };
+        }
+
+        public static List<ColumnSettings> GridSettings(ossContext context, string sid)
+        {
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.PRIMITIVEK);
+
+            return BaseColumns();
+        }
+
+        public static List<ColumnSettings> ReszletekSettings(ossContext context, string sid)
+        {
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.PRIMITIVEK);
+
+            return ColumnSettingsUtil.AddIdobelyeg(BaseColumns());
+        }
     }
 }

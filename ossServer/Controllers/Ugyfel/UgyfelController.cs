@@ -209,5 +209,47 @@ namespace ossServer.Controllers.Ugyfel
 
             return result;
         }
+
+        [HttpPost]
+        public async Task<ColumnSettingsResult> GetGridSettings([FromQuery] string sid)
+        {
+            var result = new ColumnSettingsResult();
+
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    result.Result = UgyfelBll.GridSettings(_context, sid);
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
+        }
+
+        [HttpPost]
+        public async Task<ColumnSettingsResult> GetReszletekSettings([FromQuery] string sid)
+        {
+            var result = new ColumnSettingsResult();
+
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    result.Result = UgyfelBll.ReszletekSettings(_context, sid);
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
+        }
     }
 }

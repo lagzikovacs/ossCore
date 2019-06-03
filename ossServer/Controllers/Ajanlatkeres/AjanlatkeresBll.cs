@@ -120,5 +120,38 @@ namespace ossServer.Controllers.Ajanlatkeres
             ObjectUtils.Update(dto, entity);
             return AjanlatkeresDal.Update(context, entity);
         }
+
+        private static List<ColumnSettings> BaseColumns()
+        {
+            return new List<ColumnSettings>
+            {
+                new ColumnSettings {Name="Ajanlatkereskod", Title = "", Type = ColumnType.INT },
+                new ColumnSettings {Name="Ugynoknev", Title = "", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Nev", Title = "", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Cim", Title = "", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Email", Title = "", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Telefonszam", Title = "", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Havifogyasztaskwh", Title = "", Type = ColumnType.NUMBER },
+                new ColumnSettings {Name="Haviszamlaft", Title = "", Type = ColumnType.NUMBER },
+                new ColumnSettings {Name="Napelemekteljesitmenyekw", Title = "", Type = ColumnType.NUMBER },
+                new ColumnSettings {Name="Megjegyzes", Title = "", Type = ColumnType.STRING },
+            };
+        }
+
+        public static List<ColumnSettings> GridSettings(ossContext context, string sid)
+        {
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.PRIMITIVEK);
+
+            return BaseColumns();
+        }
+
+        public static List<ColumnSettings> ReszletekSettings(ossContext context, string sid)
+        {
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.PRIMITIVEK);
+
+            return ColumnSettingsUtil.AddIdobelyeg(BaseColumns());
+        }
     }
 }

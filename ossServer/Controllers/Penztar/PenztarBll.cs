@@ -80,5 +80,33 @@ namespace ossServer.Controllers.Penztar
             PenztarDal.ExistsAnother(context, entity);
             return PenztarDal.Update(context, entity);
         }
+
+        private static List<ColumnSettings> BaseColumns()
+        {
+            return new List<ColumnSettings>
+            {
+                new ColumnSettings {Name="Penztarkod", Title = "Id", Type = ColumnType.INT },
+                new ColumnSettings {Name="Penztar1", Title = "Pénztár", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Penznem", Title = "Pénznem", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Egyenleg", Title = "Egyenleg", Type = ColumnType.NUMBER },
+                new ColumnSettings {Name="Nyitva", Title = "Nyitva", Type = ColumnType.BOOL },
+            };
+        }
+
+        public static List<ColumnSettings> GridSettings(ossContext context, string sid)
+        {
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.PRIMITIVEK);
+
+            return BaseColumns();
+        }
+
+        public static List<ColumnSettings> ReszletekSettings(ossContext context, string sid)
+        {
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.PRIMITIVEK);
+
+            return ColumnSettingsUtil.AddIdobelyeg(BaseColumns());
+        }
     }
 }
