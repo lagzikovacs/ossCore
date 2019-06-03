@@ -124,5 +124,39 @@ namespace ossServer.Controllers.Cikk
 
             CikkDal.ZoomCheck(context, Cikkkod, Cikk);
         }
+
+        private static List<ColumnSettings> BaseColumns()
+        {
+            return new List<ColumnSettings>
+            {
+                new ColumnSettings {Name="Cikkkod", Title = "Id", Type = ColumnType.INT },
+                new ColumnSettings {Name="Megnevezes", Title = "Megnevezés", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Me", Title = "Me", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Afakulcs", Title = "ÁFA kulcs", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Egysegar", Title = "Egységár", Type = ColumnType.NUMBER },
+                new ColumnSettings {Name="Keszletetkepez", Title = "Készletet képez", Type = ColumnType.BOOL },
+                new ColumnSettings {Name="Tomegkg", Title = "Tömeg, kg", Type = ColumnType.NUMBER },
+                new ColumnSettings {Name="Termekdijkt", Title = "Termékdíj KT", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Termekdijmegnevezes", Title = "Termékdíj megnevezés", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Termekdijegysegar", Title = "Termékdíj egységár", Type = ColumnType.NUMBER },
+            };
+        }
+        
+
+        public static List<ColumnSettings> GridSettings(ossContext context, string sid)
+        {
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.PRIMITIVEK);
+
+            return BaseColumns();
+        }
+
+        public static List<ColumnSettings> ReszletekSettings(ossContext context, string sid)
+        {
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.PRIMITIVEK);
+
+            return ColumnSettingsUtil.AddIdobelyeg(BaseColumns());
+        }
     }
 }
