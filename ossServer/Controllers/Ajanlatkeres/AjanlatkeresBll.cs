@@ -125,16 +125,16 @@ namespace ossServer.Controllers.Ajanlatkeres
         {
             return new List<ColumnSettings>
             {
-                new ColumnSettings {Name="Ajanlatkereskod", Title = "", Type = ColumnType.INT },
-                new ColumnSettings {Name="Ugynoknev", Title = "", Type = ColumnType.STRING },
-                new ColumnSettings {Name="Nev", Title = "", Type = ColumnType.STRING },
-                new ColumnSettings {Name="Cim", Title = "", Type = ColumnType.STRING },
-                new ColumnSettings {Name="Email", Title = "", Type = ColumnType.STRING },
-                new ColumnSettings {Name="Telefonszam", Title = "", Type = ColumnType.STRING },
-                new ColumnSettings {Name="Havifogyasztaskwh", Title = "", Type = ColumnType.NUMBER },
-                new ColumnSettings {Name="Haviszamlaft", Title = "", Type = ColumnType.NUMBER },
-                new ColumnSettings {Name="Napelemekteljesitmenyekw", Title = "", Type = ColumnType.NUMBER },
-                new ColumnSettings {Name="Megjegyzes", Title = "", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Ajanlatkereskod", Title = "Id", Type = ColumnType.INT },
+                new ColumnSettings {Name="Ugynoknev", Title = "Ügynök", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Nev", Title = "Név", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Cim", Title = "Cím", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Email", Title = "E-mail", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Telefonszam", Title = "Telefon", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Havifogyasztaskwh", Title = "Havi fogyasztás, kWh", Type = ColumnType.NUMBER },
+                new ColumnSettings {Name="Haviszamlaft", Title = "Havi számla, Ft", Type = ColumnType.NUMBER },
+                new ColumnSettings {Name="Napelemekteljesitmenyekw", Title = "Napelemek teljesítménye, kW", Type = ColumnType.NUMBER },
+                new ColumnSettings {Name="Megjegyzes", Title = "Megjegyzés", Type = ColumnType.STRING },
             };
         }
 
