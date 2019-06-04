@@ -55,7 +55,19 @@ namespace ossServer.Controllers.ProjektKapcsolat
             foreach (var entity in entites)
             {
                 var dto = KapcsolatCalc(entity);
-                if (!(dto.Iratkod != null & forUgyfelter & dto.Irany == "Belső"))
+
+                if (forUgyfelter)
+                {
+                    if (entity.Iratkod != null && entity.IratkodNavigation.Irany != "Belső")
+                        result.Add(dto);
+
+                    if (entity.Bizonylatkod != null && 
+                        (entity.BizonylatkodNavigation.Bizonylattipuskod == (int)BizonylatTipus.DijBekero) |
+                        (entity.BizonylatkodNavigation.Bizonylattipuskod == (int)BizonylatTipus.ElolegSzamla) |
+                        (entity.BizonylatkodNavigation.Bizonylattipuskod == (int)BizonylatTipus.Szamla))
+                        result.Add(dto);
+                }
+                else
                     result.Add(dto);
             }
 
