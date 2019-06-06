@@ -51,5 +51,36 @@ namespace ossServer.Controllers.PenztarTetel
             var entities = qry.Skip(rekordTol).Take(lapMeret).ToList();
             return ObjectUtils.Convert<Models.Penztartetel, PenztarTetelDto>(entities);
         }
+
+        private static List<ColumnSettings> BaseColumns()
+        {
+            return new List<ColumnSettings>
+            {
+                new ColumnSettings {Name="Penztarbizonylatszam", Title = "Pénztárbizonylatszám", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Datum", Title = "Dátum", Type = ColumnType.DATE },
+                new ColumnSettings {Name="Jogcim", Title = "Jogcím", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Ugyfelnev", Title = "Ügyfél", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Bizonylatszam", Title = "Bizonylatszám", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Bevetel", Title = "Bevétel", Type = ColumnType.NUMBER },
+                new ColumnSettings {Name="Kiadas", Title = "Kiadás", Type = ColumnType.NUMBER },
+                new ColumnSettings {Name="Megjegyzes", Title = "Megjegyzés", Type = ColumnType.STRING },
+            };
+        }
+
+        public static List<ColumnSettings> GridSettings(ossContext context, string sid)
+        {
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.PENZTAR);
+
+            return BaseColumns();
+        }
+
+        public static List<ColumnSettings> ReszletekSettings(ossContext context, string sid)
+        {
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.PENZTAR);
+
+            return BaseColumns();
+        }
     }
 }
