@@ -87,6 +87,7 @@ namespace ossServer.Controllers.ProjektTeendo
         {
             return new List<ColumnSettings>
             {
+                new ColumnSettings {Name="Projektteendokod", Title = "Id", Type = ColumnType.INT },
                 new ColumnSettings {Name="Dedikalva", Title = "Dedikálva", Type = ColumnType.STRING },
                 new ColumnSettings {Name="Hatarido", Title = "Határidő", Type = ColumnType.DATE },
                 new ColumnSettings {Name="Elvegezve", Title = "Elvégezve", Type = ColumnType.DATE },

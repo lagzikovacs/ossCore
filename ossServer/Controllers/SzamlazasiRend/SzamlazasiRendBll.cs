@@ -93,6 +93,7 @@ namespace ossServer.Controllers.SzamlazasiRend
         {
             return new List<ColumnSettings>
             {
+                new ColumnSettings {Name="Szamlazasirendkod", Title = "Id", Type = ColumnType.INT },
                 new ColumnSettings {Name="Osszeg", Title = "Összeg", Type = ColumnType.NUMBER },
                 new ColumnSettings {Name="Penznem", Title = "Pénznem", Type = ColumnType.STRING },
                 new ColumnSettings {Name="Megjegyzes", Title = "Megjegyzés", Type = ColumnType.STRING },
