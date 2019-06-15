@@ -77,7 +77,7 @@ namespace ossServer.Controllers.Primitiv.Afakulcs
             AfakulcsDal.ZoomCheck(context, afakulcskod, afakulcs);
         }
 
-        private static List<ColumnSettings> BaseColumns()
+        public static List<ColumnSettings> GridColumns()
         {
             return new List<ColumnSettings>
             {
@@ -86,21 +86,23 @@ namespace ossServer.Controllers.Primitiv.Afakulcs
                 new ColumnSettings {Name="Afamerteke", Title = "ÁFA mértéke, %", Type = ColumnType.NUMBER },
             };
         }
+        public static List<ColumnSettings> ReszletekColumns()
+        {
+            return ColumnSettingsUtil.AddIdobelyeg(GridColumns());
+        }
 
         public static List<ColumnSettings> GridSettings(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PRIMITIVEK);
 
-            return BaseColumns();
+            return GridColumns();
         }
 
         public static List<ColumnSettings> ReszletekSettings(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PRIMITIVEK);
 
-            return ColumnSettingsUtil.AddIdobelyeg(BaseColumns());
+            return ReszletekColumns();
         }
     }
 }

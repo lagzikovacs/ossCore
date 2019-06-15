@@ -125,7 +125,7 @@ namespace ossServer.Controllers.Cikk
             CikkDal.ZoomCheck(context, Cikkkod, Cikk);
         }
 
-        private static List<ColumnSettings> BaseColumns()
+        public static List<ColumnSettings> GridColumns()
         {
             return new List<ColumnSettings>
             {
@@ -141,22 +141,24 @@ namespace ossServer.Controllers.Cikk
                 new ColumnSettings {Name="Termekdijegysegar", Title = "Termékdíj egységár", Type = ColumnType.NUMBER },
             };
         }
-        
+
+        public static List<ColumnSettings> ReszletekColumns()
+        {
+            return ColumnSettingsUtil.AddIdobelyeg(GridColumns());
+        }
 
         public static List<ColumnSettings> GridSettings(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PRIMITIVEK);
 
-            return BaseColumns();
+            return GridColumns();
         }
 
         public static List<ColumnSettings> ReszletekSettings(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PRIMITIVEK);
 
-            return ColumnSettingsUtil.AddIdobelyeg(BaseColumns());
+            return ReszletekColumns();
         }
     }
 }
