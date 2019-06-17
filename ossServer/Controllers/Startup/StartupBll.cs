@@ -1,5 +1,11 @@
-﻿using ossServer.Controllers.Cikk;
+﻿using ossServer.Controllers.Ajanlatkeres;
+using ossServer.Controllers.Cikk;
+using ossServer.Controllers.Csoport;
+using ossServer.Controllers.Dokumentum;
 using ossServer.Controllers.Irat;
+using ossServer.Controllers.Kifizetes;
+using ossServer.Controllers.Penztar;
+using ossServer.Controllers.PenztarTetel;
 using ossServer.Controllers.Primitiv.Afakulcs;
 using ossServer.Controllers.Primitiv.Felhasznalo;
 using ossServer.Controllers.Primitiv.Fizetesimod;
@@ -14,6 +20,7 @@ using ossServer.Controllers.ProjektTeendo;
 using ossServer.Controllers.Session;
 using ossServer.Controllers.SzamlazasiRend;
 using ossServer.Controllers.Ugyfel;
+using ossServer.Controllers.Volume;
 using ossServer.Models;
 
 namespace ossServer.Controllers.Startup
@@ -59,6 +66,24 @@ namespace ossServer.Controllers.Startup
 
                 Irat_Grid = IratBll.GridColumns(),
                 Irat_Reszletek = IratBll.ReszletekColumns(),
+
+                Csoport_Grid = CsoportBll.GridColumns(),
+                Csoport_Reszletek = CsoportBll.ReszletekColumns(),
+
+                Ajanlatkeres_Grid = AjanlatkeresBll.GridColumns(),
+                Ajanlatkeres_Reszletek = AjanlatkeresBll.ReszletekColumns(),
+
+                Penztar_Grid = PenztarBll.GridColumns(),
+                Penztar_Reszletek = PenztarBll.ReszletekColumns(),
+                Penztartetel_Grid = PenztarTetelBll.GridColumns(),
+                Penztartetel_Reszletek = PenztarTetelBll.ReszletekColumns(),
+
+                Kifizetes_Grid = KifizetesBll.GridColumns(),
+                Kifizetes_Reszletek = KifizetesBll.ReszletekColumns(),
+                Dokumentum_Grid = DokumentumBll.GridColumns(),
+                Dokumentum_Reszletek = DokumentumBll.ReszletekColumns(),
+                Volume_Grid = VolumeBll.GridColumns(),
+                Volume_Reszletek = VolumeBll.ReszletekColumns(),
             };
 
             return result;

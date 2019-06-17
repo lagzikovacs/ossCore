@@ -27,7 +27,7 @@ namespace ossServer.Controllers.Volume
             return DokumentumDal.DokumentumkodByVolume(context, volumeKod);
         }
 
-        private static List<ColumnSettings> BaseColumns()
+        public static List<ColumnSettings> GridColumns()
         {
             return new List<ColumnSettings>
             {
@@ -40,20 +40,23 @@ namespace ossServer.Controllers.Volume
             };
         }
 
+        public static List<ColumnSettings> ReszletekColumns()
+        {
+            return GridColumns();
+        }
+
         public static List<ColumnSettings> GridSettings(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PRIMITIVEK);
 
-            return BaseColumns();
+            return GridColumns();
         }
 
         public static List<ColumnSettings> ReszletekSettings(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PRIMITIVEK);
 
-            return BaseColumns();
+            return GridColumns();
         }
     }
 }

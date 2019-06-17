@@ -121,7 +121,7 @@ namespace ossServer.Controllers.Ajanlatkeres
             return AjanlatkeresDal.Update(context, entity);
         }
 
-        private static List<ColumnSettings> BaseColumns()
+        public static List<ColumnSettings> GridColumns()
         {
             return new List<ColumnSettings>
             {
@@ -138,20 +138,23 @@ namespace ossServer.Controllers.Ajanlatkeres
             };
         }
 
+        public static List<ColumnSettings> ReszletekColumns()
+        {
+            return ColumnSettingsUtil.AddIdobelyeg(GridColumns());
+        }
+
         public static List<ColumnSettings> GridSettings(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PRIMITIVEK);
 
-            return BaseColumns();
+            return GridColumns();
         }
 
         public static List<ColumnSettings> ReszletekSettings(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PRIMITIVEK);
 
-            return ColumnSettingsUtil.AddIdobelyeg(BaseColumns());
+            return ReszletekColumns();
         }
     }
 }

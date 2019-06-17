@@ -52,7 +52,7 @@ namespace ossServer.Controllers.PenztarTetel
             return ObjectUtils.Convert<Models.Penztartetel, PenztarTetelDto>(entities);
         }
 
-        private static List<ColumnSettings> BaseColumns()
+        public static List<ColumnSettings> GridColumns()
         {
             return new List<ColumnSettings>
             {
@@ -67,20 +67,23 @@ namespace ossServer.Controllers.PenztarTetel
             };
         }
 
+        public static List<ColumnSettings> ReszletekColumns()
+        {
+            return ColumnSettingsUtil.AddIdobelyeg(GridColumns());
+        }
+
         public static List<ColumnSettings> GridSettings(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PENZTAR);
 
-            return BaseColumns();
+            return GridColumns();
         }
 
         public static List<ColumnSettings> ReszletekSettings(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PENZTAR);
 
-            return BaseColumns();
+            return ReszletekColumns();
         }
     }
 }

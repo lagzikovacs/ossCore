@@ -39,5 +39,23 @@ namespace ossServer.Controllers.Startup
 
         public List<ColumnSettings> Irat_Grid { get; set; }
         public List<ColumnSettings> Irat_Reszletek { get; set; }
+
+        public List<ColumnSettings> Csoport_Grid { get; set; }
+        public List<ColumnSettings> Csoport_Reszletek { get; set; }
+
+        public List<ColumnSettings> Ajanlatkeres_Grid { get; set; }
+        public List<ColumnSettings> Ajanlatkeres_Reszletek { get; set; }
+
+        public List<ColumnSettings> Penztar_Grid { get; set; }
+        public List<ColumnSettings> Penztar_Reszletek { get; set; }
+        public List<ColumnSettings> Penztartetel_Grid { get; set; }
+        public List<ColumnSettings> Penztartetel_Reszletek { get; set; }
+
+        public List<ColumnSettings> Kifizetes_Grid { get; set; }
+        public List<ColumnSettings> Kifizetes_Reszletek { get; set; }
+        public List<ColumnSettings> Dokumentum_Grid { get; set; }
+        public List<ColumnSettings> Dokumentum_Reszletek { get; set; }
+        public List<ColumnSettings> Volume_Grid { get; set; }
+        public List<ColumnSettings> Volume_Reszletek { get; set; }
     }
 }
