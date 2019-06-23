@@ -26,6 +26,7 @@ namespace ossServer.Controllers.Startup
         public List<ColumnSettings> Termekdij_Reszletek { get; set; }
 
         public List<ColumnSettings> Cikk_Grid { get; set; }
+        public List<ColumnSettings> BeszerzesKivet_Grid { get; set; }
         public List<ColumnSettings> Cikk_Reszletek { get; set; }
         public List<ColumnSettings> Ugyfel_Grid { get; set; }
         public List<ColumnSettings> Ugyfel_Reszletek { get; set; }

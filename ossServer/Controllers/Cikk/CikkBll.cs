@@ -142,6 +142,22 @@ namespace ossServer.Controllers.Cikk
             };
         }
 
+        public static List<ColumnSettings> BeszerzesKivetGridColumns()
+        {
+            return new List<ColumnSettings>
+            {
+                new ColumnSettings {Name="Bizonylatszam", Title = "Bizonylatszám", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Ugyfelnev", Title = "Ügyfél", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Teljesiteskelte", Title = "A teljesítés kelte", Type = ColumnType.DATE },
+                new ColumnSettings {Name="Mennyiseg", Title = "Mennyiség", Type = ColumnType.NUMBER },
+                new ColumnSettings {Name="Me", Title = "Me", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Egysegar", Title = "Egységár", Type = ColumnType.NUMBER },
+                new ColumnSettings {Name="Penznem", Title = "Pénznem", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Netto", Title = "Netto", Type = ColumnType.NUMBER },
+                new ColumnSettings {Name="Nettoft", Title = "Netto Ft", Type = ColumnType.NUMBER },
+            };
+        }
+
         public static List<ColumnSettings> ReszletekColumns()
         {
             return ColumnSettingsUtil.AddIdobelyeg(GridColumns());

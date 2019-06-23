@@ -53,6 +53,7 @@ namespace ossServer.Controllers.Startup
                 Termekdij_Reszletek = TermekdijBll.ReszletekColumns(),
 
                 Cikk_Grid = CikkBll.GridColumns(),
+                BeszerzesKivet_Grid = CikkBll.BeszerzesKivetGridColumns(),
                 Cikk_Reszletek = CikkBll.ReszletekColumns(),
                 Ugyfel_Grid = UgyfelBll.GridColumns(),
                 Ugyfel_Reszletek = UgyfelBll.ReszletekColumns(),
