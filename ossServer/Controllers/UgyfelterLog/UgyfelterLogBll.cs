@@ -35,5 +35,22 @@ namespace ossServer.Controllers.UgyfelterLog
 
             return result;
         }
+
+        public static List<ColumnSettings> GridColumns()
+        {
+            return new List<ColumnSettings>
+            {
+                new ColumnSettings {Name="Ugyfelterlogkod", Title = "Id", Type = ColumnType.INT },
+                new ColumnSettings {Name="Ugyfelnev", Title = "Név", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Ugyfelcim", Title = "Cím", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Letrehozta", Title = "Létrehozta", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Letrehozva", Title = "Létrehozva", Type = ColumnType.DATETIME },
+            };
+        }
+
+        public static List<ColumnSettings> ReszletekColumns()
+        {
+            return GridColumns();
+        }
     }
 }

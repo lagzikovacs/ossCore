@@ -58,5 +58,7 @@ namespace ossServer.Controllers.Startup
         public List<ColumnSettings> Dokumentum_Reszletek { get; set; }
         public List<ColumnSettings> Volume_Grid { get; set; }
         public List<ColumnSettings> Volume_Reszletek { get; set; }
+        public List<ColumnSettings> Ugyfelterlog_Grid { get; set; }
+        public List<ColumnSettings> Ugyfelterlog_Reszletek { get; set; }
     }
 }

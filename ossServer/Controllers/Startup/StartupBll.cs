@@ -20,6 +20,7 @@ using ossServer.Controllers.ProjektTeendo;
 using ossServer.Controllers.Session;
 using ossServer.Controllers.SzamlazasiRend;
 using ossServer.Controllers.Ugyfel;
+using ossServer.Controllers.UgyfelterLog;
 using ossServer.Controllers.Volume;
 using ossServer.Models;
 
@@ -85,6 +86,8 @@ namespace ossServer.Controllers.Startup
                 Dokumentum_Reszletek = DokumentumBll.ReszletekColumns(),
                 Volume_Grid = VolumeBll.GridColumns(),
                 Volume_Reszletek = VolumeBll.ReszletekColumns(),
+                Ugyfelterlog_Grid = UgyfelterLogBll.GridColumns(),
+                Ugyfelterlog_Reszletek = UgyfelterLogBll.ReszletekColumns(),
             };
 
             return result;

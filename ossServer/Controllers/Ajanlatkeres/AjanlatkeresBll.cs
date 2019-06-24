@@ -134,13 +134,15 @@ namespace ossServer.Controllers.Ajanlatkeres
                 new ColumnSettings {Name="Havifogyasztaskwh", Title = "Havi fogyasztás, kWh", Type = ColumnType.NUMBER },
                 new ColumnSettings {Name="Haviszamlaft", Title = "Havi számla, Ft", Type = ColumnType.NUMBER },
                 new ColumnSettings {Name="Napelemekteljesitmenyekw", Title = "Napelemek teljesítménye, kW", Type = ColumnType.NUMBER },
-                new ColumnSettings {Name="Megjegyzes", Title = "Megjegyzés", Type = ColumnType.STRING },
             };
         }
 
         public static List<ColumnSettings> ReszletekColumns()
         {
-            return ColumnSettingsUtil.AddIdobelyeg(GridColumns());
+            var gc = GridColumns();
+            gc.Add(new ColumnSettings { Name = "Megjegyzes", Title = "Megjegyzés", Type = ColumnType.STRING });
+
+            return ColumnSettingsUtil.AddIdobelyeg(gc);
         }
 
         public static List<ColumnSettings> GridSettings(ossContext context, string sid)
