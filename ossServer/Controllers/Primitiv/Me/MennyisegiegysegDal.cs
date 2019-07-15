@@ -27,7 +27,7 @@ namespace ossServer.Controllers.Primitiv.Me
 
         public async static void Lock(ossContext context, int pKey, DateTime utoljaraModositva)
         {
-            await context.ExecuteLockFunction("lockme", "mekod", pKey, utoljaraModositva);
+            await context.ExecuteLockFunction("lockmennyisegiegyseg", "mekod", pKey, utoljaraModositva);
         }
 
         public static Mennyisegiegyseg Get(ossContext context, int pKey)

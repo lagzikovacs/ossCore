@@ -5,6 +5,8 @@ using ossServer.Controllers.Csoport;
 using ossServer.Controllers.Dokumentum;
 using ossServer.Controllers.Irat;
 using ossServer.Controllers.Logon;
+using ossServer.Controllers.Projekt;
+using ossServer.Controllers.ProjektKapcsolat;
 using ossServer.Controllers.Session;
 using ossServer.Enums;
 using ossServer.Hubs;
@@ -113,6 +115,10 @@ namespace ossServer.Controllers.Fotozas
             result.iratDto = IratBll.Select(context, result.sid, 0, 1,
                 new List<SzMT> { new SzMT { Szempont = Szempont.Kod, Minta = Fp.Iratkod.ToString() } }, out _);
             result.dokumentumDto = DokumentumBll.Select(context, result.sid, Fp.Iratkod);
+            var projektKapcsolatDto = ProjektKapcsolatBll.SelectByIrat(context, result.sid, Fp.Iratkod);
+            if (projektKapcsolatDto.Count != 0)
+                result.projektDto = ProjektBll.Select(context, result.sid, 0, 1, 0,
+                    new List<SzMT> { new SzMT {Szempont = Szempont.Kod, Minta = 0 } }, out _);
 
             return result;
         }
