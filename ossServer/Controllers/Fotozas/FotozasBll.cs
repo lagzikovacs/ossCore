@@ -118,7 +118,7 @@ namespace ossServer.Controllers.Fotozas
             var projektKapcsolatDto = ProjektKapcsolatBll.SelectByIrat(context, result.sid, Fp.Iratkod);
             if (projektKapcsolatDto.Count != 0)
                 result.projektDto = ProjektBll.Select(context, result.sid, 0, 1, 0,
-                    new List<SzMT> { new SzMT {Szempont = Szempont.Kod, Minta = 0 } }, out _);
+                    new List<SzMT> { new SzMT {Szempont = Szempont.Kod, Minta = projektKapcsolatDto[0].Projektkod.ToString() } }, out _);
 
             return result;
         }
