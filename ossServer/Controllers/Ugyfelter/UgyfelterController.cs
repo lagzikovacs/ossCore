@@ -68,6 +68,26 @@ namespace ossServer.Controllers.Ugyfelter
             return result;
         }
 
+        [HttpPost]
+        public async Task<BaseResults.EmptyResult> ClearLink([FromQuery] string sid, [FromBody] UgyfelDto dto)
+        {
+            var result = new BaseResults.EmptyResult();
+
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    await UgyfelterBll.ClearLinkAsync(_context, sid, dto);
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
+        }
 
         [HttpPost]
         public async Task<UgyfelterResult> UgyfelterCheck([FromQuery] string sid, 

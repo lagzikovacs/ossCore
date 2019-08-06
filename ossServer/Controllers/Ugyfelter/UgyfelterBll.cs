@@ -77,6 +77,19 @@ namespace ossServer.Controllers.Ugyfelter
             return Link(up);
         }
 
+        public static async Task ClearLinkAsync(ossContext context, string sid, UgyfelDto dto)
+        {
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.UGYFELEKMOD);
+
+            await UgyfelDal.Lock(context, dto.Ugyfelkod, dto.Modositva);
+            var entity = UgyfelDal.Get(context, dto.Ugyfelkod);
+
+            entity.Kikuldesikod = null;
+            entity.Kikuldesikodidopontja = null;
+            UgyfelDal.Update(context, entity);
+        }
+
         public static async Task<UgyfelterDto> UgyfelterCheckAsync(ossContext context, IHubContext<OssHub> hubcontext,
             IConfiguration config, string linkparam)
         {
