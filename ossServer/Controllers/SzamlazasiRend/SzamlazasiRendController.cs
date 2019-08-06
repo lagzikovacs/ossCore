@@ -69,7 +69,7 @@ namespace ossServer.Controllers.SzamlazasiRend
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    SzamlazasiRendBll.Delete(_context, sid, dto);
+                    await SzamlazasiRendBll.DeleteAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -111,7 +111,7 @@ namespace ossServer.Controllers.SzamlazasiRend
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = SzamlazasiRendBll.Update(_context, sid, dto);
+                    result.Result = await SzamlazasiRendBll.UpdateAsync(_context, sid, dto);
 
                     tr.Commit();
                 }

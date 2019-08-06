@@ -103,7 +103,7 @@ namespace ossServer.Controllers.Ajanlatkeres
             return entity.Ajanlatkereskod;
         }
 
-        public async static void Lock(ossContext context, int pKey, DateTime utoljaraModositva)
+        public async static Task Lock(ossContext context, int pKey, DateTime utoljaraModositva)
         {
             await context.ExecuteLockFunction("lockajanlatkeres", "ajanlatkereskod", pKey, utoljaraModositva);
         }

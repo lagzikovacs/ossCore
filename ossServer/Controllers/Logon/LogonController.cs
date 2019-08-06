@@ -30,7 +30,7 @@ namespace ossServer.Controllers.Logon
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = LogonBll.Bejelentkezes(_context, _hubcontext, par.Azonosito, par.Jelszo, 
+                    result.Result = await LogonBll.BejelentkezesAsync(_context, _hubcontext, par.Azonosito, par.Jelszo, 
                         par.Ip, par.WinHost, par.WinUser);
 
                     tr.Commit();

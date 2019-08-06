@@ -5,20 +5,21 @@ using ossServer.Models;
 using ossServer.Utils;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Primitiv.Felhasznalo
 {
     public class FelhasznaloBll
     {
-        public static int Add(ossContext context, string sid, FelhasznaloDto dto)
+        public static async Task<int> AddAsync(ossContext context, string sid, FelhasznaloDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.FELHASZNALOMOD);
 
             var entity = ObjectUtils.Convert<FelhasznaloDto, Models.Felhasznalo>(dto);
             entity.Jelszo = Crypt.MD5Hash("");
-            FelhasznaloDal.Exists(context, entity);
-            return FelhasznaloDal.Add(context, entity);
+            await FelhasznaloDal.ExistsAsync(context, entity);
+            return await FelhasznaloDal.AddAsync(context, entity);
         }
 
         public static FelhasznaloDto CreateNew(ossContext context, string sid)
@@ -28,78 +29,78 @@ namespace ossServer.Controllers.Primitiv.Felhasznalo
             return new FelhasznaloDto { Statusz = "OK", Statuszkelte = DateTime.Now.Date, Logonlog = true };
         }
 
-        public static FelhasznaloDto Get(ossContext context, string sid, int key)
+        public static async Task<FelhasznaloDto> GetAsync(ossContext context, string sid, int key)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.FELHASZNALO);
 
-            var entity = FelhasznaloDal.Get(context, key);
+            var entity = await FelhasznaloDal.GetAsync(context, key);
             return ObjectUtils.Convert<Models.Felhasznalo, FelhasznaloDto>(entity);
         }
 
-        public static List<FelhasznaloDto> Read(ossContext context, string sid, string maszk)
+        public static async Task<List<FelhasznaloDto>> ReadAsync(ossContext context, string sid, string maszk)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.FELHASZNALO);
 
-            var entities = FelhasznaloDal.Read(context, maszk);
+            var entities = await FelhasznaloDal.ReadAsync(context, maszk);
             return ObjectUtils.Convert<Models.Felhasznalo, FelhasznaloDto>(entities);
         }
 
-        public static int Update(ossContext context, string sid, FelhasznaloDto dto)
+        public static async Task<int> UpdateAsync(ossContext context, string sid, FelhasznaloDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.FELHASZNALOMOD);
 
-            FelhasznaloDal.Lock(context, dto.Felhasznalokod, dto.Modositva);
-            var entity = FelhasznaloDal.Get(context, dto.Felhasznalokod);
+            await FelhasznaloDal.Lock(context, dto.Felhasznalokod, dto.Modositva);
+            var entity = await FelhasznaloDal.GetAsync(context, dto.Felhasznalokod);
 
             if (entity.Statusz != dto.Statusz)
                 dto.Statuszkelte = DateTime.Now.Date;
 
             ObjectUtils.Update(dto, entity);
-            FelhasznaloDal.ExistsAnother(context, entity);
-            return FelhasznaloDal.Update(context, entity);
+            await FelhasznaloDal.ExistsAnotherAsync(context, entity);
+            return await FelhasznaloDal.UpdateAsync(context, entity);
         }
 
-        public static void Delete(ossContext context, string sid, FelhasznaloDto dto)
+        public static async Task DeleteAsync(ossContext context, string sid, FelhasznaloDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.FELHASZNALOMOD);
 
-            FelhasznaloDal.Lock(context, dto.Felhasznalokod, dto.Modositva);
-            FelhasznaloDal.CheckReferences(context, dto.Felhasznalokod);
-            var entity = FelhasznaloDal.Get(context, dto.Felhasznalokod);
-            FelhasznaloDal.Delete(context, entity);
+            await FelhasznaloDal.Lock(context, dto.Felhasznalokod, dto.Modositva);
+            await FelhasznaloDal.CheckReferencesAsync(context, dto.Felhasznalokod);
+            var entity = await FelhasznaloDal.GetAsync(context, dto.Felhasznalokod);
+            await FelhasznaloDal.DeleteAsync(context, entity);
         }
 
         //rendszergazdának, felülírja a jelszót
         //a jelszó legyen hash-elt
-        public static void JelszoBeallitas(ossContext context, string sid, int felhasznaloKod, string jelszo, DateTime utolsoModositas)
+        public static async Task JelszoBeallitasAsync(ossContext context, string sid, int felhasznaloKod, string jelszo, DateTime utolsoModositas)
         {
             SessionBll.Check(context, sid);
             // TODO: külön jog legyen ehhez
             CsoportDal.Joge(context, JogKod.FELHASZNALOMOD);
 
-            FelhasznaloDal.Lock(context, felhasznaloKod, utolsoModositas);
-            var entity = FelhasznaloDal.Get(context, felhasznaloKod);
+            await FelhasznaloDal.Lock(context, felhasznaloKod, utolsoModositas);
+            var entity = await FelhasznaloDal.GetAsync(context, felhasznaloKod);
             entity.Jelszo = jelszo;
-            FelhasznaloDal.Update(context, entity);
+            await FelhasznaloDal.UpdateAsync(context, entity);
         }
 
         //usernek, csak a sajátot lehet, a régit ellenőrzi
         //a jelszó legyen hash-elt
-        public static void JelszoCsere(ossContext context, string sid, string regiJelszo, string ujJelszo)
+        public static async Task JelszoCsereAsync(ossContext context, string sid, string regiJelszo, string ujJelszo)
         {
             SessionBll.Check(context, sid);
             //nincs külön jog, csak a bejelentkezett, szerepkört is választott usernek működik
 
             // TODO: nincs lock, felülíródik a jelszó...
-            var entity = FelhasznaloDal.Get(context, context.CurrentSession.Felhasznalokod);
+            var entity = await FelhasznaloDal.GetAsync(context, context.CurrentSession.Felhasznalokod);
             if (entity.Jelszo.ToUpper() != regiJelszo.ToUpper())
                 throw new Exception("A régi jelszó hibás!");
             entity.Jelszo = ujJelszo;
-            FelhasznaloDal.Update(context, entity);
+            await FelhasznaloDal.UpdateAsync(context, entity);
         }
 
         public static List<ColumnSettings> GridColumns()

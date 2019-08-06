@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using ossServer.Models;
 using ossServer.Tasks;
@@ -25,7 +26,7 @@ namespace ossServer.Controllers.Riport
             _nev = (string)szmt[1].Minta;
         }
 
-        protected override Exception Run()
+        protected override async Task<Exception> RunAsync()
         {
             Exception exception = null;
 
@@ -36,7 +37,7 @@ namespace ossServer.Controllers.Riport
                     using (var tr = _context.Database.BeginTransaction())
                         try
                         {
-                            var result = new RiportBll().Projekt(_context, _sid,
+                            var result = await new RiportBll().ProjektAsync(_context, _sid,
                                 _kod, _nev);
 
                             tr.Commit();

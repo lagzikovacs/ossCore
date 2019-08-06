@@ -34,7 +34,7 @@ namespace ossServer.Controllers.Fotozas
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = FotozasBll.CreateNewLink(_context, sid, dto);
+                    result.Result = await FotozasBll.CreateNewLinkAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -55,7 +55,7 @@ namespace ossServer.Controllers.Fotozas
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = FotozasBll.GetLink(_context, sid, dto);
+                    result.Result = await FotozasBll.GetLinkAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -77,7 +77,7 @@ namespace ossServer.Controllers.Fotozas
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = FotozasBll.Check(_context, _hubcontext, _config, linkparam);
+                    result.Result = await FotozasBll.CheckAsync(_context, _hubcontext, _config, linkparam);
 
                     tr.Commit();
                 }

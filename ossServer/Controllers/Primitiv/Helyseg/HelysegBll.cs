@@ -4,6 +4,7 @@ using ossServer.Enums;
 using ossServer.Models;
 using ossServer.Utils;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Primitiv.Helyseg
 {
@@ -26,12 +27,12 @@ namespace ossServer.Controllers.Primitiv.Helyseg
             return new HelysegDto();
         }
 
-        public static void Delete(ossContext context, string sid, HelysegDto dto)
+        public static async Task DeleteAsync(ossContext context, string sid, HelysegDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
 
-            HelysegDal.Lock(context, dto.Helysegkod, dto.Modositva);
+            await HelysegDal.Lock(context, dto.Helysegkod, dto.Modositva);
             HelysegDal.CheckReferences(context, dto.Helysegkod);
             var entity = HelysegDal.Get(context, dto.Helysegkod);
             HelysegDal.Delete(context, entity);
@@ -55,12 +56,12 @@ namespace ossServer.Controllers.Primitiv.Helyseg
             return ObjectUtils.Convert<Models.Helyseg, HelysegDto>(entities);
         }
 
-        public static int Update(ossContext context, string sid, HelysegDto dto)
+        public static async Task<int> UpdateAsync(ossContext context, string sid, HelysegDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
 
-            HelysegDal.Lock(context, dto.Helysegkod, dto.Modositva);
+            await HelysegDal.Lock(context, dto.Helysegkod, dto.Modositva);
             var entity = HelysegDal.Get(context, dto.Helysegkod);
             ObjectUtils.Update(dto, entity);
             HelysegDal.ExistsAnother(context, entity);

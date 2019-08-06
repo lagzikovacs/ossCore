@@ -15,6 +15,7 @@ using ossServer.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace ossServer.Controllers.Fotozas
@@ -30,12 +31,12 @@ namespace ossServer.Controllers.Fotozas
                 HttpUtility.UrlEncode(StringCipher.Encrypt(JsonConvert.SerializeObject(Fp), edKey));
         }
 
-        public static string CreateNewLink(ossContext context, string sid, IratDto dto)
+        public static async Task<string> CreateNewLinkAsync(ossContext context, string sid, IratDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.IRATMOD);
 
-            IratDal.Lock(context, dto.Iratkod, dto.Modositva);
+            await IratDal.Lock(context, dto.Iratkod, dto.Modositva);
             var entity = IratDal.Get(context, dto.Iratkod);
 
             var kikuldesikod = Guid.NewGuid().ToString();
@@ -52,12 +53,12 @@ namespace ossServer.Controllers.Fotozas
 
             return Link(up);
         }
-        public static string GetLink(ossContext context, string sid, IratDto dto)
+        public static async Task<string> GetLinkAsync(ossContext context, string sid, IratDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.IRATMOD);
 
-            IratDal.Lock(context, dto.Iratkod, dto.Modositva);
+            await IratDal.Lock(context, dto.Iratkod, dto.Modositva);
             var entity = IratDal.Get(context, dto.Iratkod);
             if (entity.Kikuldesikod == null)
                 throw new Exception("Ez az irat még nem kapott fotózás linket!");
@@ -72,7 +73,7 @@ namespace ossServer.Controllers.Fotozas
             return Link(Up);
         }
 
-        public static FotozasDto Check(ossContext context, IHubContext<OssHub> hubcontext,
+        public static async Task<FotozasDto> CheckAsync(ossContext context, IHubContext<OssHub> hubcontext,
             IConfiguration config, string linkparam)
         {
             string uh = "Ügyféltér hiba {0} - értesítse a GridSolar sales-t!";
@@ -94,7 +95,7 @@ namespace ossServer.Controllers.Fotozas
 
             try
             {
-                result.sid = LogonBll.Bejelentkezes(context, hubcontext, 
+                result.sid = await LogonBll.BejelentkezesAsync(context, hubcontext, 
                     config.GetValue<string>("Fotozas:user"),
                     Crypt.MD5Hash(config.GetValue<string>("Fotozas:password")), "", "", "");
             }

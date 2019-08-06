@@ -4,6 +4,7 @@ using ossServer.Enums;
 using ossServer.Models;
 using ossServer.Utils;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Primitiv.Penznem
 {
@@ -26,12 +27,12 @@ namespace ossServer.Controllers.Primitiv.Penznem
             return new PenznemDto();
         }
 
-        public static void Delete(ossContext context, string sid, PenznemDto dto)
+        public static async Task DeleteAsync(ossContext context, string sid, PenznemDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);
 
-            PenznemDal.Lock(context, dto.Penznemkod, dto.Modositva);
+            await PenznemDal.Lock(context, dto.Penznemkod, dto.Modositva);
             PenznemDal.CheckReferences(context, dto.Penznemkod);
             var entity = PenznemDal.Get(context, dto.Penznemkod);
             PenznemDal.Delete(context, entity);
@@ -55,12 +56,12 @@ namespace ossServer.Controllers.Primitiv.Penznem
             return ObjectUtils.Convert<Models.Penznem, PenznemDto>(entities);
         }
 
-        public static int Update(ossContext context, string sid, PenznemDto dto)
+        public static async Task<int> UpdateAsync(ossContext context, string sid, PenznemDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);
 
-            PenznemDal.Lock(context, dto.Penznemkod, dto.Modositva);
+            await PenznemDal.Lock(context, dto.Penznemkod, dto.Modositva);
             var entity = PenznemDal.Get(context, dto.Penznemkod);
             ObjectUtils.Update(dto, entity);
             PenznemDal.ExistsAnother(context, entity);

@@ -4,6 +4,7 @@ using ossServer.Enums;
 using ossServer.Models;
 using ossServer.Utils;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Primitiv.Termekdij
 {
@@ -26,12 +27,12 @@ namespace ossServer.Controllers.Primitiv.Termekdij
             return new TermekdijDto { Termekdijegysegar = 0 };
         }
 
-        public static void Delete(ossContext context, string sid, TermekdijDto dto)
+        public static async Task DeleteAsync(ossContext context, string sid, TermekdijDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
 
-            TermekdijDal.Lock(context, dto.Termekdijkod, dto.Modositva);
+            await TermekdijDal.Lock(context, dto.Termekdijkod, dto.Modositva);
             TermekdijDal.CheckReferences(context, dto.Termekdijkod);
             var entity = TermekdijDal.Get(context, dto.Termekdijkod);
             TermekdijDal.Delete(context, entity);
@@ -55,12 +56,12 @@ namespace ossServer.Controllers.Primitiv.Termekdij
             return ObjectUtils.Convert<Models.Termekdij, TermekdijDto>(entities);
         }
 
-        public static int Update(ossContext context, string sid, TermekdijDto dto)
+        public static async Task<int> UpdateAsync(ossContext context, string sid, TermekdijDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
 
-            TermekdijDal.Lock(context, dto.Termekdijkod, dto.Modositva);
+            await TermekdijDal.Lock(context, dto.Termekdijkod, dto.Modositva);
             var entity = TermekdijDal.Get(context, dto.Termekdijkod);
             ObjectUtils.Update(dto, entity);
             TermekdijDal.ExistsAnother(context, entity);

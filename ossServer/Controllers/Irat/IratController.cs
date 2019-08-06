@@ -70,7 +70,7 @@ namespace ossServer.Controllers.Irat
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    IratBll.Delete(_context, sid, dto);
+                    await IratBll.DeleteAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -112,7 +112,7 @@ namespace ossServer.Controllers.Irat
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = IratBll.Update(_context, sid, dto);
+                    result.Result = await IratBll.UpdateAsync(_context, sid, dto);
 
                     tr.Commit();
                 }

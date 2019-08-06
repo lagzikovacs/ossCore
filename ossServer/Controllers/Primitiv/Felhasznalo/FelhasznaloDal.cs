@@ -4,61 +4,64 @@ using ossServer.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Primitiv.Felhasznalo
 {
     public class FelhasznaloDal
     {
-        public static void Exists(ossContext model, Models.Felhasznalo entity)
+        public static async Task ExistsAsync(ossContext model, Models.Felhasznalo entity)
         {
-            if (model.Felhasznalo.Any(s => s.Azonosito == entity.Azonosito))
+            if (await model.Felhasznalo.AnyAsync(s => s.Azonosito == entity.Azonosito))
                 throw new Exception(string.Format(Messages.MarLetezoTetel, entity.Azonosito));
         }
 
-        public static int Add(ossContext model, Models.Felhasznalo entity)
+        public static async Task<int> AddAsync(ossContext model, Models.Felhasznalo entity)
         {
             Register.Creation(model, entity);
-            model.Felhasznalo.Add(entity);
-            model.SaveChanges();
+            await model.Felhasznalo.AddAsync(entity);
+            await model.SaveChangesAsync();
 
             return entity.Felhasznalokod;
         }
 
-        public async static void Lock(ossContext context, int pKey, DateTime utoljaraModositva)
+        public async static Task Lock(ossContext context, int pKey, DateTime utoljaraModositva)
         {
             await context.ExecuteLockFunction("lockfelhasznalo", "felhasznalokod", pKey, utoljaraModositva);
         }
 
-        public static Models.Felhasznalo Get(ossContext model, int key)
+        public static async Task<Models.Felhasznalo> GetAsync(ossContext model, int key)
         {
-            var result = model.Felhasznalo.Where(s => s.Felhasznalokod == key).ToList();
+            var result = await model.Felhasznalo.Where(s => s.Felhasznalokod == key).ToListAsync();
             if (result.Count != 1)
                 throw new Exception(string.Format(Messages.AdatNemTalalhato, 
                     $"{nameof(Models.Felhasznalo.Felhasznalokod)}={key}"));
             return result.First();
         }
 
-        public static Models.Felhasznalo Get(ossContext model, string azonosito, string jelszo)
+        public static async Task<Models.Felhasznalo> GetAsync(ossContext model, string azonosito, string jelszo)
         {
-            var result = model.Felhasznalo.AsNoTracking()
+            var result = await model.Felhasznalo.AsNoTracking()
               .Where(s => s.Azonosito == azonosito && s.Jelszo == jelszo && s.Statusz == "OK")
-              .ToList();
+              .ToListAsync();
+
             if (result.Count != 1)
                 throw new Exception($"Ismeretlen azonosító vagy hibás jelszó: {azonosito}!");
+
             return result.First();
         }
 
-        public static List<Models.Felhasznalo> Read(ossContext model, string maszk)
+        public static async Task<List<Models.Felhasznalo>> ReadAsync(ossContext model, string maszk)
         {
-            return model.Felhasznalo.AsNoTracking()
-              .Where(s => s.Nev.Contains(maszk)).OrderBy(s => s.Nev).ToList();
+            return await model.Felhasznalo.AsNoTracking()
+              .Where(s => s.Nev.Contains(maszk)).OrderBy(s => s.Nev).ToListAsync();
         }
 
-        public static void CheckReferences(ossContext model, int pKey)
+        public static async Task CheckReferencesAsync(ossContext model, int pKey)
         {
             var result = new Dictionary<string, int>();
 
-            var n = model.Csoportfelhasznalo.Count(s => s.Felhasznalokod == pKey);
+            var n = await model.Csoportfelhasznalo.CountAsync(s => s.Felhasznalokod == pKey);
             if (n > 0)
                 result.Add("CSOPORTFELHASZNALO.FELHASZNALOKOD", n);
 
@@ -72,22 +75,22 @@ namespace ossServer.Controllers.Primitiv.Felhasznalo
             }
         }
 
-        public static void Delete(ossContext model, Models.Felhasznalo entity)
+        public static async Task DeleteAsync(ossContext model, Models.Felhasznalo entity)
         {
             model.Felhasznalo.Remove(entity);
-            model.SaveChanges();
+            await model.SaveChangesAsync();
         }
 
-        public static void ExistsAnother(ossContext model, Models.Felhasznalo entity)
+        public static async Task ExistsAnotherAsync(ossContext model, Models.Felhasznalo entity)
         {
-            if (model.Felhasznalo.Any(s => s.Azonosito == entity.Azonosito && s.Felhasznalokod != entity.Felhasznalokod))
+            if (await model.Felhasznalo.AnyAsync(s => s.Azonosito == entity.Azonosito && s.Felhasznalokod != entity.Felhasznalokod))
                 throw new Exception(string.Format(Messages.NemMenthetoMarLetezik, entity.Azonosito));
         }
 
-        public static int Update(ossContext model, Models.Felhasznalo entity)
+        public static async Task<int> UpdateAsync(ossContext model, Models.Felhasznalo entity)
         {
             Register.Modification(model, entity);
-            model.SaveChanges();
+            await model.SaveChangesAsync();
 
             return entity.Felhasznalokod;
         }

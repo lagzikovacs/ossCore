@@ -72,7 +72,7 @@ namespace ossServer.Controllers.Cikk
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    CikkBll.Delete(_context, sid, dto);
+                    await CikkBll.DeleteAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -134,7 +134,7 @@ namespace ossServer.Controllers.Cikk
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = CikkBll.Update(_context, sid, dto);
+                    result.Result = await CikkBll.UpdateAsync(_context, sid, dto);
 
                     tr.Commit();
                 }

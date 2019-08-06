@@ -58,7 +58,7 @@ namespace ossServer.Controllers.Ajanlat
             };
         }
 
-        public static int AjanlatKesztites(ossContext context, string sid, 
+        public static async System.Threading.Tasks.Task<int> AjanlatKesztitesAsync(ossContext context, string sid, 
             int projektKod, List<AjanlatBuf> ajanlatBuf, List<SzMT> fi)
         {
             SessionBll.Check(context, sid);
@@ -145,7 +145,7 @@ namespace ossServer.Controllers.Ajanlat
                 string.Format(gar, napelem.Garancia, inverter.Garancia, mechanikaiSzerelveny.Garancia,
                 villamosSzerelveny.Garancia, munkadij.Garancia));
 
-            var felhasznalo = FelhasznaloDal.Get(context, context.CurrentSession.Felhasznalokod);
+            var felhasznalo = await FelhasznaloDal.GetAsync(context, context.CurrentSession.Felhasznalokod);
             XlsUtils.Mezo(_sheet, 8, 3, $"{felhasznalo.Nev}, {felhasznalo.Telefon}, {felhasznalo.Email}");
 
             //az excel mezőkkiértékelése

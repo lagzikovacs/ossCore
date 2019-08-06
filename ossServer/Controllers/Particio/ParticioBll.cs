@@ -4,6 +4,7 @@ using ossServer.Enums;
 using ossServer.Models;
 using ossServer.Utils;
 using System;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Particio
 {
@@ -83,7 +84,7 @@ namespace ossServer.Controllers.Particio
             return dto;
         }
 
-        public static int Update(ossContext context, string sid, ParticioDto dto)
+        public static async Task<int> UpdateAsync(ossContext context, string sid, ParticioDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PARTICIO);
@@ -92,7 +93,7 @@ namespace ossServer.Controllers.Particio
             // CheckDto(dto);
             EncryptDto(dto);
 
-            ParticioDal.Lock(context, dto.Particiokod, dto.Modositva);
+            await ParticioDal.Lock(context, dto.Particiokod, dto.Modositva);
             var entity = ParticioDal.Get(context);
             ObjectUtils.Update(dto, entity);
             return ParticioDal.Update(context, entity);

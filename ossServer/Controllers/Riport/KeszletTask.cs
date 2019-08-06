@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using ossServer.Models;
 using ossServer.Tasks;
@@ -23,7 +24,7 @@ namespace ossServer.Controllers.Riport
             _idopont = (DateTime)szmt[0].Minta;
         }
 
-        protected override Exception Run()
+        protected override async Task<Exception> RunAsync()
         {
             Exception exception = null;
 
@@ -34,8 +35,7 @@ namespace ossServer.Controllers.Riport
                     using (var tr = _context.Database.BeginTransaction())
                         try
                         {
-                            var result = new RiportBll().Keszlet(_context, _sid,
-                                _idopont);
+                            var result = await new RiportBll().KeszletAsync(_context, _sid, _idopont);
 
                             tr.Commit();
 

@@ -70,7 +70,7 @@ namespace ossServer.Controllers.Primitiv.Termekdij
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    TermekdijBll.Delete(_context, sid, dto);
+                    await TermekdijBll.DeleteAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -133,7 +133,7 @@ namespace ossServer.Controllers.Primitiv.Termekdij
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = TermekdijBll.Update(_context, sid, dto);
+                    result.Result = await TermekdijBll.UpdateAsync(_context, sid, dto);
 
                     tr.Commit();
                 }

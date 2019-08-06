@@ -5,6 +5,7 @@ using ossServer.Models;
 using ossServer.Utils;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Kifizetes
 {
@@ -43,12 +44,12 @@ namespace ossServer.Controllers.Kifizetes
             return result;
         }
 
-        public static void Delete(ossContext context, string sid, KifizetesDto dto)
+        public static async Task DeleteAsync(ossContext context, string sid, KifizetesDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.BIZONYLATMOD);
 
-            KifizetesDal.Lock(context, dto.Kifizeteskod, dto.Modositva);
+            await KifizetesDal.Lock(context, dto.Kifizeteskod, dto.Modositva);
             var entity = KifizetesDal.Get(context, dto.Kifizeteskod);
             KifizetesDal.Delete(context, entity);
         }
@@ -70,12 +71,12 @@ namespace ossServer.Controllers.Kifizetes
             return new KifizetesDto { Datum = DateTime.Today };
         }
 
-        public static int Update(ossContext context, string sid, KifizetesDto dto)
+        public static async Task<int> UpdateAsync(ossContext context, string sid, KifizetesDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.BIZONYLATMOD);
 
-            KifizetesDal.Lock(context, dto.Kifizeteskod, dto.Modositva);
+            await KifizetesDal.Lock(context, dto.Kifizeteskod, dto.Modositva);
             var entity = KifizetesDal.Get(context, dto.Kifizeteskod);
             ObjectUtils.Update(dto, entity);
             return KifizetesDal.Update(context, entity);

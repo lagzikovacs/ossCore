@@ -5,6 +5,7 @@ using ossServer.Models;
 using ossServer.Utils;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Cikk
 {
@@ -26,12 +27,12 @@ namespace ossServer.Controllers.Cikk
             return new CikkDto();
         }
 
-        public static void Delete(ossContext context, string sid, CikkDto dto)
+        public static async Task DeleteAsync(ossContext context, string sid, CikkDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.CIKK);
 
-            CikkDal.Lock(context, dto.Cikkkod, dto.Modositva);
+            await CikkDal.Lock(context, dto.Cikkkod, dto.Modositva);
             CikkDal.CheckReferences(context, dto.Cikkkod);
             var entity = CikkDal.Get(context, dto.Cikkkod);
             CikkDal.Delete(context, entity);
@@ -78,12 +79,12 @@ namespace ossServer.Controllers.Cikk
             return result;
         }
 
-        public static int Update(ossContext context, string sid, CikkDto dto)
+        public static async Task<int> UpdateAsync(ossContext context, string sid, CikkDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.CIKK);
 
-            CikkDal.Lock(context, dto.Cikkkod, dto.Modositva);
+            await CikkDal.Lock(context, dto.Cikkkod, dto.Modositva);
             var entity = CikkDal.Get(context, dto.Cikkkod);
 
             ObjectUtils.Update(dto, entity);

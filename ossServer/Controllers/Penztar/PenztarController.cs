@@ -69,7 +69,7 @@ namespace ossServer.Controllers.Penztar
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    PenztarBll.Delete(_context, sid, dto);
+                    await PenztarBll.DeleteAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -174,7 +174,7 @@ namespace ossServer.Controllers.Penztar
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = PenztarBll.Update(_context, sid, dto);
+                    result.Result = await PenztarBll.UpdateAsync(_context, sid, dto);
 
                     tr.Commit();
                 }

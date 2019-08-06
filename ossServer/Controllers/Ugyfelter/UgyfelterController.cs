@@ -34,7 +34,7 @@ namespace ossServer.Controllers.Ugyfelter
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = UgyfelterBll.CreateNewLink(_context, sid, dto);
+                    result.Result = await UgyfelterBll.CreateNewLinkAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -55,7 +55,7 @@ namespace ossServer.Controllers.Ugyfelter
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = UgyfelterBll.GetLink(_context, sid, dto);
+                    result.Result = await UgyfelterBll.GetLinkAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -78,7 +78,7 @@ namespace ossServer.Controllers.Ugyfelter
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = UgyfelterBll.UgyfelterCheck(_context, _hubcontext, _config, linkparam);
+                    result.Result = await UgyfelterBll.UgyfelterCheckAsync(_context, _hubcontext, _config, linkparam);
 
                     tr.Commit();
                 }

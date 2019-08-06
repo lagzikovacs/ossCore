@@ -8,6 +8,7 @@ using ossServer.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Irat
 {
@@ -30,12 +31,12 @@ namespace ossServer.Controllers.Irat
             return new IratDto { Keletkezett = DateTime.Now.Date, Irany = "Belső" };
         }
 
-        public static void Delete(ossContext context, string sid, IratDto dto)
+        public static async Task DeleteAsync(ossContext context, string sid, IratDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.IRATMOD);
 
-            IratDal.Lock(context, dto.Iratkod, dto.Modositva);
+            await IratDal.Lock(context, dto.Iratkod, dto.Modositva);
             IratDal.CheckReferences(context, dto.Iratkod);
             var entity = IratDal.Get(context, dto.Iratkod);
             IratDal.Delete(context, entity);
@@ -81,12 +82,12 @@ namespace ossServer.Controllers.Irat
             return result;
         }
 
-        public static int Update(ossContext context, string sid, IratDto dto)
+        public static async Task<int> UpdateAsync(ossContext context, string sid, IratDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.IRATMOD);
 
-            IratDal.Lock(context, dto.Iratkod, dto.Modositva);
+            await IratDal.Lock(context, dto.Iratkod, dto.Modositva);
             var entity = IratDal.Get(context, dto.Iratkod);
             ObjectUtils.Update(dto, entity);
             return IratDal.Update(context, entity);

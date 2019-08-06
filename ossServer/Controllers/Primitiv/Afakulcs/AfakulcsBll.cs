@@ -4,20 +4,21 @@ using ossServer.Enums;
 using ossServer.Models;
 using ossServer.Utils;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Primitiv.Afakulcs
 {
     public class AfakulcsBll
     {
-        public static int Add(ossContext context, string sid, AfakulcsDto dto)
+        public static async Task<int> AddAsync(ossContext context, string sid, AfakulcsDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
 
             var entity = ObjectUtils.Convert<AfakulcsDto, Models.Afakulcs>(dto);
-            AfakulcsDal.Exists(context, entity);
+            await AfakulcsDal.ExistsAsync(context, entity);
 
-            return AfakulcsDal.Add(context, entity);
+            return await AfakulcsDal.AddAsync(context, entity);
         }
 
         public static AfakulcsDto CreateNew(ossContext context, string sid)
@@ -28,53 +29,53 @@ namespace ossServer.Controllers.Primitiv.Afakulcs
             return new AfakulcsDto();
         }
 
-        public static void Delete(ossContext context, string sid, AfakulcsDto dto)
+        public static async Task DeleteAsync(ossContext context, string sid, AfakulcsDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
 
-            AfakulcsDal.Lock(context, dto.Afakulcskod, dto.Modositva);
-            AfakulcsDal.CheckReferences(context, dto.Afakulcskod);
-            var entity = AfakulcsDal.Get(context, dto.Afakulcskod);
-            AfakulcsDal.Delete(context, entity);
+            await AfakulcsDal.Lock(context, dto.Afakulcskod, dto.Modositva);
+            await AfakulcsDal.CheckReferencesAsync(context, dto.Afakulcskod);
+            var entity = await AfakulcsDal.GetAsync(context, dto.Afakulcskod);
+            await AfakulcsDal.DeleteAsync(context, entity);
         }
 
-        public static AfakulcsDto Get(ossContext context, string sid, int key)
+        public static async Task<AfakulcsDto> GetAsync(ossContext context, string sid, int key)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);
 
-            var entity = AfakulcsDal.Get(context, key);
+            var entity = await AfakulcsDal.GetAsync(context, key);
             return ObjectUtils.Convert<Models.Afakulcs, AfakulcsDto>(entity);
         }
 
-        public static List<AfakulcsDto> Read(ossContext context, string sid, string maszk)
+        public static async Task<List<AfakulcsDto>> ReadAsync(ossContext context, string sid, string maszk)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);
 
-            var entities = AfakulcsDal.Read(context, maszk);
+            var entities = await AfakulcsDal.ReadAsync(context, maszk);
             return ObjectUtils.Convert<Models.Afakulcs, AfakulcsDto>(entities);
         }
 
-        public static int Update(ossContext context, string sid, AfakulcsDto dto)
+        public static async Task<int> UpdateAsync(ossContext context, string sid, AfakulcsDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
 
-            AfakulcsDal.Lock(context, dto.Afakulcskod, dto.Modositva);
-            var entity = AfakulcsDal.Get(context, dto.Afakulcskod);
+            await AfakulcsDal.Lock(context, dto.Afakulcskod, dto.Modositva);
+            var entity = await AfakulcsDal.GetAsync(context, dto.Afakulcskod);
             ObjectUtils.Update(dto, entity);
-            AfakulcsDal.ExistsAnother(context, entity);
+            await AfakulcsDal.ExistsAnotherAsync(context, entity);
 
-            return AfakulcsDal.Update(context, entity);
+            return await AfakulcsDal.UpdateAsync(context, entity);
         }
 
-        public static void ZoomCheck(ossContext context, string sid, int afakulcskod, string afakulcs)
+        public static async Task ZoomCheckAsync(ossContext context, string sid, int afakulcskod, string afakulcs)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);
-            AfakulcsDal.ZoomCheck(context, afakulcskod, afakulcs);
+            await AfakulcsDal.ZoomCheckAsync(context, afakulcskod, afakulcs);
         }
 
         public static List<ColumnSettings> GridColumns()

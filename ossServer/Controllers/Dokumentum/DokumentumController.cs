@@ -166,7 +166,7 @@ namespace ossServer.Controllers.Dokumentum
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    DokumentumBll.Delete(_context, sid, dto);
+                    await DokumentumBll.DeleteAsync(_context, sid, dto);
 
                     tr.Commit();
                 }

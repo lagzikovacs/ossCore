@@ -4,6 +4,7 @@ using ossServer.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Primitiv.Helyseg
 {
@@ -25,7 +26,7 @@ namespace ossServer.Controllers.Primitiv.Helyseg
             return entity.Helysegkod;
         }
 
-        public async static void Lock(ossContext context, int pKey, DateTime utoljaraModositva)
+        public async static Task Lock(ossContext context, int pKey, DateTime utoljaraModositva)
         {
             await context.ExecuteLockFunction("lockhelyseg", "helysegkod", pKey, utoljaraModositva);
         }

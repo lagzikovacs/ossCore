@@ -69,7 +69,7 @@ namespace ossServer.Controllers.Projekt
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    ProjektBll.Delete(_context, sid, dto);
+                    await ProjektBll.DeleteAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -111,7 +111,7 @@ namespace ossServer.Controllers.Projekt
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = ProjektBll.Update(_context, sid, dto);
+                    result.Result = await ProjektBll.UpdateAsync(_context, sid, dto);
 
                     tr.Commit();
                 }

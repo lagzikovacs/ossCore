@@ -70,7 +70,7 @@ namespace ossServer.Controllers.Primitiv.Teendo
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    TeendoBll.Delete(_context, sid, dto);
+                    await TeendoBll.DeleteAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -133,7 +133,7 @@ namespace ossServer.Controllers.Primitiv.Teendo
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = TeendoBll.Update(_context, sid, dto);
+                    result.Result = await TeendoBll.UpdateAsync(_context, sid, dto);
 
                     tr.Commit();
                 }

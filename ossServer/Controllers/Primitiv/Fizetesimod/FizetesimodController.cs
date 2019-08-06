@@ -70,7 +70,7 @@ namespace ossServer.Controllers.Primitiv.Fizetesimod
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    FizetesimodBll.Delete(_context, sid, dto);
+                    await FizetesimodBll.DeleteAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -133,7 +133,7 @@ namespace ossServer.Controllers.Primitiv.Fizetesimod
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = FizetesimodBll.Update(_context, sid, dto);
+                    result.Result = await FizetesimodBll.UpdateAsync(_context, sid, dto);
 
                     tr.Commit();
                 }

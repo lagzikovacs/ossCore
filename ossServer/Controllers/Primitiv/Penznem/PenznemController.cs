@@ -70,7 +70,7 @@ namespace ossServer.Controllers.Primitiv.Penznem
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    PenznemBll.Delete(_context, sid, dto);
+                    await PenznemBll.DeleteAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -133,7 +133,7 @@ namespace ossServer.Controllers.Primitiv.Penznem
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = PenznemBll.Update(_context, sid, dto);
+                    result.Result = await PenznemBll.UpdateAsync(_context, sid, dto);
 
                     tr.Commit();
                 }

@@ -9,6 +9,7 @@ using ossServer.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Bizonylat
 {
@@ -202,12 +203,12 @@ namespace ossServer.Controllers.Bizonylat
             return result;
         }
 
-        public static void Delete(ossContext context, string sid, BizonylatDto dto)
+        public static async Task DeleteAsync(ossContext context, string sid, BizonylatDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.BIZONYLATMOD);
 
-            BizonylatDal.Lock(context, dto.Bizonylatkod, dto.Modositva);
+            await BizonylatDal.Lock(context, dto.Bizonylatkod, dto.Modositva);
             var entity = BizonylatDal.Get(context, dto.Bizonylatkod);
             BizonylatDal.Delete(context, entity);
         }
@@ -237,7 +238,7 @@ namespace ossServer.Controllers.Bizonylat
                 context.KodGen(Bl[bizonylattipusKod].KodNev).ToString("00000");
         }
 
-        public static int Save(ossContext context, string sid, BizonylatComplexDto complexDto)
+        public static async Task<int> SaveAsync(ossContext context, string sid, BizonylatComplexDto complexDto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.BIZONYLATMOD);
@@ -263,7 +264,7 @@ namespace ossServer.Controllers.Bizonylat
             {
                 //updateelni a fejet
                 bizonylatKod = complexDto.Dto.Bizonylatkod;
-                BizonylatDal.Lock(context, bizonylatKod, complexDto.Dto.Modositva);
+                await BizonylatDal.Lock(context, bizonylatKod, complexDto.Dto.Modositva);
                 entity = BizonylatDal.Get(context, bizonylatKod);
                 ObjectUtils.Update(complexDto.Dto, entity);
                 BizonylatDal.Update(context, entity);
@@ -311,7 +312,7 @@ namespace ossServer.Controllers.Bizonylat
             return bizonylatKod;
         }
 
-        public static int UjBizonylatMintaAlapjan(ossContext context, string sid, 
+        public static async Task<int> UjBizonylatMintaAlapjanAsync(ossContext context, string sid, 
             int bizonylatKod, BizonylatTipus bizonylatTipus)
         {
             SessionBll.Check(context, sid);
@@ -340,15 +341,15 @@ namespace ossServer.Controllers.Bizonylat
             }
 
             //Save: az Áfa tételek törlődnek és újraszámítódnak
-            return Save(context, sid, complexDto);
+            return await SaveAsync(context, sid, complexDto);
         }
 
-        public static int Storno(ossContext context, string sid, BizonylatDto dto)
+        public static async Task<int> StornoAsync(ossContext context, string sid, BizonylatDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.BIZONYLATMOD);
 
-            BizonylatDal.Lock(context, dto.Bizonylatkod, dto.Modositva);
+            await BizonylatDal.Lock(context, dto.Bizonylatkod, dto.Modositva);
 
             //a fej/tételek/áfa lekérése/módosítása/hozzáadása lépésenként
             var stornozando = BizonylatDal.Get(context, dto.Bizonylatkod);
@@ -446,13 +447,13 @@ namespace ossServer.Controllers.Bizonylat
             return stornozo.Bizonylatkod;
         }
 
-        public static int Kibocsatas(ossContext context, string sid, 
+        public static async Task<int> KibocsatasAsync(ossContext context, string sid, 
             BizonylatDto dto, string bizonylatszam)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.BIZONYLATMOD);
 
-            BizonylatDal.Lock(context, dto.Bizonylatkod, dto.Modositva);
+            await BizonylatDal.Lock(context, dto.Bizonylatkod, dto.Modositva);
             var entity = BizonylatDal.Get(context, dto.Bizonylatkod);
             if (entity.Bizonylatszam != null)
                 throw new Exception("Ez a bizonylat már ki van bocsátva!");
@@ -493,12 +494,12 @@ namespace ossServer.Controllers.Bizonylat
             return result;
         }
 
-        public static int KifizetesRendben(ossContext context, string sid, BizonylatDto dto)
+        public static async Task<int> KifizetesRendbenAsync(ossContext context, string sid, BizonylatDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.BIZONYLATMOD);
 
-            BizonylatDal.Lock(context, dto.Bizonylatkod, dto.Modositva);
+            await BizonylatDal.Lock(context, dto.Bizonylatkod, dto.Modositva);
             var entity = BizonylatDal.Get(context, dto.Bizonylatkod);
             if (entity.Kifizetesrendben == true) //null miatt
                 entity.Kifizetesrendben = false;
@@ -507,12 +508,12 @@ namespace ossServer.Controllers.Bizonylat
             return BizonylatDal.Update(context, entity);
         }
 
-        public static int Kiszallitva(ossContext context, string sid, BizonylatDto dto)
+        public static async Task<int> KiszallitvaAsync(ossContext context, string sid, BizonylatDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.BIZONYLATMOD);
 
-            BizonylatDal.Lock(context, dto.Bizonylatkod, dto.Modositva);
+            await BizonylatDal.Lock(context, dto.Bizonylatkod, dto.Modositva);
             var entity = BizonylatDal.Get(context, dto.Bizonylatkod);
             if (entity.Kiszallitva == true) //null miatt
                 entity.Kiszallitva = false;

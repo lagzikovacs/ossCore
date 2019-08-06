@@ -18,6 +18,7 @@ using ossServer.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace ossServer.Controllers.Ugyfelter
@@ -33,12 +34,12 @@ namespace ossServer.Controllers.Ugyfelter
                 HttpUtility.UrlEncode(StringCipher.Encrypt(JsonConvert.SerializeObject(up), edKey));
         }
 
-        public static string CreateNewLink(ossContext context, string sid, UgyfelDto dto)
+        public static async Task<string> CreateNewLinkAsync(ossContext context, string sid, UgyfelDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.UGYFELEKMOD);
 
-            UgyfelDal.Lock(context, dto.Ugyfelkod, dto.Modositva);
+            await UgyfelDal.Lock(context, dto.Ugyfelkod, dto.Modositva);
             var entity = UgyfelDal.Get(context, dto.Ugyfelkod);
 
             var kikuldesikod = Guid.NewGuid().ToString();
@@ -56,12 +57,12 @@ namespace ossServer.Controllers.Ugyfelter
             return Link(up);
         }
 
-        public static string GetLink(ossContext context, string sid, UgyfelDto dto)
+        public static async Task<string> GetLinkAsync(ossContext context, string sid, UgyfelDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.UGYFELEKMOD);
 
-            UgyfelDal.Lock(context, dto.Ugyfelkod, dto.Modositva);
+            await UgyfelDal.Lock(context, dto.Ugyfelkod, dto.Modositva);
             var entity = UgyfelDal.Get(context, dto.Ugyfelkod);
             if (entity.Kikuldesikod == null)
                 throw new Exception("Ez az ügyfél még nem kapott ügyféltér linket!");
@@ -76,7 +77,7 @@ namespace ossServer.Controllers.Ugyfelter
             return Link(up);
         }
 
-        public static UgyfelterDto UgyfelterCheck(ossContext context, IHubContext<OssHub> hubcontext,
+        public static async Task<UgyfelterDto> UgyfelterCheckAsync(ossContext context, IHubContext<OssHub> hubcontext,
             IConfiguration config, string linkparam)
         {
             const string uh = "Ügyféltér hiba {0} - értesítse a GridSolar sales-t!";
@@ -98,7 +99,7 @@ namespace ossServer.Controllers.Ugyfelter
 
             try
             {
-                result.sid = LogonBll.Bejelentkezes(context, hubcontext,
+                result.sid = await LogonBll.BejelentkezesAsync(context, hubcontext,
                     config.GetValue<string>("Ugyfelter:user"),
                     Crypt.MD5Hash(config.GetValue<string>("Ugyfelter:password")), "", "", "");
             }

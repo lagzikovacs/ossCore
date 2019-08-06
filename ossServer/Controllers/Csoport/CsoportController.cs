@@ -71,7 +71,7 @@ namespace ossServer.Controllers.Csoport
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    CsoportBll.Delete(_context, sid, dto);
+                    await CsoportBll.DeleteAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -134,7 +134,7 @@ namespace ossServer.Controllers.Csoport
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = CsoportBll.Update(_context, sid, dto);
+                    result.Result = await CsoportBll.UpdateAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -156,7 +156,7 @@ namespace ossServer.Controllers.Csoport
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = CsoportBll.SelectCsoportFelhasznalo(_context, sid, csoportKod);
+                    result.Result = await CsoportBll.SelectCsoportFelhasznaloAsync(_context, sid, csoportKod);
 
                     tr.Commit();
                 }

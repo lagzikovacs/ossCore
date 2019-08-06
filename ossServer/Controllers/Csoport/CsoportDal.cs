@@ -26,7 +26,7 @@ namespace ossServer.Controllers.Csoport
             return entity.Csoportkod;
         }
 
-        public async static void Lock(ossContext context, int pKey, DateTime utoljaraModositva)
+        public async static Task Lock(ossContext context, int pKey, DateTime utoljaraModositva)
         {
             await context.ExecuteLockFunction("lockcsoport", "csoportkod", pKey, utoljaraModositva);
         }

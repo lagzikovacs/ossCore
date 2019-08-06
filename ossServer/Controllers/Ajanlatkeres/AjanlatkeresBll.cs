@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Ajanlatkeres
 {
@@ -79,12 +80,12 @@ namespace ossServer.Controllers.Ajanlatkeres
             return new AjanlatkeresDto { Ugynoknev = context.CurrentSession.Felhasznalo };
         }
 
-        public static void Delete(ossContext context, string sid, AjanlatkeresDto dto)
+        public static async Task DeleteAsync(ossContext context, string sid, AjanlatkeresDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.AJANLATKERESMOD);
 
-            AjanlatkeresDal.Lock(context, dto.Ajanlatkereskod, dto.Modositva);
+            await AjanlatkeresDal.Lock(context, dto.Ajanlatkereskod, dto.Modositva);
             var entity = AjanlatkeresDal.Get(context, dto.Ajanlatkereskod);
             AjanlatkeresDal.Delete(context, entity);
         }
@@ -110,12 +111,12 @@ namespace ossServer.Controllers.Ajanlatkeres
             return ObjectUtils.Convert<Models.Ajanlatkeres, AjanlatkeresDto>(entities);
         }
 
-        public static int Update(ossContext context, string sid, AjanlatkeresDto dto)
+        public static async Task<int> UpdateAsync(ossContext context, string sid, AjanlatkeresDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.AJANLATKERESMOD);
 
-            AjanlatkeresDal.Lock(context, dto.Ajanlatkereskod, dto.Modositva);
+            await AjanlatkeresDal.Lock(context, dto.Ajanlatkereskod, dto.Modositva);
             var entity = AjanlatkeresDal.Get(context, dto.Ajanlatkereskod);
             ObjectUtils.Update(dto, entity);
             return AjanlatkeresDal.Update(context, entity);

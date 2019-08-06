@@ -72,7 +72,7 @@ namespace ossServer.Controllers.Kifizetes
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    KifizetesBll.Delete(_context, sid, dto);
+                    await KifizetesBll.DeleteAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -114,7 +114,7 @@ namespace ossServer.Controllers.Kifizetes
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = KifizetesBll.Update(_context, sid, dto);
+                    result.Result = await KifizetesBll.UpdateAsync(_context, sid, dto);
 
                     tr.Commit();
                 }

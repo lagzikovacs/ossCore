@@ -4,12 +4,13 @@ using ossServer.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Riport
 {
     public class RiportDal
     {
-        public static List<int> KimenoSzamlakBizonylatkodok(ossContext context, 
+        public static async Task<List<int>> KimenoSzamlakBizonylatkodokAsync(ossContext context, 
             DateTime teljesitesKeltetol, DateTime teljesitesKelteig)
         {
             var pluszEgyNap = teljesitesKelteig.AddDays(1);
@@ -21,7 +22,7 @@ namespace ossServer.Controllers.Riport
               .OrderBy(s => s.Bizonylatszam)
               .Select(s => s.Bizonylatkod);
 
-            var result = qry.ToList();
+            var result = await qry.ToListAsync();
 
             var qry1 = context.Bizonylat.AsNoTracking()
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
@@ -30,31 +31,31 @@ namespace ossServer.Controllers.Riport
               .OrderBy(s => s.Bizonylatszam)
               .Select(s => s.Bizonylatkod);
 
-            result.AddRange(qry1.ToList());
+            result.AddRange(await qry1.ToListAsync());
 
             return result;
         }
 
-        public static List<int> BejovoSzamlakBizonylatkodok(ossContext context, 
+        public static async Task<List<int>> BejovoSzamlakBizonylatkodokAsync(ossContext context, 
             DateTime teljesitesKeltetol, DateTime teljesitesKelteig)
         {
             var pluszEgyNap = teljesitesKelteig.AddDays(1);
 
-            return context.Bizonylat.AsNoTracking()
+            return await context.Bizonylat.AsNoTracking()
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.Bizonylattipuskod == (int)BizonylatTipus.BejovoSzamla)
               .Where(s => s.Teljesiteskelte >= teljesitesKeltetol && s.Teljesiteskelte < pluszEgyNap)
               .OrderBy(s => s.Bizonylatszam)
               .Select(s => s.Bizonylatkod)
-              .ToList();
+              .ToListAsync();
         }
 
-        public static List<Models.Bizonylat> BizonylatRiporttetelek(ossContext context, 
+        public static async Task<List<Models.Bizonylat>> BizonylatRiporttetelekAsync(ossContext context, 
             List<int> bizonylatkodok)
         {
-            var temp = context.Bizonylat.AsNoTracking()
+            var temp = await context.Bizonylat.AsNoTracking()
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
-              .Where(s => bizonylatkodok.Contains(s.Bizonylatkod)).ToList();
+              .Where(s => bizonylatkodok.Contains(s.Bizonylatkod)).ToListAsync();
 
             var result = new List<Models.Bizonylat>();
 
@@ -66,7 +67,7 @@ namespace ossServer.Controllers.Riport
         }
 
 
-        public static List<int> KovetelesekBizonylatkodok(ossContext context, 
+        public static async Task<List<int>> KovetelesekBizonylatkodokAsync(ossContext context, 
             DateTime ezenANapon, bool lejart)
         {
             var ezenANaponPluszEgyNap = ezenANapon.AddDays(1); // Az sql-es < reláció miatt (óra/perc/sec belekalkulálása)
@@ -91,10 +92,10 @@ namespace ossServer.Controllers.Riport
 
             qry = qry.OrderBy(s => s.Bizonylatszam);
 
-            return qry.Select(s => s.Bizonylatkod).ToList();
+            return await qry.Select(s => s.Bizonylatkod).ToListAsync();
         }
 
-        public static List<int> TartozasokBizonylatkodok(ossContext context, 
+        public static async Task<List<int>> TartozasokBizonylatkodokAsync(ossContext context, 
             DateTime ezenANapon, bool lejart)
         {
             var ezenANaponPluszEgyNap = ezenANapon.AddDays(1); // Az sql-es < reláció miatt (óra/perc/sec belekalkulálása)
@@ -114,13 +115,13 @@ namespace ossServer.Controllers.Riport
 
             qry = qry.OrderBy(s => s.Fizetesihatarido).ThenBy(s => s.Ugyfelnev);
 
-            return qry.Select(s => s.Bizonylatkod).ToList();
+            return await qry.Select(s => s.Bizonylatkod).ToListAsync();
         }
 
-        public static List<KovetelesTartozasRiporttetelDto> KovetelesekTartozasokRiporttetelek(ossContext context,
+        public static async Task<List<KovetelesTartozasRiporttetelDto>> KovetelesekTartozasokRiporttetelekAsync(ossContext context,
             List<int> bizonylatkodok, DateTime ezenANapon)
         {
-            var temp = context.Bizonylat.AsNoTracking()
+            var temp = await context.Bizonylat.AsNoTracking()
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => bizonylatkodok.Contains(s.Bizonylatkod))
               .Select(s => new KovetelesTartozasRiporttetelDto
@@ -138,7 +139,7 @@ namespace ossServer.Controllers.Riport
                   Ugyfelnev = s.Ugyfelnev,
                   Arfolyam = s.Arfolyam
               })
-              .ToList();
+              .ToListAsync();
 
             var result = new List<KovetelesTartozasRiporttetelDto>();
 
@@ -153,7 +154,7 @@ namespace ossServer.Controllers.Riport
                   .Where(s => s.Bizonylatkod == bizonylatkod & s.Datum < ezenANaponPluszEgyNap)
                   .Select(s => s.Osszeg);
 
-                dto.Megfizetve = qry.Any() ? qry.Sum() : 0;
+                dto.Megfizetve = await qry.AnyAsync() ? await qry.SumAsync() : 0;
 
                 result.Add(dto);
             }
@@ -161,12 +162,12 @@ namespace ossServer.Controllers.Riport
             return result;
         }
 
-        public static List<BeszerzesRiporttetelDto> BeszerzesRiporttetelek(ossContext context,
+        public static async Task<List<BeszerzesRiporttetelDto>> BeszerzesRiporttetelekAsync(ossContext context,
           DateTime teljesitesKelteTol, DateTime teljesitesKelteIg)
         {
             teljesitesKelteIg = teljesitesKelteIg.AddDays(1);
 
-            return context.Bizonylattetel.AsNoTracking()
+            return await context.Bizonylattetel.AsNoTracking()
               .Include(r => r.BizonylatkodNavigation)
               .Where(s => s.BizonylatkodNavigation.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.BizonylatkodNavigation.Bizonylattipuskod == (int)BizonylatTipus.BejovoSzamla)
@@ -187,10 +188,10 @@ namespace ossServer.Controllers.Riport
                       Ugyfelnev = u.BizonylatkodNavigation.Ugyfelnev
                   }).OrderBy(o => o.Teljesiteskelte)
               })
-              .ToList();
+              .ToListAsync();
         }
 
-        public static List<KeszletDto> KeszletErtekNelkul(ossContext context, DateTime ezenIdopontig)
+        public static async Task<List<KeszletDto>> KeszletErtekNelkulAsync(ossContext context, DateTime ezenIdopontig)
         {
             ezenIdopontig = ezenIdopontig.AddDays(1);
 
@@ -212,11 +213,11 @@ namespace ossServer.Controllers.Riport
                           t.Sum(s => s.BizonylatkodNavigation.Bizonylattipuskod == (int)BizonylatTipus.Szallito ? s.Mennyiseg : 0)
               });
 
-            return qry.ToList().Where(s => s.Keszlet != 0).OrderBy(s => s.Cikk).ToList();
+            return (await qry.ToListAsync()).Where(s => s.Keszlet != 0).OrderBy(s => s.Cikk).ToList();
         }
 
         //a készlet az utoljára beérkezett tételekből áll
-        public static void KeszletErteke(ossContext context, KeszletDto dto, DateTime ezenIdopontig)
+        public static async Task KeszletErtekeAsync(ossContext context, KeszletDto dto, DateTime ezenIdopontig)
         {
             ezenIdopontig = ezenIdopontig.AddDays(1);
 
@@ -239,14 +240,14 @@ namespace ossServer.Controllers.Riport
                   s.Egysegar
               });
 
-            var osszes = qry.Count();
+            var osszes = await qry.CountAsync();
             if (osszes > 0)
             {
                 var levonando = dto.Keszlet;
 
                 while (rekordTol < osszes && levonando > 0)
                 {
-                    var lst = qry.Skip(rekordTol).Take(lapMeret).ToList();
+                    var lst = await qry.Skip(rekordTol).Take(lapMeret).ToListAsync();
 
                     if (rekordTol == 0)
                     {
@@ -275,17 +276,17 @@ namespace ossServer.Controllers.Riport
             }
         }
 
-        public static List<Models.Penztartetel> PenztarTetel(ossContext context, int penztarKod, DateTime datumTol,
+        public static async Task<List<Penztartetel>> PenztarTetelAsync(ossContext context, int penztarKod, DateTime datumTol,
           DateTime datumIg)
         {
-            return context.Penztartetel.AsNoTracking()
+            return await context.Penztartetel.AsNoTracking()
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.Penztarkod == penztarKod && s.Datum >= datumTol && s.Datum <= datumIg)
               .OrderByDescending(s => s.Penztarbizonylatszam)
-              .ToList();
+              .ToListAsync();
         }
 
-        public static List<Models.Projekt> Projekt(ossContext context, int statusz)
+        public static async Task<List<Models.Projekt>> ProjektAsync(ossContext context, int statusz)
         {
             var qry = context.Projekt.AsNoTracking()
                 .Include(r => r.UgyfelkodNavigation).ThenInclude(r => r.HelysegkodNavigation)
@@ -294,7 +295,7 @@ namespace ossServer.Controllers.Riport
             if (statusz != 0)
                 qry = qry.Where(s => s.Statusz == statusz);
 
-            return qry.OrderByDescending(s => s.Projektkod).ToList();
+            return await qry.OrderByDescending(s => s.Projektkod).ToListAsync();
         }
     }
 }

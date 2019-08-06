@@ -7,15 +7,16 @@ using ossServer.Hubs;
 using ossServer.Models;
 using ossServer.Utils;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Logon
 {
     public class LogonBll
     {
-        public static string Bejelentkezes(ossContext context, IHubContext<OssHub> hubcontext, 
+        public static async Task<string> BejelentkezesAsync(ossContext context, IHubContext<OssHub> hubcontext, 
             string azonosito, string jelszo, string ip, string winHost, string winUser)
         {
-            var felhasznalo = FelhasznaloDal.Get(context, azonosito, jelszo);
+            var felhasznalo = await FelhasznaloDal.GetAsync(context, azonosito, jelszo);
             var sid = SessionBll.CreateNew(context, ip, winHost, winUser,
               felhasznalo.Felhasznalokod, felhasznalo.Nev, azonosito, felhasznalo.Logonlog);
 

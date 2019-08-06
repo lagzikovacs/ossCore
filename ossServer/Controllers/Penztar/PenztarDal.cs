@@ -3,6 +3,7 @@ using ossServer.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Penztar
 {
@@ -24,7 +25,7 @@ namespace ossServer.Controllers.Penztar
             return entity.Penztarkod;
         }
 
-        public async static void Lock(ossContext context, int pKey, DateTime utoljaraModositva)
+        public async static Task Lock(ossContext context, int pKey, DateTime utoljaraModositva)
         {
             await context.ExecuteLockFunction("lockpenztar", "penztarkod", pKey, utoljaraModositva);
         }

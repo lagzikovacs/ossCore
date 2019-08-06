@@ -27,7 +27,7 @@ namespace ossServer.Controllers.Primitiv.Afakulcs
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = AfakulcsBll.Add(_context, sid, dto);
+                    result.Result = await AfakulcsBll.AddAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -70,7 +70,7 @@ namespace ossServer.Controllers.Primitiv.Afakulcs
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    AfakulcsBll.Delete(_context, sid, dto);
+                    await AfakulcsBll.DeleteAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -91,7 +91,7 @@ namespace ossServer.Controllers.Primitiv.Afakulcs
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<AfakulcsDto> { AfakulcsBll.Get(_context, sid, key) };
+                    result.Result = new List<AfakulcsDto> { await AfakulcsBll.GetAsync(_context, sid, key) };
 
                     tr.Commit();
                 }
@@ -112,7 +112,7 @@ namespace ossServer.Controllers.Primitiv.Afakulcs
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = AfakulcsBll.Read(_context, sid, maszk);
+                    result.Result = await AfakulcsBll.ReadAsync(_context, sid, maszk);
 
                     tr.Commit();
                 }
@@ -133,7 +133,7 @@ namespace ossServer.Controllers.Primitiv.Afakulcs
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = AfakulcsBll.Update(_context, sid, dto);
+                    result.Result = await AfakulcsBll.UpdateAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -155,7 +155,7 @@ namespace ossServer.Controllers.Primitiv.Afakulcs
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    AfakulcsBll.ZoomCheck(_context, sid, par.Afakulcskod, par.Afakulcs);
+                    await AfakulcsBll.ZoomCheckAsync(_context, sid, par.Afakulcskod, par.Afakulcs);
 
                     tr.Commit();
                 }

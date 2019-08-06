@@ -31,12 +31,12 @@ namespace ossServer.Controllers.Ugyfel
             return new UgyfelDto { Csoport = 0 };
         }
 
-        public static void Delete(ossContext context, string sid, UgyfelDto dto)
+        public static async Task DeleteAsync(ossContext context, string sid, UgyfelDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.UGYFELEKMOD);
 
-            UgyfelDal.Lock(context, dto.Ugyfelkod, dto.Modositva);
+            await UgyfelDal.Lock(context, dto.Ugyfelkod, dto.Modositva);
             UgyfelDal.CheckReferences(context, dto.Ugyfelkod);
             var entity = UgyfelDal.Get(context, dto.Ugyfelkod);
             UgyfelDal.Delete(context, entity);
@@ -103,12 +103,12 @@ namespace ossServer.Controllers.Ugyfel
             return result;
         }
 
-        public static int Update(ossContext context, string sid, UgyfelDto dto)
+        public static async Task<int> UpdateAsync(ossContext context, string sid, UgyfelDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.UGYFELEKMOD);
 
-            UgyfelDal.Lock(context, dto.Ugyfelkod, dto.Modositva);
+            await UgyfelDal.Lock(context, dto.Ugyfelkod, dto.Modositva);
             var entity = UgyfelDal.Get(context, dto.Ugyfelkod);
 
             ObjectUtils.Update(dto, entity);

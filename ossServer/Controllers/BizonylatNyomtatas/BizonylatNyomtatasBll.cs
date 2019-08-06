@@ -9,6 +9,7 @@ using ossServer.Enums;
 using ossServer.Models;
 using ossServer.Utils;
 using System;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.BizonylatNyomtatas
 {
@@ -44,7 +45,7 @@ namespace ossServer.Controllers.BizonylatNyomtatas
             BizonylatDal.Update(context, entity);
         }
 
-        public static byte[] Nyomtatas(IConfiguration config, ossContext context, string sid,
+        public static async Task<byte[]> NyomtatasAsync(IConfiguration config, ossContext context, string sid,
             int bizonylatKod, BizonylatNyomtatasTipus nyomtatasTipus)
         {
             const string minta = "!!! MINTA !!!";
@@ -53,7 +54,7 @@ namespace ossServer.Controllers.BizonylatNyomtatas
             CsoportDal.Joge(context, JogKod.BIZONYLAT);
 
             var entityBizonylat = BizonylatDal.GetComplex(context, bizonylatKod);
-            BizonylatDal.Lock(context, bizonylatKod, entityBizonylat.Modositva);
+            await BizonylatDal.Lock(context, bizonylatKod, entityBizonylat.Modositva);
 
             var entityParticio = ParticioDal.Get(context);
             var iratKod = entityParticio.BizonylatBizonylatkepIratkod != null ?

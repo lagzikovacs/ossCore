@@ -5,6 +5,7 @@ using ossServer.Enums;
 using ossServer.Models;
 using ossServer.Utils;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.SzamlazasiRend
 {
@@ -68,22 +69,22 @@ namespace ossServer.Controllers.SzamlazasiRend
             return result;
         }
 
-        public static void Delete(ossContext context, string sid, SzamlazasiRendDto dto)
+        public static async Task DeleteAsync(ossContext context, string sid, SzamlazasiRendDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PROJEKT);
 
-            SzamlazasiRendDal.Lock(context, dto.Szamlazasirendkod, dto.Modositva);
+            await SzamlazasiRendDal.Lock(context, dto.Szamlazasirendkod, dto.Modositva);
             var entity = SzamlazasiRendDal.Get(context, dto.Szamlazasirendkod);
             SzamlazasiRendDal.Delete(context, entity);
         }
 
-        public static int Update(ossContext context, string sid, SzamlazasiRendDto dto)
+        public static async Task<int> UpdateAsync(ossContext context, string sid, SzamlazasiRendDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PROJEKT);
 
-            SzamlazasiRendDal.Lock(context, dto.Szamlazasirendkod, dto.Modositva);
+            await SzamlazasiRendDal.Lock(context, dto.Szamlazasirendkod, dto.Modositva);
             var entity = SzamlazasiRendDal.Get(context, dto.Szamlazasirendkod);
             ObjectUtils.Update(dto, entity);
             return SzamlazasiRendDal.Update(context, entity);

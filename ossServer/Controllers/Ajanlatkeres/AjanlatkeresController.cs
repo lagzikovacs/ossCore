@@ -91,7 +91,7 @@ namespace ossServer.Controllers.Ajanlatkeres
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    AjanlatkeresBll.Delete(_context, sid, dto);
+                    await AjanlatkeresBll.DeleteAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -156,7 +156,7 @@ namespace ossServer.Controllers.Ajanlatkeres
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = AjanlatkeresBll.Update(_context, sid, dto);
+                    result.Result = await AjanlatkeresBll.UpdateAsync(_context, sid, dto);
 
                     tr.Commit();
                 }

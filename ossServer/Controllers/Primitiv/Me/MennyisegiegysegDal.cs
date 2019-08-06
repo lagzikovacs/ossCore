@@ -4,6 +4,7 @@ using ossServer.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Primitiv.Me
 {
@@ -25,7 +26,7 @@ namespace ossServer.Controllers.Primitiv.Me
             return entity.Mekod;
         }
 
-        public async static void Lock(ossContext context, int pKey, DateTime utoljaraModositva)
+        public async static Task Lock(ossContext context, int pKey, DateTime utoljaraModositva)
         {
             await context.ExecuteLockFunction("lockmennyisegiegyseg", "mekod", pKey, utoljaraModositva);
         }

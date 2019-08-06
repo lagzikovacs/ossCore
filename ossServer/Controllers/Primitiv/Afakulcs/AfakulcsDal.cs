@@ -4,55 +4,58 @@ using ossServer.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Primitiv.Afakulcs
 {
     public class AfakulcsDal
     {
-        public static void Exists(ossContext context, Models.Afakulcs entity)
+        public static async Task ExistsAsync(ossContext context, Models.Afakulcs entity)
         {
-            if (context.Afakulcs.Any(s => s.Particiokod == entity.Particiokod && s.Afakulcs1 == entity.Afakulcs1))
+            if (await context.Afakulcs.AnyAsync(s => s.Particiokod == entity.Particiokod && s.Afakulcs1 == entity.Afakulcs1))
                 throw new Exception(string.Format(Messages.MarLetezoTetel, entity.Afakulcs1));
         }
 
-        public static int Add(ossContext context, Models.Afakulcs entity)
+        public static async Task<int> AddAsync(ossContext context, Models.Afakulcs entity)
         {
             Register.Creation(context, entity);
-            context.Afakulcs.Add(entity);
-            context.SaveChanges();
+            await context.Afakulcs.AddAsync(entity);
+            await context.SaveChangesAsync();
 
             return entity.Afakulcskod;
         }
 
-        public async static void Lock(ossContext context, int pKey, DateTime utoljaraModositva)
+        public async static Task Lock(ossContext context, int pKey, DateTime utoljaraModositva)
         {
             await context.ExecuteLockFunction("lockafakulcs", "afakulcskod", pKey, utoljaraModositva);
         }
 
-        public static Models.Afakulcs Get(ossContext context, int pKey)
+        public static async Task<Models.Afakulcs> GetAsync(ossContext context, int pKey)
         {
-            var result = context.Afakulcs
+            var result = await context.Afakulcs
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.Afakulcskod == pKey)
-              .ToList();
+              .ToListAsync();
+
             if (result.Count != 1)
                 throw new Exception(string.Format(Messages.AdatNemTalalhato, $"{nameof(Models.Afakulcs.Afakulcskod)}={pKey}"));
+
             return result.First();
         }
 
-        public static void CheckReferences(ossContext context, int pKey)
+        public static async Task CheckReferencesAsync(ossContext context, int pKey)
         {
             var result = new Dictionary<string, int>();
 
-            var n = context.Cikk.Count(s => s.Afakulcskod == pKey);
+            var n = await context.Cikk.CountAsync(s => s.Afakulcskod == pKey);
             if (n > 0)
                 result.Add("CIKK.AFAKULCS", n);
 
-            n = context.Bizonylattetel.Count(s => s.Afakulcskod == pKey);
+            n = await context.Bizonylattetel.CountAsync(s => s.Afakulcskod == pKey);
             if (n > 0)
                 result.Add("BIZONYLATTETEL.AFAKULCS", n);
 
-            n = context.Bizonylatafa.Count(s => s.Afakulcskod == pKey);
+            n = await context.Bizonylatafa.CountAsync(s => s.Afakulcskod == pKey);
             if (n > 0)
                 result.Add("BIZONYLATAFA.AFAKULCS", n);
 
@@ -66,41 +69,41 @@ namespace ossServer.Controllers.Primitiv.Afakulcs
             }
         }
 
-        public static void Delete(ossContext context, Models.Afakulcs entity)
+        public static async Task DeleteAsync(ossContext context, Models.Afakulcs entity)
         {
             context.Afakulcs.Remove(entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public static void ExistsAnother(ossContext context, Models.Afakulcs entity)
+        public static async Task ExistsAnotherAsync(ossContext context, Models.Afakulcs entity)
         {
-            if (context.Afakulcs
-                .Any(s => s.Particiokod == entity.Particiokod && s.Afakulcs1 == entity.Afakulcs1 && 
+            if (await context.Afakulcs
+                .AnyAsync(s => s.Particiokod == entity.Particiokod && s.Afakulcs1 == entity.Afakulcs1 && 
                     s.Afakulcskod != entity.Afakulcskod))
                 throw new Exception(string.Format(Messages.NemMenthetoMarLetezik, entity.Afakulcs1));
         }
 
-        public static int Update(ossContext context, Models.Afakulcs entity)
+        public static async Task<int> UpdateAsync(ossContext context, Models.Afakulcs entity)
         {
             Register.Modification(context, entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             return entity.Afakulcskod;
         }
 
-        public static List<Models.Afakulcs> Read(ossContext context, string maszk)
+        public static async Task<List<Models.Afakulcs>> ReadAsync(ossContext context, string maszk)
         {
-            return context.Afakulcs.AsNoTracking()
+            return await context.Afakulcs.AsNoTracking()
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.Afakulcs1.Contains(maszk))
               .OrderBy(s => s.Afakulcs1)
-              .ToList();
+              .ToListAsync();
         }
 
-        public static void ZoomCheck(ossContext context, int afakulcskod, string afakulcs)
+        public static async Task ZoomCheckAsync(ossContext context, int afakulcskod, string afakulcs)
         {
-            if (!context.Afakulcs
-                .Any(s => s.Particiokod == context.CurrentSession.Particiokod &&
+            if (!await context.Afakulcs
+                .AnyAsync(s => s.Particiokod == context.CurrentSession.Particiokod &&
                           s.Afakulcskod == afakulcskod && s.Afakulcs1 == afakulcs))
                 throw new Exception(string.Format(Messages.HibasZoom, "ÁFA kulcs"));
         }

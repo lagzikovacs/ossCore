@@ -2,6 +2,7 @@
 using ossServer.Utils;
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace ossServer.Tasks
 {
@@ -26,15 +27,15 @@ namespace ossServer.Tasks
         {
             ServerTaskManager.Add(_tasktoken, this);
 
-            var t = System.Threading.Tasks.Task.Factory.StartNew(InternalRun, _cancellationtoken);
+            var t = Task.Factory.StartNew(InternalRunAsync, _cancellationtoken);
         }
 
-        private void InternalRun()
+        private async Task InternalRunAsync()
         {
             lock (_result)
                 _result.Status = ServerTaskStates.Running;
 
-            var exception = Run();
+            var exception = await RunAsync();
 
             lock (_result)
             {
@@ -56,7 +57,7 @@ namespace ossServer.Tasks
             ServerTaskManager.TryRemove(_tasktoken);
         }
 
-        protected abstract Exception Run();
+        protected abstract Task<Exception> RunAsync();
 
         public ServerTaskResult Check()
         {

@@ -27,7 +27,7 @@ namespace ossServer.Controllers.Primitiv.Felhasznalo
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = FelhasznaloBll.Add(_context, sid, dto);
+                    result.Result = await FelhasznaloBll.AddAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -70,7 +70,7 @@ namespace ossServer.Controllers.Primitiv.Felhasznalo
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    FelhasznaloBll.Delete(_context, sid, dto);
+                    await FelhasznaloBll.DeleteAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -91,7 +91,7 @@ namespace ossServer.Controllers.Primitiv.Felhasznalo
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<FelhasznaloDto> { FelhasznaloBll.Get(_context, sid, key) };
+                    result.Result = new List<FelhasznaloDto> { await FelhasznaloBll.GetAsync(_context, sid, key) };
 
                     tr.Commit();
                 }
@@ -112,7 +112,7 @@ namespace ossServer.Controllers.Primitiv.Felhasznalo
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = FelhasznaloBll.Read(_context, sid, maszk);
+                    result.Result = await FelhasznaloBll.ReadAsync(_context, sid, maszk);
 
                     tr.Commit();
                 }
@@ -133,7 +133,7 @@ namespace ossServer.Controllers.Primitiv.Felhasznalo
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = FelhasznaloBll.Update(_context, sid, dto);
+                    result.Result = await FelhasznaloBll.UpdateAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -155,7 +155,7 @@ namespace ossServer.Controllers.Primitiv.Felhasznalo
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    FelhasznaloBll.JelszoBeallitas(_context, sid, jp.FelhasznaloKod, jp.UjJelszo, jp.UtolsoModositas);
+                    await FelhasznaloBll.JelszoBeallitasAsync(_context, sid, jp.FelhasznaloKod, jp.UjJelszo, jp.UtolsoModositas);
 
                     tr.Commit();
                 }
@@ -177,7 +177,7 @@ namespace ossServer.Controllers.Primitiv.Felhasznalo
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    FelhasznaloBll.JelszoCsere(_context, sid, jp.RegiJelszo, jp.UjJelszo);
+                    await FelhasznaloBll.JelszoCsereAsync(_context, sid, jp.RegiJelszo, jp.UjJelszo);
 
                     tr.Commit();
                 }

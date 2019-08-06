@@ -4,6 +4,7 @@ using ossServer.Enums;
 using ossServer.Models;
 using ossServer.Utils;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Primitiv.Me
 {
@@ -26,12 +27,12 @@ namespace ossServer.Controllers.Primitiv.Me
             return new MennyisegiegysegDto();
         }
 
-        public static void Delete(ossContext context, string sid, MennyisegiegysegDto dto)
+        public static async Task DeleteAsync(ossContext context, string sid, MennyisegiegysegDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
 
-            MennyisegiegysegDal.Lock(context, dto.Mekod, dto.Modositva);
+            await MennyisegiegysegDal.Lock(context, dto.Mekod, dto.Modositva);
             MennyisegiegysegDal.CheckReferences(context, dto.Mekod);
             var entity = MennyisegiegysegDal.Get(context, dto.Mekod);
             MennyisegiegysegDal.Delete(context, entity);
@@ -55,12 +56,12 @@ namespace ossServer.Controllers.Primitiv.Me
             return ObjectUtils.Convert<Models.Mennyisegiegyseg, MennyisegiegysegDto>(entities);
         }
 
-        public static int Update(ossContext context, string sid, MennyisegiegysegDto dto)
+        public static async Task<int> UpdateAsync(ossContext context, string sid, MennyisegiegysegDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
 
-            MennyisegiegysegDal.Lock(context, dto.Mekod, dto.Modositva);
+            await MennyisegiegysegDal.Lock(context, dto.Mekod, dto.Modositva);
             var entity = MennyisegiegysegDal.Get(context, dto.Mekod);
             ObjectUtils.Update(dto, entity);
             MennyisegiegysegDal.ExistsAnother(context, entity);

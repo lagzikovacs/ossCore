@@ -4,6 +4,7 @@ using ossServer.Enums;
 using ossServer.Models;
 using ossServer.Utils;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Primitiv.Fizetesimod
 {
@@ -26,12 +27,12 @@ namespace ossServer.Controllers.Primitiv.Fizetesimod
             return new FizetesimodDto();
         }
 
-        public static void Delete(ossContext context, string sid, FizetesimodDto dto)
+        public static async Task DeleteAsync(ossContext context, string sid, FizetesimodDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
 
-            FizetesimodDal.Lock(context, dto.Fizetesimodkod, dto.Modositva);
+            await FizetesimodDal.Lock(context, dto.Fizetesimodkod, dto.Modositva);
             FizetesimodDal.CheckReferences(context, dto.Fizetesimodkod);
             var entity = FizetesimodDal.Get(context, dto.Fizetesimodkod);
             FizetesimodDal.Delete(context, entity);
@@ -55,12 +56,12 @@ namespace ossServer.Controllers.Primitiv.Fizetesimod
             return ObjectUtils.Convert<Models.Fizetesimod, FizetesimodDto>(entities);
         }
 
-        public static int Update(ossContext context, string sid, FizetesimodDto dto)
+        public static async Task<int> UpdateAsync(ossContext context, string sid, FizetesimodDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
 
-            FizetesimodDal.Lock(context, dto.Fizetesimodkod, dto.Modositva);
+            await FizetesimodDal.Lock(context, dto.Fizetesimodkod, dto.Modositva);
             var entity = FizetesimodDal.Get(context, dto.Fizetesimodkod);
             ObjectUtils.Update(dto, entity);
             FizetesimodDal.ExistsAnother(context, entity);

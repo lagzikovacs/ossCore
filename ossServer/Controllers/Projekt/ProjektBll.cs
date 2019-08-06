@@ -8,6 +8,7 @@ using ossServer.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Projekt
 {
@@ -47,12 +48,12 @@ namespace ossServer.Controllers.Projekt
             return result;
         }
 
-        public static void Delete(ossContext context, string sid, ProjektDto dto)
+        public static async Task DeleteAsync(ossContext context, string sid, ProjektDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PROJEKTMOD);
 
-            ProjektDal.Lock(context, dto.Projektkod, dto.Modositva);
+            await ProjektDal.Lock(context, dto.Projektkod, dto.Modositva);
             ProjektDal.CheckReferences(context, dto.Projektkod);
             var entity = ProjektDal.Get(context, dto.Projektkod);
             ProjektDal.Delete(context, entity);
@@ -97,12 +98,12 @@ namespace ossServer.Controllers.Projekt
             return result;
         }
 
-        public static int Update(ossContext context, string sid, ProjektDto dto)
+        public static async Task<int> UpdateAsync(ossContext context, string sid, ProjektDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PROJEKTMOD);
 
-            ProjektDal.Lock(context, dto.Projektkod, dto.Modositva);
+            await ProjektDal.Lock(context, dto.Projektkod, dto.Modositva);
             var entity = ProjektDal.Get(context, dto.Projektkod);
 
             ObjectUtils.Update(dto, entity);

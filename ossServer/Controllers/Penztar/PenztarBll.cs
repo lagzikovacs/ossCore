@@ -4,6 +4,7 @@ using ossServer.Enums;
 using ossServer.Models;
 using ossServer.Utils;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Penztar
 {
@@ -27,12 +28,12 @@ namespace ossServer.Controllers.Penztar
             return new PenztarDto { Nyitva = true };
         }
 
-        public static void Delete(ossContext context, string sid, PenztarDto dto)
+        public static async Task DeleteAsync(ossContext context, string sid, PenztarDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PENZTARMOD);
 
-            PenztarDal.Lock(context, dto.Penztarkod, dto.Modositva);
+            await PenztarDal.Lock(context, dto.Penztarkod, dto.Modositva);
             PenztarDal.CheckReferences(context, dto.Penztarkod);
             var entity = PenztarDal.Get(context, dto.Penztarkod);
             PenztarDal.Delete(context, entity);
@@ -69,12 +70,12 @@ namespace ossServer.Controllers.Penztar
             return PenztarDal.ReadByCurrencyOpened(context, penznemkod);
         }
 
-        public static int Update(ossContext context, string sid, PenztarDto dto)
+        public static async Task<int> UpdateAsync(ossContext context, string sid, PenztarDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PENZTARMOD);
 
-            PenztarDal.Lock(context, dto.Penztarkod, dto.Modositva);
+            await PenztarDal.Lock(context, dto.Penztarkod, dto.Modositva);
             var entity = PenztarDal.Get(context, dto.Penztarkod);
             ObjectUtils.Update(dto, entity);
             PenztarDal.ExistsAnother(context, entity);

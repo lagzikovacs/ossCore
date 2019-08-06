@@ -70,7 +70,7 @@ namespace ossServer.Controllers.Primitiv.Me
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    MennyisegiegysegBll.Delete(_context, sid, dto);
+                    await MennyisegiegysegBll.DeleteAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -132,7 +132,7 @@ namespace ossServer.Controllers.Primitiv.Me
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = MennyisegiegysegBll.Update(_context, sid, dto);
+                    result.Result = await MennyisegiegysegBll.UpdateAsync(_context, sid, dto);
 
                     tr.Commit();
                 }

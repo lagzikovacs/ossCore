@@ -5,6 +5,7 @@ using ossServer.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Cikk
 {
@@ -74,7 +75,7 @@ namespace ossServer.Controllers.Cikk
             return entity.Cikkkod;
         }
 
-        public async static void Lock(ossContext context, int pKey, DateTime utoljaraModositva)
+        public async static Task Lock(ossContext context, int pKey, DateTime utoljaraModositva)
         {
             await context.ExecuteLockFunction("lockcikk", "cikkkod", pKey, utoljaraModositva);
         }

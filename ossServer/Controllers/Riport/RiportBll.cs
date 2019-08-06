@@ -9,6 +9,7 @@ using ossServer.Utils;
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Riport
 {
@@ -37,7 +38,7 @@ namespace ossServer.Controllers.Riport
             //    _sheet.Columns[i].AutoFit(1, _sheet.Rows[rowStart], _sheet.Rows[_sheet.Rows.Count - 1]);
         }
 
-        public byte[] KimenoSzamla(ossContext context, string sid, 
+        public async Task<byte[]> KimenoSzamlaAsync(ossContext context, string sid, 
             DateTime teljesitesKeltetol, DateTime teljesitesKelteig)
         {
             SessionBll.Check(context, sid);
@@ -45,7 +46,7 @@ namespace ossServer.Controllers.Riport
 
             SpreadsheetInfo.SetLicense(licKey);
 
-            var bizonylatkodok = RiportDal.KimenoSzamlakBizonylatkodok(context, teljesitesKeltetol, teljesitesKelteig);
+            var bizonylatkodok = await RiportDal.KimenoSzamlakBizonylatkodokAsync(context, teljesitesKeltetol, teljesitesKelteig);
 
             BeginReport("Kimenő számlák");
 
@@ -72,7 +73,7 @@ namespace ossServer.Controllers.Riport
             {
                 var egyAdag = bizonylatkodok.Take(100).ToList();
 
-                var riporttetelek = RiportDal.BizonylatRiporttetelek(context, egyAdag);
+                var riporttetelek = await RiportDal.BizonylatRiporttetelekAsync(context, egyAdag);
                 foreach (var tetel in riporttetelek)
                 {
                     Mezo(rowNum, 0, tetel.Bizonylatszam);
@@ -109,7 +110,7 @@ namespace ossServer.Controllers.Riport
             return EndReport();
         }
 
-        public byte[] BejovoSzamla(ossContext context, string sid, 
+        public async Task<byte[]> BejovoSzamlaAsync(ossContext context, string sid, 
             DateTime teljesitesKeltetol, DateTime teljesitesKelteig)
         {
             SessionBll.Check(context, sid);
@@ -117,7 +118,7 @@ namespace ossServer.Controllers.Riport
 
             SpreadsheetInfo.SetLicense(licKey);
 
-            var bizonylatkodok = RiportDal.BejovoSzamlakBizonylatkodok(context, teljesitesKeltetol, teljesitesKelteig);
+            var bizonylatkodok = await RiportDal.BejovoSzamlakBizonylatkodokAsync(context, teljesitesKeltetol, teljesitesKelteig);
 
             BeginReport("Bejövő számlák");
 
@@ -144,7 +145,7 @@ namespace ossServer.Controllers.Riport
             {
                 var egyAdag = bizonylatkodok.Take(100).ToList();
 
-                var riporttetelek = RiportDal.BizonylatRiporttetelek(context, egyAdag);
+                var riporttetelek = await RiportDal.BizonylatRiporttetelekAsync(context, egyAdag);
                 foreach (var tetel in riporttetelek)
                 {
                     Mezo(rowNum, 0, tetel.Bizonylatszam);
@@ -180,7 +181,7 @@ namespace ossServer.Controllers.Riport
             return EndReport();
         }
 
-        public byte[] Kovetelesek(ossContext context, string sid, 
+        public async Task<byte[]> KovetelesekAsync(ossContext context, string sid, 
             DateTime ezenANapon, bool lejart)
         {
             SessionBll.Check(context, sid);
@@ -188,7 +189,7 @@ namespace ossServer.Controllers.Riport
 
             SpreadsheetInfo.SetLicense(licKey);
 
-            var bizonylatkodok = RiportDal.KovetelesekBizonylatkodok(context, ezenANapon, lejart);
+            var bizonylatkodok = await RiportDal.KovetelesekBizonylatkodokAsync(context, ezenANapon, lejart);
 
             BeginReport("Követelések");
 
@@ -216,7 +217,7 @@ namespace ossServer.Controllers.Riport
             {
                 var egyAdag = bizonylatkodok.Take(100).ToList();
 
-                var riporttetelek = RiportDal.KovetelesekTartozasokRiporttetelek(context, egyAdag, ezenANapon);
+                var riporttetelek = await RiportDal.KovetelesekTartozasokRiporttetelekAsync(context, egyAdag, ezenANapon);
                 foreach (var tetel in riporttetelek)
                 {
                     Mezo(rowNum, 0, tetel.Bizonylatszam);
@@ -251,7 +252,7 @@ namespace ossServer.Controllers.Riport
             return EndReport();
         }
 
-        public byte[] Tartozasok(ossContext context, string sid, 
+        public async Task<byte[]> TartozasokAsync(ossContext context, string sid, 
             DateTime ezenANapon, bool lejart)
         {
             SessionBll.Check(context, sid);
@@ -259,7 +260,7 @@ namespace ossServer.Controllers.Riport
 
             SpreadsheetInfo.SetLicense(licKey);
 
-            var bizonylatkodok = RiportDal.TartozasokBizonylatkodok(context, ezenANapon, lejart);
+            var bizonylatkodok = await RiportDal.TartozasokBizonylatkodokAsync(context, ezenANapon, lejart);
 
             BeginReport("Tartozások");
 
@@ -287,7 +288,7 @@ namespace ossServer.Controllers.Riport
             {
                 var egyAdag = bizonylatkodok.Take(100).ToList();
 
-                var riporttetelek = RiportDal.KovetelesekTartozasokRiporttetelek(context, egyAdag, ezenANapon);
+                var riporttetelek = await RiportDal.KovetelesekTartozasokRiporttetelekAsync(context, egyAdag, ezenANapon);
                 foreach (var tetel in riporttetelek)
                 {
                     Mezo(rowNum, 0, tetel.Bizonylatszam);
@@ -322,7 +323,7 @@ namespace ossServer.Controllers.Riport
             return EndReport();
         }
 
-        public byte[] Beszerzes(ossContext context, string sid, 
+        public async Task<byte[]> BeszerzesAsync(ossContext context, string sid, 
             DateTime teljesitesKeltetol, DateTime teljesitesKelteig, bool reszletekIs)
         {
             SessionBll.Check(context, sid);
@@ -330,7 +331,7 @@ namespace ossServer.Controllers.Riport
 
             SpreadsheetInfo.SetLicense(licKey);
 
-            var riporttetelek = RiportDal.BeszerzesRiporttetelek(context, teljesitesKeltetol, teljesitesKelteig);
+            var riporttetelek = await RiportDal.BeszerzesRiporttetelekAsync(context, teljesitesKeltetol, teljesitesKelteig);
 
             var nev = "Beszerzés";
             if (reszletekIs)
@@ -398,7 +399,7 @@ namespace ossServer.Controllers.Riport
             return EndReport();
         }
 
-        public byte[] Keszlet(ossContext context, string sid, 
+        public async Task<byte[]> KeszletAsync(ossContext context, string sid, 
             DateTime ezenIdopontig)
         {
             SessionBll.Check(context, sid);
@@ -406,7 +407,7 @@ namespace ossServer.Controllers.Riport
 
             SpreadsheetInfo.SetLicense(licKey);
 
-            var lstDto = RiportDal.KeszletErtekNelkul(context, ezenIdopontig);
+            var lstDto = await RiportDal.KeszletErtekNelkulAsync(context, ezenIdopontig);
 
             const string nev = "Készlet";
 
@@ -438,7 +439,7 @@ namespace ossServer.Controllers.Riport
                 //a negatív készletnek pedig nincs értéke
                 if (dto.Keszlet > 0)
                 {
-                    RiportDal.KeszletErteke(context, dto, ezenIdopontig);
+                    await RiportDal.KeszletErtekeAsync(context, dto, ezenIdopontig);
                 }
 
                 Mezo(rowNum, 0, dto.Cikk);
@@ -466,7 +467,7 @@ namespace ossServer.Controllers.Riport
             return EndReport();
         }
 
-        public byte[] PenztarTetel(ossContext context, string sid, 
+        public async Task<byte[]> PenztarTetelAsync(ossContext context, string sid, 
             int penztarKod, DateTime datumTol, DateTime datumIg)
         {
             SessionBll.Check(context, sid);
@@ -491,7 +492,7 @@ namespace ossServer.Controllers.Riport
             Fejlec(rowNum, 7, "Megjegyzés");
             ++rowNum;
 
-            var riporttetelek = RiportDal.PenztarTetel(context, penztarKod, datumTol, datumIg);
+            var riporttetelek = await RiportDal.PenztarTetelAsync(context, penztarKod, datumTol, datumIg);
 
             foreach (var tetel in riporttetelek)
             {
@@ -516,7 +517,7 @@ namespace ossServer.Controllers.Riport
             return EndReport();
         }
 
-        public byte[] Projekt(ossContext context, string sid, 
+        public async Task<byte[]> ProjektAsync(ossContext context, string sid, 
             int statusz, string nev)
         {
             SessionBll.Check(context, sid);
@@ -547,7 +548,7 @@ namespace ossServer.Controllers.Riport
             Fejlec(rowNum, 12, "Méret, kW");
             ++rowNum;
 
-            var riporttetelek = RiportDal.Projekt(context, statusz);
+            var riporttetelek = await RiportDal.ProjektAsync(context, statusz);
 
             foreach (var tetel in riporttetelek)
             {

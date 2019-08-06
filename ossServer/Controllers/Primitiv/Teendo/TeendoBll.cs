@@ -4,6 +4,7 @@ using ossServer.Enums;
 using ossServer.Models;
 using ossServer.Utils;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Primitiv.Teendo
 {
@@ -26,12 +27,12 @@ namespace ossServer.Controllers.Primitiv.Teendo
             return new TeendoDto();
         }
 
-        public static void Delete(ossContext context, string sid, TeendoDto dto)
+        public static async Task DeleteAsync(ossContext context, string sid, TeendoDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
 
-            TeendoDal.Lock(context, dto.Teendokod, dto.Modositva);
+            await TeendoDal.Lock(context, dto.Teendokod, dto.Modositva);
             TeendoDal.CheckReferences(context, dto.Teendokod);
             var entity = TeendoDal.Get(context, dto.Teendokod);
             TeendoDal.Delete(context, entity);
@@ -55,12 +56,12 @@ namespace ossServer.Controllers.Primitiv.Teendo
             return ObjectUtils.Convert<Models.Teendo, TeendoDto>(entities);
         }
 
-        public static int Update(ossContext context, string sid, TeendoDto dto)
+        public static async Task<int> UpdateAsync(ossContext context, string sid, TeendoDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
 
-            TeendoDal.Lock(context, dto.Teendokod, dto.Modositva);
+            await TeendoDal.Lock(context, dto.Teendokod, dto.Modositva);
             var entity = TeendoDal.Get(context, dto.Teendokod);
             ObjectUtils.Update(dto, entity);
             TeendoDal.ExistsAnother(context, entity);

@@ -48,7 +48,7 @@ namespace ossServer.Controllers.Particio
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = ParticioBll.Update(_context, sid, dto);
+                    result.Result = await ParticioBll.UpdateAsync(_context, sid, dto);
 
                     tr.Commit();
                 }

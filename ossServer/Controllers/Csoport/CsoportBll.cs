@@ -6,6 +6,7 @@ using ossServer.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Csoport
 {
@@ -29,12 +30,12 @@ namespace ossServer.Controllers.Csoport
             return new CsoportDto();
         }
 
-        public static void Delete(ossContext context, string sid, CsoportDto dto)
+        public static async Task DeleteAsync(ossContext context, string sid, CsoportDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.CSOPORT);
 
-            CsoportDal.Lock(context, dto.Csoportkod, dto.Modositva);
+            await CsoportDal.Lock(context, dto.Csoportkod, dto.Modositva);
             CsoportDal.CheckReferences(context, dto.Csoportkod);
             var entity = CsoportDal.Get(context, dto.Csoportkod);
             CsoportDal.Delete(context, entity);
@@ -68,12 +69,12 @@ namespace ossServer.Controllers.Csoport
             return result;
         }
 
-        public static int Update(ossContext context, string sid, CsoportDto dto)
+        public static async Task<int> UpdateAsync(ossContext context, string sid, CsoportDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.CSOPORT);
 
-            CsoportDal.Lock(context, dto.Csoportkod, dto.Modositva);
+            await CsoportDal.Lock(context, dto.Csoportkod, dto.Modositva);
             var entity = CsoportDal.Get(context, dto.Csoportkod);
             ObjectUtils.Update(dto, entity); 
             CsoportDal.ExistsAnother(context, entity);
@@ -81,13 +82,13 @@ namespace ossServer.Controllers.Csoport
             return CsoportDal.Update(context, entity);
         }
 
-        public static List<FelhasznaloDto> SelectCsoportFelhasznalo(ossContext context, string sid, int csoportKod)
+        public static async Task<List<FelhasznaloDto>> SelectCsoportFelhasznaloAsync(ossContext context, string sid, int csoportKod)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.CSOPORT);
 
             var csF = CsoportDal.SelectCsoportFelhasznalo(context, csoportKod);
-            var entities = FelhasznaloDal.Read(context, "");
+            var entities = await FelhasznaloDal.ReadAsync(context, "");
 
             var result = new List<FelhasznaloDto>();
 

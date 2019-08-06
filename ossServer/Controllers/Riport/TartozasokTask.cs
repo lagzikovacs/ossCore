@@ -4,6 +4,7 @@ using ossServer.Tasks;
 using ossServer.Utils;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Riport
 {
@@ -25,7 +26,7 @@ namespace ossServer.Controllers.Riport
             _lejart = false;
         }
 
-        protected override Exception Run()
+        protected override async Task<Exception> RunAsync()
         {
             Exception exception = null;
 
@@ -36,7 +37,7 @@ namespace ossServer.Controllers.Riport
                     using (var tr = _context.Database.BeginTransaction())
                         try
                         {
-                            var result = new RiportBll().Tartozasok(_context, _sid,
+                            var result = await new RiportBll().TartozasokAsync(_context, _sid,
                                 _ezenANapon, _lejart);
 
                             tr.Commit();

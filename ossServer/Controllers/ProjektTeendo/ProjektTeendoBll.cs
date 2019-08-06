@@ -5,6 +5,7 @@ using ossServer.Models;
 using ossServer.Utils;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.ProjektTeendo
 {
@@ -62,22 +63,22 @@ namespace ossServer.Controllers.ProjektTeendo
             return result;
         }
 
-        public static void Delete(ossContext context, string sid, ProjektTeendoDto dto)
+        public static async Task DeleteAsync(ossContext context, string sid, ProjektTeendoDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PROJEKT);
 
-            ProjektTeendoDal.Lock(context, dto.Projektteendokod, dto.Modositva);
+            await ProjektTeendoDal.Lock(context, dto.Projektteendokod, dto.Modositva);
             var entity = ProjektTeendoDal.Get(context, dto.Projektteendokod);
             ProjektTeendoDal.Delete(context, entity);
         }
 
-        public static int Update(ossContext context, string sid, ProjektTeendoDto dto)
+        public static async Task<int> UpdateAsync(ossContext context, string sid, ProjektTeendoDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PROJEKT);
 
-            ProjektTeendoDal.Lock(context, dto.Projektteendokod, dto.Modositva);
+            await ProjektTeendoDal.Lock(context, dto.Projektteendokod, dto.Modositva);
             var entity = ProjektTeendoDal.Get(context, dto.Projektteendokod);
             ObjectUtils.Update(dto, entity);
             return ProjektTeendoDal.Update(context, entity);

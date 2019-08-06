@@ -71,7 +71,7 @@ namespace ossServer.Controllers.ProjektTeendo
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    ProjektTeendoBll.Delete(_context, sid, dto);
+                    await ProjektTeendoBll.DeleteAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -113,7 +113,7 @@ namespace ossServer.Controllers.ProjektTeendo
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = ProjektTeendoBll.Update(_context, sid, dto);
+                    result.Result = await ProjektTeendoBll.UpdateAsync(_context, sid, dto);
 
                     tr.Commit();
                 }

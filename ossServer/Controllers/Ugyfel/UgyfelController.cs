@@ -69,7 +69,7 @@ namespace ossServer.Controllers.Ugyfel
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    UgyfelBll.Delete(_context, sid, dto);
+                    await UgyfelBll.DeleteAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -132,7 +132,7 @@ namespace ossServer.Controllers.Ugyfel
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = UgyfelBll.Update(_context, sid, dto);
+                    result.Result = await UgyfelBll.UpdateAsync(_context, sid, dto);
 
                     tr.Commit();
                 }

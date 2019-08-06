@@ -25,7 +25,7 @@ namespace ossServer.Controllers.Riport
             _teljesitesKelteig = (DateTime)szmt[1].Minta;
         }
 
-        protected override Exception Run()
+        protected override async System.Threading.Tasks.Task<Exception> RunAsync()
         {
             Exception exception = null;
 
@@ -36,7 +36,7 @@ namespace ossServer.Controllers.Riport
                     using (var tr = _context.Database.BeginTransaction())
                         try
                         {
-                            var result = new RiportBll().BejovoSzamla(_context, _sid,
+                            var result = await new RiportBll().BejovoSzamlaAsync(_context, _sid,
                                 _teljesitesKeltetol, _teljesitesKelteig);
 
                             tr.Commit();

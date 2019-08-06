@@ -4,6 +4,7 @@ using ossServer.Enums;
 using ossServer.Models;
 using ossServer.Utils;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Primitiv.Irattipus
 {
@@ -26,12 +27,12 @@ namespace ossServer.Controllers.Primitiv.Irattipus
             return new IrattipusDto();
         }
 
-        public static void Delete(ossContext context, string sid, IrattipusDto dto)
+        public static async Task DeleteAsync(ossContext context, string sid, IrattipusDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
 
-            IrattipusDal.Lock(context, dto.Irattipuskod, dto.Modositva);
+            await IrattipusDal.Lock(context, dto.Irattipuskod, dto.Modositva);
             IrattipusDal.CheckReferences(context, dto.Irattipuskod);
             var entity = IrattipusDal.Get(context, dto.Irattipuskod);
             IrattipusDal.Delete(context, entity);
@@ -55,12 +56,12 @@ namespace ossServer.Controllers.Primitiv.Irattipus
             return ObjectUtils.Convert<Models.Irattipus, IrattipusDto>(entities);
         }
 
-        public static int Update(ossContext context, string sid, IrattipusDto dto)
+        public static async Task<int> UpdateAsync(ossContext context, string sid, IrattipusDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
 
-            IrattipusDal.Lock(context, dto.Irattipuskod, dto.Modositva);
+            await IrattipusDal.Lock(context, dto.Irattipuskod, dto.Modositva);
             var entity = IrattipusDal.Get(context, dto.Irattipuskod);
             ObjectUtils.Update(dto, entity);
             IrattipusDal.ExistsAnother(context, entity);

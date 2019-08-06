@@ -60,7 +60,7 @@ namespace ossServer.Controllers.Ajanlat
                         new SzMT {Szempont = Szempont.SzuksegesAramerosseg, Minta = ap.SzuksegesAramerosseg},
                     };
 
-                    result.Result = AjanlatBll.AjanlatKesztites(_context, sid, 
+                    result.Result = await AjanlatBll.AjanlatKesztitesAsync(_context, sid, 
                         ap.ProjektKod, ap.AjanlatBuf, fi);
 
                     tr.Commit();

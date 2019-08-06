@@ -117,7 +117,7 @@ namespace ossServer.Controllers.Bizonylat
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    BizonylatBll.Delete(_context, sid, dto);
+                    await BizonylatBll.DeleteAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -161,7 +161,7 @@ namespace ossServer.Controllers.Bizonylat
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = BizonylatBll.Save(_context, sid, par);
+                    result.Result = await BizonylatBll.SaveAsync(_context, sid, par);
 
                     tr.Commit();
                 }
@@ -183,7 +183,7 @@ namespace ossServer.Controllers.Bizonylat
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = BizonylatBll.Kibocsatas(_context, sid, par.Dto, par.Bizonylatszam);
+                    result.Result = await BizonylatBll.KibocsatasAsync(_context, sid, par.Dto, par.Bizonylatszam);
 
                     tr.Commit();
                 }
@@ -204,7 +204,7 @@ namespace ossServer.Controllers.Bizonylat
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = BizonylatBll.KifizetesRendben(_context, sid, par);
+                    result.Result = await BizonylatBll.KifizetesRendbenAsync(_context, sid, par);
 
                     tr.Commit();
                 }
@@ -225,7 +225,7 @@ namespace ossServer.Controllers.Bizonylat
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = BizonylatBll.Kiszallitva(_context, sid, par);
+                    result.Result = await BizonylatBll.KiszallitvaAsync(_context, sid, par);
 
                     tr.Commit();
                 }
@@ -247,7 +247,7 @@ namespace ossServer.Controllers.Bizonylat
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = BizonylatBll.Storno(_context, sid, par);
+                    result.Result = await BizonylatBll.StornoAsync(_context, sid, par);
 
                     tr.Commit();
                 }
@@ -269,7 +269,7 @@ namespace ossServer.Controllers.Bizonylat
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = BizonylatBll.UjBizonylatMintaAlapjan(_context, sid, 
+                    result.Result = await BizonylatBll.UjBizonylatMintaAlapjanAsync(_context, sid, 
                         par.BizonylatKod, par.BizonylatTipus);
 
                     tr.Commit();

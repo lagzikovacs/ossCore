@@ -70,7 +70,7 @@ namespace ossServer.Controllers.Primitiv.Helyseg
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    HelysegBll.Delete(_context, sid, dto);
+                    await HelysegBll.DeleteAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -133,7 +133,7 @@ namespace ossServer.Controllers.Primitiv.Helyseg
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = HelysegBll.Update(_context, sid, dto);
+                    result.Result = await HelysegBll.UpdateAsync(_context, sid, dto);
 
                     tr.Commit();
                 }

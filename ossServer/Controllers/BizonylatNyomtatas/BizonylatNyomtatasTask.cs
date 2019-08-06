@@ -6,6 +6,7 @@ using ossServer.Tasks;
 using ossServer.Utils;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.BizonylatNyomtatas
 {
@@ -27,7 +28,7 @@ namespace ossServer.Controllers.BizonylatNyomtatas
             _nyomtatasTipus = SzMTUtils.GetBizonylatNyomtatasTipus(szmt, Szempont.NyomtatasTipus);
         }
 
-        protected override Exception Run()
+        protected override async Task<Exception> RunAsync()
         {
             Exception exception = null;
 
@@ -38,7 +39,7 @@ namespace ossServer.Controllers.BizonylatNyomtatas
                 using (var tr = _context.Database.BeginTransaction())
                     try
                     {
-                        var result = BizonylatNyomtatasBll.Nyomtatas(_config, _context, _sid,
+                        var result = await BizonylatNyomtatasBll.NyomtatasAsync(_config, _context, _sid,
                             _bizonylatkod, _nyomtatasTipus);
 
                         tr.Commit();

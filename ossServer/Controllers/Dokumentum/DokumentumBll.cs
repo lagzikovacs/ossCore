@@ -9,6 +9,7 @@ using ossServer.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Dokumentum
 {
@@ -34,12 +35,12 @@ namespace ossServer.Controllers.Dokumentum
             return ObjectUtils.Convert<Models.Dokumentum, DokumentumDto>(entities);
         }
 
-        public static void Delete(ossContext context, string sid, DokumentumDto dto)
+        public static async Task DeleteAsync(ossContext context, string sid, DokumentumDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.IRAT);
 
-            DokumentumDal.Lock(context, dto.Dokumentumkod, dto.Modositva);
+            await DokumentumDal.Lock(context, dto.Dokumentumkod, dto.Modositva);
             var entity = DokumentumDal.Get(context, dto.Dokumentumkod);
             DokumentumDal.Delete(context, entity);
         }

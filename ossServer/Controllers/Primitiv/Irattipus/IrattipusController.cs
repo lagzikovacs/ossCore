@@ -70,7 +70,7 @@ namespace ossServer.Controllers.Primitiv.Irattipus
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    IrattipusBll.Delete(_context, sid, dto);
+                    await IrattipusBll.DeleteAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -133,7 +133,7 @@ namespace ossServer.Controllers.Primitiv.Irattipus
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = IrattipusBll.Update(_context, sid, dto);
+                    result.Result = await IrattipusBll.UpdateAsync(_context, sid, dto);
 
                     tr.Commit();
                 }

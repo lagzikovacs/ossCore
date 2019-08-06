@@ -2,6 +2,7 @@
 using ossServer.Utils;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Particio
 {
@@ -25,7 +26,7 @@ namespace ossServer.Controllers.Particio
             return result.First();
         }
 
-        public async static void Lock(ossContext context, int pKey, DateTime utoljaraModositva)
+        public async static Task Lock(ossContext context, int pKey, DateTime utoljaraModositva)
         {
             await context.ExecuteLockFunction("lockparticio", "particiokod", pKey, utoljaraModositva);
         }
