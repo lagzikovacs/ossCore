@@ -11,14 +11,14 @@ namespace ossServer.Controllers.Cikk
 {
     public class CikkBll
     {
-        public static int Add(ossContext context, string sid, CikkDto dto)
+        public static async Task<int> AddAsync(ossContext context, string sid, CikkDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.CIKK);
 
             var entity = ObjectUtils.Convert<CikkDto, Models.Cikk>(dto);
-            CikkDal.Exists(context, entity);
-            return CikkDal.Add(context, entity);
+            await CikkDal.ExistsAsync(context, entity);
+            return await CikkDal.AddAsync(context, entity);
         }
 
         public static CikkDto CreateNew(ossContext context, string sid)
@@ -33,9 +33,9 @@ namespace ossServer.Controllers.Cikk
             CsoportDal.Joge(context, JogKod.CIKK);
 
             await CikkDal.Lock(context, dto.Cikkkod, dto.Modositva);
-            CikkDal.CheckReferences(context, dto.Cikkkod);
-            var entity = CikkDal.Get(context, dto.Cikkkod);
-            CikkDal.Delete(context, entity);
+            await CikkDal.CheckReferencesAsync(context, dto.Cikkkod);
+            var entity = await CikkDal.GetAsync(context, dto.Cikkkod);
+            await CikkDal.DeleteAsync(context, entity);
         }
 
         private static CikkDto Calc(Models.Cikk entity)
@@ -56,21 +56,21 @@ namespace ossServer.Controllers.Cikk
             return dto;
         }
 
-        public static CikkDto Get(ossContext context, string sid, int key)
+        public static async Task<CikkDto> GetAsync(ossContext context, string sid, int key)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.CIKK);
 
-            var entity = CikkDal.Get(context, key);
+            var entity = await CikkDal.GetAsync(context, key);
             return Calc(entity);
         }
 
-        public static List<CikkDto> Read(ossContext context, string sid, string maszk)
+        public static async Task<List<CikkDto>> ReadAsync(ossContext context, string sid, string maszk)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.CIKK);
 
-            var entities = CikkDal.Read(context, maszk);
+            var entities = await CikkDal.ReadAsync(context, maszk);
 
             var result = new List<CikkDto>();
             foreach (var entity in entities)
@@ -85,11 +85,11 @@ namespace ossServer.Controllers.Cikk
             CsoportDal.Joge(context, JogKod.CIKK);
 
             await CikkDal.Lock(context, dto.Cikkkod, dto.Modositva);
-            var entity = CikkDal.Get(context, dto.Cikkkod);
+            var entity = await CikkDal.GetAsync(context, dto.Cikkkod);
 
             ObjectUtils.Update(dto, entity);
-            CikkDal.ExistsAnother(context, entity);
-            return CikkDal.Update(context, entity);
+            await CikkDal.ExistsAnotherAsync(context, entity);
+            return await CikkDal.UpdateAsync(context, entity);
         }
 
         public static List<CikkDto> Select(ossContext context, string sid, int rekordTol, int lapMeret, 
@@ -109,21 +109,21 @@ namespace ossServer.Controllers.Cikk
             return result;
         }
 
-        public static List<CikkMozgasTetelDto> Mozgas(ossContext context, string sid, int cikkKod, 
+        public static async Task<List<CikkMozgasTetelDto>> MozgasAsync(ossContext context, string sid, int cikkKod, 
             BizonylatTipus bizonylatTipus)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.CIKK);
 
-            return CikkDal.Mozgas(context, cikkKod, bizonylatTipus);
+            return await CikkDal.MozgasAsync(context, cikkKod, bizonylatTipus);
         }
 
-        public static void ZoomCheck(ossContext context, string sid, int Cikkkod, string Cikk)
+        public static async Task ZoomCheckAsync(ossContext context, string sid, int Cikkkod, string Cikk)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.CIKK);
 
-            CikkDal.ZoomCheck(context, Cikkkod, Cikk);
+            await CikkDal.ZoomCheckAsync(context, Cikkkod, Cikk);
         }
 
         public static List<ColumnSettings> GridColumns()

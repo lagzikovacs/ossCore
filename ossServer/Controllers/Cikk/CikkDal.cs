@@ -60,17 +60,17 @@ namespace ossServer.Controllers.Cikk
             return (IOrderedQueryable<Models.Cikk>)qry;
         }
 
-        public static void Exists(ossContext context, Models.Cikk entity)
+        public static async Task ExistsAsync(ossContext context, Models.Cikk entity)
         {
-            if (context.Cikk.Any(s => s.Particiokod == entity.Particiokod && s.Megnevezes == entity.Megnevezes))
+            if (await context.Cikk.AnyAsync(s => s.Particiokod == entity.Particiokod && s.Megnevezes == entity.Megnevezes))
                 throw new Exception(string.Format(Messages.MarLetezoTetel, entity.Megnevezes));
         }
 
-        public static int Add(ossContext context, Models.Cikk entity)
+        public static async Task<int> AddAsync(ossContext context, Models.Cikk entity)
         {
             Register.Creation(context, entity);
-            context.Cikk.Add(entity);
-            context.SaveChanges();
+            await context.Cikk.AddAsync(entity);
+            await context.SaveChangesAsync();
 
             return entity.Cikkkod;
         }
@@ -80,25 +80,27 @@ namespace ossServer.Controllers.Cikk
             await context.ExecuteLockFunction("lockcikk", "cikkkod", pKey, utoljaraModositva);
         }
 
-        public static Models.Cikk Get(ossContext context, int pKey)
+        public static async Task<Models.Cikk> GetAsync(ossContext context, int pKey)
         {
-            var result = context.Cikk
+            var result = await context.Cikk
               .Include(r => r.AfakulcskodNavigation)
               .Include(r1 => r1.MekodNavigation)
               .Include(r2 => r2.TermekdijkodNavigation)
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.Cikkkod == pKey)
-              .ToList();
+              .ToListAsync();
+
             if (result.Count != 1)
                 throw new Exception(string.Format(Messages.AdatNemTalalhato, $"{nameof(Models.Cikk.Cikkkod)}={pKey}"));
+
             return result.First();
         }
 
-        public static void CheckReferences(ossContext context, int pKey)
+        public static async Task CheckReferencesAsync(ossContext context, int pKey)
         {
             var result = new Dictionary<string, int>();
 
-            var n = context.Bizonylattetel.Count(s => s.Cikkkod == pKey);
+            var n = await context.Bizonylattetel.CountAsync(s => s.Cikkkod == pKey);
             if (n > 0)
                 result.Add("BIZONYLATTETEL.CIKKKOD", n);
 
@@ -112,47 +114,47 @@ namespace ossServer.Controllers.Cikk
             }
         }
 
-        public static void Delete(ossContext context, Models.Cikk entity)
+        public static async Task DeleteAsync(ossContext context, Models.Cikk entity)
         {
             context.Cikk.Remove(entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public static void ExistsAnother(ossContext context, Models.Cikk entity)
+        public static async Task ExistsAnotherAsync(ossContext context, Models.Cikk entity)
         {
-            if (context.Cikk.Any(s =>
+            if (await context.Cikk.AnyAsync(s =>
                 s.Particiokod == entity.Particiokod && s.Megnevezes == entity.Megnevezes && 
                 s.Cikkkod != entity.Cikkkod))
                 throw new Exception(string.Format(Messages.NemMenthetoMarLetezik, entity.Megnevezes));
         }
 
-        public static int Update(ossContext context, Models.Cikk entity)
+        public static async Task<int> UpdateAsync(ossContext context, Models.Cikk entity)
         {
             Register.Modification(context, entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             return entity.Cikkkod;
         }
 
-        public static List<Models.Cikk> Read(ossContext context, string maszk)
+        public static async Task<List<Models.Cikk>> ReadAsync(ossContext context, string maszk)
         {
-            return context.Cikk.AsNoTracking()
+            return await context.Cikk.AsNoTracking()
               .Include(r => r.AfakulcskodNavigation)
               .Include(r1 => r1.MekodNavigation)
               .Include(r2 => r2.TermekdijkodNavigation)
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod && s.Megnevezes.Contains(maszk))
               .OrderBy(s => s.Megnevezes)
-              .ToList();
+              .ToListAsync();
         }
 
-        public static List<CikkMozgasTetelDto> Mozgas(ossContext context, int cikkKod, BizonylatTipus bizonylatTipus)
+        public static async Task<List<CikkMozgasTetelDto>> MozgasAsync(ossContext context, int cikkKod, BizonylatTipus bizonylatTipus)
         {
             var qry = context.Bizonylattetel.AsNoTracking().Include(r => r.BizonylatkodNavigation)
               .Where(s => s.Cikkkod == cikkKod && s.BizonylatkodNavigation.Bizonylattipuskod == (int)bizonylatTipus)
               .OrderByDescending(s => s.BizonylatkodNavigation.Teljesiteskelte)
               .ThenByDescending(s => s.Bizonylattetelkod);
 
-            return qry.Select(s => new CikkMozgasTetelDto
+            return await qry.Select(s => new CikkMozgasTetelDto
             {
                 Bizonylatszam = s.BizonylatkodNavigation.Bizonylatszam,
                 Ugyfelnev = s.BizonylatkodNavigation.Ugyfelnev,
@@ -163,12 +165,12 @@ namespace ossServer.Controllers.Cikk
                 Penznem = s.BizonylatkodNavigation.Penznem,
                 Netto = s.Netto,
                 Nettoft = s.Netto * s.BizonylatkodNavigation.Arfolyam
-            }).ToList();
+            }).ToListAsync();
         }
 
-        public static void ZoomCheck(ossContext context, int CikkKod, string Cikk)
+        public static async Task ZoomCheckAsync(ossContext context, int CikkKod, string Cikk)
         {
-            if (!context.Cikk.Any(s => s.Particiokod == context.CurrentSession.Particiokod &&
+            if (!await context.Cikk.AnyAsync(s => s.Particiokod == context.CurrentSession.Particiokod &&
                 s.Cikkkod == CikkKod && s.Megnevezes == Cikk))
                 throw new Exception(string.Format(Messages.HibasZoom, "Cikk"));
         }

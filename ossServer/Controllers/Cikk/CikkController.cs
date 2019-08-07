@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ossServer.BaseResults;
 using ossServer.Enums;
@@ -30,7 +28,7 @@ namespace ossServer.Controllers.Cikk
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = CikkBll.Add(_context, sid, dto);
+                    result.Result = await CikkBll.AddAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -93,7 +91,7 @@ namespace ossServer.Controllers.Cikk
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<CikkDto> { CikkBll.Get(_context, sid, key) };
+                    result.Result = new List<CikkDto> { await CikkBll.GetAsync(_context, sid, key) };
 
                     tr.Commit();
                 }
@@ -114,7 +112,7 @@ namespace ossServer.Controllers.Cikk
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = CikkBll.Read(_context, sid, maszk);
+                    result.Result = await CikkBll.ReadAsync(_context, sid, maszk);
                     tr.Commit();
                 }
                 catch (Exception ex)
@@ -178,7 +176,7 @@ namespace ossServer.Controllers.Cikk
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = CikkBll.Mozgas(_context, sid, par.CikkKod, 
+                    result.Result = await CikkBll.MozgasAsync(_context, sid, par.CikkKod, 
                         (BizonylatTipus)par.BizonylatTipusKod);
 
                     tr.Commit();
@@ -200,7 +198,7 @@ namespace ossServer.Controllers.Cikk
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    CikkBll.ZoomCheck(_context, sid, par.CikkKod, par.Cikk);
+                    await CikkBll.ZoomCheckAsync(_context, sid, par.CikkKod, par.Cikk);
 
                     tr.Commit();
                 }
