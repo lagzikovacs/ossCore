@@ -68,6 +68,26 @@ namespace ossServer.Controllers.Fotozas
             return result;
         }
 
+        [HttpPost]
+        public async Task<BaseResults.EmptyResult> ClearLink([FromQuery] string sid, [FromBody] IratDto dto)
+        {
+            var result = new BaseResults.EmptyResult();
+
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    await FotozasBll.ClearLinkAsync(_context, sid, dto);
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
+        }
 
         [HttpPost]
         public async Task<FotozasResult> Check([FromBody] string linkparam)

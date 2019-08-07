@@ -53,6 +53,20 @@ namespace ossServer.Controllers.Fotozas
 
             return Link(up);
         }
+
+        public static async Task ClearLinkAsync(ossContext context, string sid, IratDto dto)
+        {
+            SessionBll.Check(context, sid);
+            CsoportDal.Joge(context, JogKod.UGYFELEKMOD);
+
+            await IratDal.Lock(context, dto.Iratkod, dto.Modositva);
+            var entity = IratDal.Get(context, dto.Iratkod);
+
+            entity.Kikuldesikod = null;
+            entity.Kikuldesikodidopontja = null;
+            IratDal.Update(context, entity);
+        }
+
         public static async Task<string> GetLinkAsync(ossContext context, string sid, IratDto dto)
         {
             SessionBll.Check(context, sid);
