@@ -14,7 +14,7 @@ namespace ossServer.Controllers.Ajanlatkeres
 {
     public class AjanlatkeresBll
     {
-        public static void WebesAjanlatkeres(ossContext context, WebesAjanlatkeresParam par)
+        public static async Task WebesAjanlatkeresAsync(ossContext context, WebesAjanlatkeresParam par)
         {
             var dto = new AjanlatkeresDto
             {
@@ -35,7 +35,7 @@ namespace ossServer.Controllers.Ajanlatkeres
             };
 
             var entity = ObjectUtils.Convert<AjanlatkeresDto, Models.Ajanlatkeres>(dto);
-            var id = AjanlatkeresDal.AddWeb(context, entity);
+            var id = await AjanlatkeresDal.AddWebAsync(context, entity);
 
             //ügyfél
             var uzenet = $"Tisztelt {par.Nev}!<br><br>A következő adatokkal kért tőlünk ajánlatot: <br><br>Cím: {par.Cim}<br>Email: {par.Email}<br>Telefonszám: {par.Telefon}<br><br>Hamarosan keresni fogjuk a részletek egyeztetése céljából!<br><br>www.gridsolar.hu";
@@ -63,13 +63,13 @@ namespace ossServer.Controllers.Ajanlatkeres
             }
         }
 
-        public static int Add(ossContext context, string sid, AjanlatkeresDto dto)
+        public static async Task<int> AddAsync(ossContext context, string sid, AjanlatkeresDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.AJANLATKERESMOD);
 
             var entity = ObjectUtils.Convert<AjanlatkeresDto, Models.Ajanlatkeres>(dto);
-            return AjanlatkeresDal.Add(context, entity);
+            return await AjanlatkeresDal.AddAsync(context, entity);
         }
 
         public static AjanlatkeresDto CreateNew(ossContext context, string sid)
@@ -86,16 +86,16 @@ namespace ossServer.Controllers.Ajanlatkeres
             CsoportDal.Joge(context, JogKod.AJANLATKERESMOD);
 
             await AjanlatkeresDal.Lock(context, dto.Ajanlatkereskod, dto.Modositva);
-            var entity = AjanlatkeresDal.Get(context, dto.Ajanlatkereskod);
-            AjanlatkeresDal.Delete(context, entity);
+            var entity = await AjanlatkeresDal.GetAsync(context, dto.Ajanlatkereskod);
+            await AjanlatkeresDal.DeleteAsync(context, entity);
         }
 
-        public static AjanlatkeresDto Get(ossContext context, string sid, int key)
+        public static async Task<AjanlatkeresDto> GetAsync(ossContext context, string sid, int key)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.AJANLATKERES);
 
-            var entity = AjanlatkeresDal.Get(context, key);
+            var entity = await AjanlatkeresDal.GetAsync(context, key);
             return ObjectUtils.Convert<Models.Ajanlatkeres, AjanlatkeresDto>(entity);
         }
 
@@ -117,9 +117,9 @@ namespace ossServer.Controllers.Ajanlatkeres
             CsoportDal.Joge(context, JogKod.AJANLATKERESMOD);
 
             await AjanlatkeresDal.Lock(context, dto.Ajanlatkereskod, dto.Modositva);
-            var entity = AjanlatkeresDal.Get(context, dto.Ajanlatkereskod);
+            var entity = await AjanlatkeresDal.GetAsync(context, dto.Ajanlatkereskod);
             ObjectUtils.Update(dto, entity);
-            return AjanlatkeresDal.Update(context, entity);
+            return await AjanlatkeresDal.UpdateAsync(context, entity);
         }
 
         public static List<ColumnSettings> GridColumns()

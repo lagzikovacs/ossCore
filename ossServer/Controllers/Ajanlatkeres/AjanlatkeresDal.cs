@@ -86,19 +86,19 @@ namespace ossServer.Controllers.Ajanlatkeres
 
             return (IOrderedQueryable<Models.Ajanlatkeres>)qry;
         }
-        internal static int AddWeb(ossContext context, Models.Ajanlatkeres entity)
+        internal static async Task<int> AddWebAsync(ossContext context, Models.Ajanlatkeres entity)
         {
-            context.Ajanlatkeres.Add(entity);
-            context.SaveChanges();
+            await context.Ajanlatkeres.AddAsync(entity);
+            await context.SaveChangesAsync();
 
             return entity.Ajanlatkereskod;
         }
 
-        internal static int Add(ossContext context, Models.Ajanlatkeres entity)
+        internal static async Task<int> AddAsync(ossContext context, Models.Ajanlatkeres entity)
         {
             Register.Creation(context, entity);
-            context.Ajanlatkeres.Add(entity);
-            context.SaveChanges();
+            await context.Ajanlatkeres.AddAsync(entity);
+            await context.SaveChangesAsync();
 
             return entity.Ajanlatkereskod;
         }
@@ -108,27 +108,29 @@ namespace ossServer.Controllers.Ajanlatkeres
             await context.ExecuteLockFunction("lockajanlatkeres", "ajanlatkereskod", pKey, utoljaraModositva);
         }
 
-        public static Models.Ajanlatkeres Get(ossContext context, int pKey)
+        public static async Task<Models.Ajanlatkeres> GetAsync(ossContext context, int pKey)
         {
-            var result = context.Ajanlatkeres
+            var result = await context.Ajanlatkeres
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.Ajanlatkereskod == pKey)
-              .ToList();
+              .ToListAsync();
+
             if (result.Count != 1)
                 throw new Exception(string.Format(Messages.AdatNemTalalhato, $"{nameof(Models.Ajanlatkeres.Ajanlatkereskod)}={pKey}"));
+
             return result.First();
         }
 
-        public static void Delete(ossContext context, Models.Ajanlatkeres entity)
+        public static async Task DeleteAsync(ossContext context, Models.Ajanlatkeres entity)
         {
             context.Ajanlatkeres.Remove(entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public static int Update(ossContext context, Models.Ajanlatkeres entity)
+        public static async Task<int> UpdateAsync(ossContext context, Models.Ajanlatkeres entity)
         {
             Register.Modification(context, entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             return entity.Ajanlatkereskod;
         }

@@ -27,7 +27,7 @@ namespace ossServer.Controllers.Ajanlatkeres
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    AjanlatkeresBll.WebesAjanlatkeres(_context, par);
+                    await AjanlatkeresBll.WebesAjanlatkeresAsync(_context, par);
 
                     tr.Commit();
                 }
@@ -48,7 +48,7 @@ namespace ossServer.Controllers.Ajanlatkeres
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = AjanlatkeresBll.Add(_context, sid, dto);
+                    result.Result = await AjanlatkeresBll.AddAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -112,7 +112,7 @@ namespace ossServer.Controllers.Ajanlatkeres
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<AjanlatkeresDto> { AjanlatkeresBll.Get(_context, sid, key) };
+                    result.Result = new List<AjanlatkeresDto> { await AjanlatkeresBll.GetAsync(_context, sid, key) };
 
                     tr.Commit();
                 }
