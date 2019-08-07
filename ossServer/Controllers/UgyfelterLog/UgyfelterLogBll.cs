@@ -23,7 +23,7 @@ namespace ossServer.Controllers.UgyfelterLog
             List<SzMT> szmt, out int osszesRekord)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.UGYFELTERLOG);
+            CsoportDal.JogeAsync(context, JogKod.UGYFELTERLOG);
 
             var qry = UgyfelterLogDal.GetQuery(context, szmt);
             osszesRekord = qry.Count();

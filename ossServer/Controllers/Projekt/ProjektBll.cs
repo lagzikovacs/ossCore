@@ -17,7 +17,7 @@ namespace ossServer.Controllers.Projekt
         public static int Add(ossContext context, string sid, ProjektDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PROJEKTMOD);
+            CsoportDal.JogeAsync(context, JogKod.PROJEKTMOD);
 
             var entity = ObjectUtils.Convert<ProjektDto, Models.Projekt>(dto);
             return ProjektDal.Add(context, entity);
@@ -28,7 +28,7 @@ namespace ossServer.Controllers.Projekt
             const string minta = "HUF";
 
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PROJEKTMOD);
+            CsoportDal.JogeAsync(context, JogKod.PROJEKTMOD);
 
             var result = new ProjektDto
             {
@@ -51,7 +51,7 @@ namespace ossServer.Controllers.Projekt
         public static async Task DeleteAsync(ossContext context, string sid, ProjektDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PROJEKTMOD);
+            CsoportDal.JogeAsync(context, JogKod.PROJEKTMOD);
 
             await ProjektDal.Lock(context, dto.Projektkod, dto.Modositva);
             ProjektDal.CheckReferences(context, dto.Projektkod);
@@ -75,7 +75,7 @@ namespace ossServer.Controllers.Projekt
         public static ProjektDto Get(ossContext context, string sid, int key)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PROJEKT);
+            CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
             var entity = ProjektDal.Get(context, key);
             return Calc(entity);
@@ -85,7 +85,7 @@ namespace ossServer.Controllers.Projekt
             int statusz, List<SzMT> szmt, out int osszesRekord)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PROJEKT);
+            CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
             var qry = ProjektDal.GetQuery(context, statusz, szmt);
             osszesRekord = qry.Count();
@@ -101,7 +101,7 @@ namespace ossServer.Controllers.Projekt
         public static async Task<int> UpdateAsync(ossContext context, string sid, ProjektDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PROJEKTMOD);
+            CsoportDal.JogeAsync(context, JogKod.PROJEKTMOD);
 
             await ProjektDal.Lock(context, dto.Projektkod, dto.Modositva);
             var entity = ProjektDal.Get(context, dto.Projektkod);

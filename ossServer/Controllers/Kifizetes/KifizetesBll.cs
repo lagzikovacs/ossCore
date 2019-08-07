@@ -24,7 +24,7 @@ namespace ossServer.Controllers.Kifizetes
         public static KifizetesDto Get(ossContext context, string sid, int kifizetesKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.BIZONYLAT);
+            CsoportDal.JogeAsync(context, JogKod.BIZONYLAT);
 
             var entity = KifizetesDal.Get(context, kifizetesKod);
             return Calc(entity);
@@ -33,7 +33,7 @@ namespace ossServer.Controllers.Kifizetes
         public static List<KifizetesDto> Select(ossContext context, string sid, int bizonylatKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.BIZONYLAT);
+            CsoportDal.JogeAsync(context, JogKod.BIZONYLAT);
 
             var entities = KifizetesDal.Read(context, bizonylatKod);
 
@@ -47,7 +47,7 @@ namespace ossServer.Controllers.Kifizetes
         public static async Task DeleteAsync(ossContext context, string sid, KifizetesDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.BIZONYLATMOD);
+            CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
 
             await KifizetesDal.Lock(context, dto.Kifizeteskod, dto.Modositva);
             var entity = KifizetesDal.Get(context, dto.Kifizeteskod);
@@ -57,7 +57,7 @@ namespace ossServer.Controllers.Kifizetes
         public static int Add(ossContext context, string sid, KifizetesDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.BIZONYLATMOD);
+            CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
 
             var entity = ObjectUtils.Convert<KifizetesDto, Models.Kifizetes>(dto);
             return KifizetesDal.Add(context, entity);
@@ -66,7 +66,7 @@ namespace ossServer.Controllers.Kifizetes
         public static KifizetesDto CreateNew(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.BIZONYLATMOD);
+            CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
 
             return new KifizetesDto { Datum = DateTime.Today };
         }
@@ -74,7 +74,7 @@ namespace ossServer.Controllers.Kifizetes
         public static async Task<int> UpdateAsync(ossContext context, string sid, KifizetesDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.BIZONYLATMOD);
+            CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
 
             await KifizetesDal.Lock(context, dto.Kifizeteskod, dto.Modositva);
             var entity = KifizetesDal.Get(context, dto.Kifizeteskod);

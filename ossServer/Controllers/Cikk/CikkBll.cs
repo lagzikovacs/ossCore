@@ -14,7 +14,7 @@ namespace ossServer.Controllers.Cikk
         public static async Task<int> AddAsync(ossContext context, string sid, CikkDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.CIKK);
+            CsoportDal.JogeAsync(context, JogKod.CIKK);
 
             var entity = ObjectUtils.Convert<CikkDto, Models.Cikk>(dto);
             await CikkDal.ExistsAsync(context, entity);
@@ -30,7 +30,7 @@ namespace ossServer.Controllers.Cikk
         public static async Task DeleteAsync(ossContext context, string sid, CikkDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.CIKK);
+            CsoportDal.JogeAsync(context, JogKod.CIKK);
 
             await CikkDal.Lock(context, dto.Cikkkod, dto.Modositva);
             await CikkDal.CheckReferencesAsync(context, dto.Cikkkod);
@@ -59,7 +59,7 @@ namespace ossServer.Controllers.Cikk
         public static async Task<CikkDto> GetAsync(ossContext context, string sid, int key)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.CIKK);
+            CsoportDal.JogeAsync(context, JogKod.CIKK);
 
             var entity = await CikkDal.GetAsync(context, key);
             return Calc(entity);
@@ -68,7 +68,7 @@ namespace ossServer.Controllers.Cikk
         public static async Task<List<CikkDto>> ReadAsync(ossContext context, string sid, string maszk)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.CIKK);
+            CsoportDal.JogeAsync(context, JogKod.CIKK);
 
             var entities = await CikkDal.ReadAsync(context, maszk);
 
@@ -82,7 +82,7 @@ namespace ossServer.Controllers.Cikk
         public static async Task<int> UpdateAsync(ossContext context, string sid, CikkDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.CIKK);
+            CsoportDal.JogeAsync(context, JogKod.CIKK);
 
             await CikkDal.Lock(context, dto.Cikkkod, dto.Modositva);
             var entity = await CikkDal.GetAsync(context, dto.Cikkkod);
@@ -96,7 +96,7 @@ namespace ossServer.Controllers.Cikk
             List<SzMT> szmt, out int osszesRekord)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.CIKK);
+            CsoportDal.JogeAsync(context, JogKod.CIKK);
 
             var qry = CikkDal.GetQuery(context, szmt);
             osszesRekord = qry.Count();
@@ -113,7 +113,7 @@ namespace ossServer.Controllers.Cikk
             BizonylatTipus bizonylatTipus)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.CIKK);
+            CsoportDal.JogeAsync(context, JogKod.CIKK);
 
             return await CikkDal.MozgasAsync(context, cikkKod, bizonylatTipus);
         }
@@ -121,7 +121,7 @@ namespace ossServer.Controllers.Cikk
         public static async Task ZoomCheckAsync(ossContext context, string sid, int Cikkkod, string Cikk)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.CIKK);
+            CsoportDal.JogeAsync(context, JogKod.CIKK);
 
             await CikkDal.ZoomCheckAsync(context, Cikkkod, Cikk);
         }

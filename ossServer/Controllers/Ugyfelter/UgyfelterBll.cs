@@ -33,7 +33,7 @@ namespace ossServer.Controllers.Ugyfelter
         public static async Task<string> CreateNewLinkAsync(ossContext context, string sid, UgyfelDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.UGYFELEKMOD);
+            CsoportDal.JogeAsync(context, JogKod.UGYFELEKMOD);
 
             await UgyfelDal.Lock(context, dto.Ugyfelkod, dto.Modositva);
             var entity = await UgyfelDal.GetAsync(context, dto.Ugyfelkod);
@@ -56,7 +56,7 @@ namespace ossServer.Controllers.Ugyfelter
         public static async Task<string> GetLinkAsync(ossContext context, string sid, UgyfelDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.UGYFELEKMOD);
+            CsoportDal.JogeAsync(context, JogKod.UGYFELEKMOD);
 
             await UgyfelDal.Lock(context, dto.Ugyfelkod, dto.Modositva);
             var entity = await UgyfelDal.GetAsync(context, dto.Ugyfelkod);
@@ -76,7 +76,7 @@ namespace ossServer.Controllers.Ugyfelter
         public static async Task ClearLinkAsync(ossContext context, string sid, UgyfelDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.UGYFELEKMOD);
+            CsoportDal.JogeAsync(context, JogKod.UGYFELEKMOD);
 
             await UgyfelDal.Lock(context, dto.Ugyfelkod, dto.Modositva);
             var entity = await UgyfelDal.GetAsync(context, dto.Ugyfelkod);
@@ -118,11 +118,11 @@ namespace ossServer.Controllers.Ugyfelter
             }
 
             // az Ügyféltér usernek az ügyfél particióját kell tudni választani
-            var csoport = LogonBll.Szerepkorok(context, result.sid).Where(s => s.Particiokod == up.Particiokod).ToList();
+            var csoport = (await LogonBll.SzerepkorokAsync(context, result.sid)).Where(s => s.Particiokod == up.Particiokod).ToList();
             if (csoport.Count != 1)
                 throw new Exception(string.Format(uh, 3));
 
-            LogonBll.SzerepkorValasztas(context, result.sid, csoport[0].Particiokod, csoport[0].Csoportkod);
+            await LogonBll.SzerepkorValasztasAsync(context, result.sid, csoport[0].Particiokod, csoport[0].Csoportkod);
 
             // ügyféltér log
             await UgyfelterLogDal.AddAsync(context, new Models.Ugyfelterlog { Ugyfelkod = up.Ugyfelkod });

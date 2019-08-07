@@ -13,7 +13,7 @@ namespace ossServer.Controllers.Primitiv.Termekdij
         public static async Task<int> AddAsync(ossContext context, string sid, TermekdijDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
+            CsoportDal.JogeAsync(context, JogKod.PRIMITIVEKMOD);
 
             var entity = ObjectUtils.Convert<TermekdijDto, Models.Termekdij>(dto);
             await TermekdijDal.ExistsAsync(context, entity);
@@ -23,7 +23,7 @@ namespace ossServer.Controllers.Primitiv.Termekdij
         public static TermekdijDto CreateNew(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
+            CsoportDal.JogeAsync(context, JogKod.PRIMITIVEKMOD);
 
             return new TermekdijDto { Termekdijegysegar = 0 };
         }
@@ -31,7 +31,7 @@ namespace ossServer.Controllers.Primitiv.Termekdij
         public static async Task DeleteAsync(ossContext context, string sid, TermekdijDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
+            CsoportDal.JogeAsync(context, JogKod.PRIMITIVEKMOD);
 
             await TermekdijDal.Lock(context, dto.Termekdijkod, dto.Modositva);
             await TermekdijDal.CheckReferencesAsync(context, dto.Termekdijkod);
@@ -42,7 +42,7 @@ namespace ossServer.Controllers.Primitiv.Termekdij
         public static async Task<TermekdijDto> GetAsync(ossContext context, string sid, int key)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PRIMITIVEK);
+            CsoportDal.JogeAsync(context, JogKod.PRIMITIVEK);
 
             var entity = await TermekdijDal.GetAsync(context, key);
             return ObjectUtils.Convert<Models.Termekdij, TermekdijDto>(entity);
@@ -51,7 +51,7 @@ namespace ossServer.Controllers.Primitiv.Termekdij
         public static async Task<List<TermekdijDto>> ReadAsync(ossContext context, string sid, string maszk)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PRIMITIVEK);
+            CsoportDal.JogeAsync(context, JogKod.PRIMITIVEK);
 
             var entities = await TermekdijDal.ReadAsync(context, maszk);
             return ObjectUtils.Convert<Models.Termekdij, TermekdijDto>(entities);
@@ -60,7 +60,7 @@ namespace ossServer.Controllers.Primitiv.Termekdij
         public static async Task<int> UpdateAsync(ossContext context, string sid, TermekdijDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
+            CsoportDal.JogeAsync(context, JogKod.PRIMITIVEKMOD);
 
             await TermekdijDal.Lock(context, dto.Termekdijkod, dto.Modositva);
             var entity = await TermekdijDal.GetAsync(context, dto.Termekdijkod);
@@ -72,7 +72,7 @@ namespace ossServer.Controllers.Primitiv.Termekdij
         public static async Task ZoomCheckAsync(ossContext context, string sid, int termekdijkod, string termekdijkt)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PRIMITIVEK);
+            CsoportDal.JogeAsync(context, JogKod.PRIMITIVEK);
 
             await TermekdijDal.ZoomCheckAsync(context, termekdijkod, termekdijkt);
         }

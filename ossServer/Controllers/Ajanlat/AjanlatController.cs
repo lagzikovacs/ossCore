@@ -28,7 +28,7 @@ namespace ossServer.Controllers.Ajanlat
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = AjanlatBll.CreateNew(_context, sid);
+                    result.Result = await AjanlatBll.CreateNewAsync(_context, sid);
 
                     tr.Commit();
                 }

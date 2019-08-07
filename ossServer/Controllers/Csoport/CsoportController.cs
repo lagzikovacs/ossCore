@@ -28,7 +28,7 @@ namespace ossServer.Controllers.Csoport
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = CsoportBll.Add(_context, sid, dto);
+                    result.Result = await CsoportBll.AddAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -92,7 +92,7 @@ namespace ossServer.Controllers.Csoport
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<CsoportDto> { CsoportBll.Get(_context, sid, key) };
+                    result.Result = new List<CsoportDto> { await CsoportBll.GetAsync(_context, sid, key) };
 
                     tr.Commit();
                 }
@@ -113,7 +113,7 @@ namespace ossServer.Controllers.Csoport
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = CsoportBll.Read(_context, sid, maszk);
+                    result.Result = await CsoportBll.ReadAsync(_context, sid, maszk);
 
                     tr.Commit();
                 }

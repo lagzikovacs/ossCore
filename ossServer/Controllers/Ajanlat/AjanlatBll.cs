@@ -16,15 +16,16 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Ajanlat
 {
     public class AjanlatBll
     {
-        public static AjanlatParam CreateNew(ossContext context, string sid)
+        public static async Task<AjanlatParam> CreateNewAsync(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.AJANLATKESZITES);
+            await CsoportDal.JogeAsync(context, JogKod.AJANLATKESZITES);
 
             return new AjanlatParam
             {
@@ -62,7 +63,7 @@ namespace ossServer.Controllers.Ajanlat
             int projektKod, List<AjanlatBuf> ajanlatBuf, List<SzMT> fi)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.AJANLATKESZITES);
+            CsoportDal.JogeAsync(context, JogKod.AJANLATKESZITES);
 
             ExcelFile _excel;
             ExcelWorksheet _sheet;
@@ -191,7 +192,7 @@ namespace ossServer.Controllers.Ajanlat
         public static AjanlatParam AjanlatCalc(ossContext context, string sid, AjanlatParam ap)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.AJANLATKESZITES);
+            CsoportDal.JogeAsync(context, JogKod.AJANLATKESZITES);
 
             foreach (var buf in ap.AjanlatBuf)
             {

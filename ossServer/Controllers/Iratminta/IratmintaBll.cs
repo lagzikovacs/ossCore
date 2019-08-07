@@ -24,7 +24,7 @@ namespace ossServer.Controllers.Iratminta
         public static byte[] Elegedettseg(ossContext context, string sid, int projektKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PROJEKT);
+            CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
             var entityProjekt = ProjektDal.Get(context, projektKod);
             var entityParticio = ParticioDal.Get(context);
@@ -65,7 +65,7 @@ namespace ossServer.Controllers.Iratminta
         public static byte[] KeszrejelentesNkm(ossContext context, string sid, int projektKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PROJEKT);
+            CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
             var entityProjekt = ProjektDal.Get(context, projektKod);
             var entityParticio = ParticioDal.Get(context);
@@ -109,7 +109,7 @@ namespace ossServer.Controllers.Iratminta
         public static byte[] KeszrejelentesElmuEmasz(ossContext context, string sid, int projektKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PROJEKT);
+            CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
             var entityProjekt = ProjektDal.Get(context, projektKod);
             var entityParticio = ParticioDal.Get(context);
@@ -153,7 +153,7 @@ namespace ossServer.Controllers.Iratminta
         public static byte[] KeszrejelentesEon(ossContext context, string sid, int projektKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PROJEKT);
+            CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
             var entityProjekt = ProjektDal.Get(context, projektKod);
             var entityParticio = ParticioDal.Get(context);
@@ -197,7 +197,7 @@ namespace ossServer.Controllers.Iratminta
         public static byte[] Munkalap(ossContext context, string sid, int projektKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PROJEKT);
+            CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
             var entityProjekt = ProjektDal.Get(context, projektKod);
             var entityParticio = ParticioDal.Get(context);
@@ -251,7 +251,7 @@ namespace ossServer.Controllers.Iratminta
         public static byte[] SzallitasiSzerzodes(ossContext context, string sid, int projektKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PROJEKT);
+            CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
             var entityProjekt = ProjektDal.Get(context, projektKod);
             var entityParticio = ParticioDal.Get(context);
@@ -307,7 +307,7 @@ namespace ossServer.Controllers.Iratminta
         public static byte[] FeltetelesSzerzodes(ossContext context, string sid, int projektKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PROJEKT);
+            CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
             var entityProjekt = ProjektDal.Get(context, projektKod);
             var entityParticio = ParticioDal.Get(context);
@@ -361,7 +361,7 @@ namespace ossServer.Controllers.Iratminta
         public static byte[] Szerzodes(ossContext context, string sid, int projektKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PROJEKT);
+            CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
             var entityProjekt = ProjektDal.Get(context, projektKod);
             var entityParticio = ParticioDal.Get(context);

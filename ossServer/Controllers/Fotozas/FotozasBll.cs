@@ -34,7 +34,7 @@ namespace ossServer.Controllers.Fotozas
         public static async Task<string> CreateNewLinkAsync(ossContext context, string sid, IratDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.IRATMOD);
+            CsoportDal.JogeAsync(context, JogKod.IRATMOD);
 
             await IratDal.Lock(context, dto.Iratkod, dto.Modositva);
             var entity = IratDal.Get(context, dto.Iratkod);
@@ -57,7 +57,7 @@ namespace ossServer.Controllers.Fotozas
         public static async Task ClearLinkAsync(ossContext context, string sid, IratDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.UGYFELEKMOD);
+            CsoportDal.JogeAsync(context, JogKod.UGYFELEKMOD);
 
             await IratDal.Lock(context, dto.Iratkod, dto.Modositva);
             var entity = IratDal.Get(context, dto.Iratkod);
@@ -70,7 +70,7 @@ namespace ossServer.Controllers.Fotozas
         public static async Task<string> GetLinkAsync(ossContext context, string sid, IratDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.IRATMOD);
+            CsoportDal.JogeAsync(context, JogKod.IRATMOD);
 
             await IratDal.Lock(context, dto.Iratkod, dto.Modositva);
             var entity = IratDal.Get(context, dto.Iratkod);
@@ -119,12 +119,12 @@ namespace ossServer.Controllers.Fotozas
             }
 
             // az Fotózás usernek az irat particióját kell tudni választani
-            var csoport = LogonBll.Szerepkorok(context, result.sid)
+            var csoport = (await LogonBll.SzerepkorokAsync(context, result.sid))
                 .Where(s => s.Particiokod == Fp.Particiokod).ToList();
             if (csoport.Count != 1)
                 throw new Exception(string.Format(uh, 3));
 
-            LogonBll.SzerepkorValasztas(context, result.sid, 
+            await LogonBll.SzerepkorValasztasAsync(context, result.sid, 
                 csoport[0].Particiokod, csoport[0].Csoportkod);
 
             result.iratDto = IratBll.Select(context, result.sid, 0, 1,

@@ -20,7 +20,7 @@ namespace ossServer.Controllers.Dokumentum
         public static DokumentumDto Get(ossContext context, string sid, int dokumentumKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.IRAT);
+            CsoportDal.JogeAsync(context, JogKod.IRAT);
 
             var entity = DokumentumDal.Get(context, dokumentumKod);
             return ObjectUtils.Convert<Models.Dokumentum, DokumentumDto>(entity);
@@ -29,7 +29,7 @@ namespace ossServer.Controllers.Dokumentum
         public static List<DokumentumDto> Select(ossContext context, string sid, int iratKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.IRAT);
+            CsoportDal.JogeAsync(context, JogKod.IRAT);
 
             var entities = DokumentumDal.Select(context, iratKod);
             return ObjectUtils.Convert<Models.Dokumentum, DokumentumDto>(entities);
@@ -38,7 +38,7 @@ namespace ossServer.Controllers.Dokumentum
         public static async Task DeleteAsync(ossContext context, string sid, DokumentumDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.IRAT);
+            CsoportDal.JogeAsync(context, JogKod.IRAT);
 
             await DokumentumDal.Lock(context, dto.Dokumentumkod, dto.Modositva);
             var entity = DokumentumDal.Get(context, dto.Dokumentumkod);
@@ -86,7 +86,7 @@ namespace ossServer.Controllers.Dokumentum
         public static Models.Dokumentum Bejegyzes(ossContext context, string sid, FajlBuf fajlBuf)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.IRAT);
+            CsoportDal.JogeAsync(context, JogKod.IRAT);
 
             Models.Volume entityVolume;
             int ujFajlMerete = fajlBuf.Meret;
@@ -170,7 +170,7 @@ namespace ossServer.Controllers.Dokumentum
         public static Models.Dokumentum Ellenorzes(ossContext context, string sid, int dokumentumKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.IRAT);
+            CsoportDal.JogeAsync(context, JogKod.IRAT);
 
             return DokumentumDal.GetWithVolume(context, dokumentumKod);
         }
@@ -189,7 +189,7 @@ namespace ossServer.Controllers.Dokumentum
         public static Models.Dokumentum Feltoltes(ossContext context, string sid, int dokumentumKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.IRAT);
+            CsoportDal.JogeAsync(context, JogKod.IRAT);
 
             return DokumentumDal.GetWithVolume(context, dokumentumKod);
         }
@@ -220,7 +220,7 @@ namespace ossServer.Controllers.Dokumentum
         public static Models.Dokumentum Letoltes(ossContext context, string sid, int dokumentumKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.IRAT);
+            CsoportDal.JogeAsync(context, JogKod.IRAT);
 
             return DokumentumDal.GetWithVolume(context, dokumentumKod);
         }
@@ -279,7 +279,7 @@ namespace ossServer.Controllers.Dokumentum
         public static Models.Dokumentum LetoltesPDF(ossContext context, string sid, int dokumentumKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.IRAT);
+            CsoportDal.JogeAsync(context, JogKod.IRAT);
 
             return Letoltes(context, sid, dokumentumKod);
         }

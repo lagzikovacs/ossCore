@@ -17,7 +17,7 @@ namespace ossServer.Controllers.Irat
         public static int Add(ossContext context, string sid, IratDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.IRAT);
+            CsoportDal.JogeAsync(context, JogKod.IRAT);
 
             var entity = ObjectUtils.Convert<IratDto, Models.Irat>(dto);
             return IratDal.Add(context, entity);
@@ -26,7 +26,7 @@ namespace ossServer.Controllers.Irat
         public static IratDto CreateNew(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.IRAT);
+            CsoportDal.JogeAsync(context, JogKod.IRAT);
 
             return new IratDto { Keletkezett = DateTime.Now.Date, Irany = "Belső" };
         }
@@ -34,7 +34,7 @@ namespace ossServer.Controllers.Irat
         public static async Task DeleteAsync(ossContext context, string sid, IratDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.IRATMOD);
+            CsoportDal.JogeAsync(context, JogKod.IRATMOD);
 
             await IratDal.Lock(context, dto.Iratkod, dto.Modositva);
             IratDal.CheckReferences(context, dto.Iratkod);
@@ -59,7 +59,7 @@ namespace ossServer.Controllers.Irat
         public static IratDto Get(ossContext context, string sid, int key)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.IRAT);
+            CsoportDal.JogeAsync(context, JogKod.IRAT);
 
             var entity = IratDal.Get(context, key);
             return Calc(entity);
@@ -69,7 +69,7 @@ namespace ossServer.Controllers.Irat
             List<SzMT> szmt, out int osszesRekord)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.IRAT);
+            CsoportDal.JogeAsync(context, JogKod.IRAT);
 
             var qry = IratDal.GetQuery(context, szmt);
             osszesRekord = qry.Count();
@@ -85,7 +85,7 @@ namespace ossServer.Controllers.Irat
         public static async Task<int> UpdateAsync(ossContext context, string sid, IratDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.IRATMOD);
+            CsoportDal.JogeAsync(context, JogKod.IRATMOD);
 
             await IratDal.Lock(context, dto.Iratkod, dto.Modositva);
             var entity = IratDal.Get(context, dto.Iratkod);

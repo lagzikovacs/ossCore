@@ -11,17 +11,17 @@ namespace ossServer.Controllers.Csoport
 {
     public class CsoportDal
     {
-        public static void Exists(ossContext context, Models.Csoport entity)
+        public static async Task ExistsAsync(ossContext context, Models.Csoport entity)
         {
-            if (context.Csoport.Any(s => s.Particiokod == entity.Particiokod && s.Csoport1 == entity.Csoport1))
+            if (await context.Csoport.AnyAsync(s => s.Particiokod == entity.Particiokod && s.Csoport1 == entity.Csoport1))
                 throw new Exception(string.Format(Messages.MarLetezoTetel, entity.Csoport1));
         }
 
-        public static int Add(ossContext context, Models.Csoport entity)
+        public static async Task<int> AddAsync(ossContext context, Models.Csoport entity)
         {
             Register.Creation(context, entity);
-            context.Csoport.Add(entity);
-            context.SaveChanges();
+            await context.Csoport.AddAsync(entity);
+            await context.SaveChangesAsync();
 
             return entity.Csoportkod;
         }
@@ -31,25 +31,27 @@ namespace ossServer.Controllers.Csoport
             await context.ExecuteLockFunction("lockcsoport", "csoportkod", pKey, utoljaraModositva);
         }
 
-        public static Models.Csoport Get(ossContext context, int pKey)
+        public static async Task<Models.Csoport> GetAsync(ossContext context, int pKey)
         {
-            var result = context.Csoport
+            var result = await context.Csoport
               .Where(s => s.Csoportkod == pKey)
-              .ToList();
+              .ToListAsync();
+
             if (result.Count != 1)
                 throw new Exception(string.Format(Messages.AdatNemTalalhato, $"{nameof(Models.Csoport.Csoportkod)}={pKey}"));
+
             return result.First();
         }
 
-        public static void CheckReferences(ossContext context, int pKey)
+        public static async Task CheckReferencesAsync(ossContext context, int pKey)
         {
             var result = new Dictionary<string, int>();
 
-            var n = context.Csoportfelhasznalo.Count(s => s.Csoportkod == pKey);
+            var n = await context.Csoportfelhasznalo.CountAsync(s => s.Csoportkod == pKey);
             if (n > 0)
                 result.Add("CSOPORTFELHASZNALO.CSOPORTKOD", n);
 
-            n = context.Csoportjog.Count(s => s.Csoportkod == pKey);
+            n = await context.Csoportjog.CountAsync(s => s.Csoportkod == pKey);
             if (n > 0)
                 result.Add("CSOPORTJOG.CSOPORTKOD", n);
 
@@ -63,74 +65,74 @@ namespace ossServer.Controllers.Csoport
             }
         }
 
-        public static void Delete(ossContext context, Models.Csoport entity)
+        public static async Task DeleteAsync(ossContext context, Models.Csoport entity)
         {
             context.Csoport.Remove(entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public static void ExistsAnother(ossContext context, Models.Csoport entity)
+        public static async Task ExistsAnotherAsync(ossContext context, Models.Csoport entity)
         {
-            if (context.Csoport.Any(s =>
+            if (await context.Csoport.AnyAsync(s =>
               s.Particiokod == entity.Particiokod && s.Csoport1 == entity.Csoport1 && s.Csoportkod != entity.Csoportkod))
                 throw new Exception(string.Format(Messages.NemMenthetoMarLetezik, entity.Csoport1));
         }
 
-        public static int Update(ossContext context, Models.Csoport entity)
+        public static async Task<int> UpdateAsync(ossContext context, Models.Csoport entity)
         {
             Register.Modification(context, entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             return entity.Csoportkod;
         }
 
-        public static List<Models.Csoport> Read(ossContext context, string maszk)
+        public static async Task<List<Models.Csoport>> ReadAsync(ossContext context, string maszk)
         {
-            return context.Csoport.Include(r => r.ParticiokodNavigation).AsNoTracking()
+            return await context.Csoport.Include(r => r.ParticiokodNavigation).AsNoTracking()
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod && s.Csoport1.Contains(maszk))
-              .OrderBy(s => s.Csoport1).ToList();
+              .OrderBy(s => s.Csoport1).ToListAsync();
         }
 
 
-        public static List<Models.Csoport> GetSzerepkorok(ossContext context)
+        public static async Task<List<Models.Csoport>> GetSzerepkorokAsync(ossContext context)
         {
             var qryCsf = context.Csoportfelhasznalo
               .Where(s => s.Felhasznalokod == context.CurrentSession.Felhasznalokod)
               .Select(s => s.Csoportkod);
 
-            return context.Csoport.Include(r => r.ParticiokodNavigation)
+            return await context.Csoport.Include(r => r.ParticiokodNavigation)
               .Where(s => qryCsf.Contains(s.Csoportkod))
               .OrderBy(s => s.ParticiokodNavigation.Megnevezes)
               .ThenBy(s => s.Csoport1)
-              .ToList();
+              .ToListAsync();
         }
 
-        public static void CheckSzerepkor(ossContext context, int particioKod, int csoportKod)
+        public static async Task CheckSzerepkorAsync(ossContext context, int particioKod, int csoportKod)
         {
             var qryCsf = context.Csoportfelhasznalo
               .Where(s => s.Particiokod == particioKod)
               .Where(s => s.Csoportkod == csoportKod)
               .Where(s => s.Felhasznalokod == context.CurrentSession.Felhasznalokod);
 
-            if (qryCsf.ToList().Count != 1)
+            if ((await qryCsf.ToListAsync()).Count != 1)
                 throw new Exception("A kiválasztott szerepkör nem létezik!");
         }
 
-        public static int Joge(ossContext context, string jogKod)
+        public static async Task<int> JogeAsync(ossContext context, string jogKod)
         {
-            return context.Csoportjog
+            return await context.Csoportjog
               .Include(r => r.LehetsegesjogkodNavigation)
               .Where(s => s.Csoportkod == context.CurrentSession.Csoportkod)
-              .Count(s => s.LehetsegesjogkodNavigation.Jogkod == jogKod);
+              .CountAsync(s => s.LehetsegesjogkodNavigation.Jogkod == jogKod);
         }
 
-        public static void Joge(ossContext context, JogKod jogKod)
+        public static async Task JogeAsync(ossContext context, JogKod jogKod)
         {
             // TODO upgrade után kivenni
             if (jogKod == JogKod.BIZONYLAT)
                 return;
 
-            if (Joge(context, jogKod.ToString()) == 0)
+            if (await JogeAsync(context, jogKod.ToString()) == 0)
                 throw new Exception("Hm... acces denied!");
         }
 

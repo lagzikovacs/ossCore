@@ -13,7 +13,7 @@ namespace ossServer.Controllers.Primitiv.Helyseg
         public static async Task<int> AddAsync(ossContext context, string sid, HelysegDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
+            CsoportDal.JogeAsync(context, JogKod.PRIMITIVEKMOD);
 
             var entity = ObjectUtils.Convert<HelysegDto, Models.Helyseg>(dto);
             await HelysegDal.ExistsAsync(context, entity);
@@ -23,14 +23,14 @@ namespace ossServer.Controllers.Primitiv.Helyseg
         public static HelysegDto CreateNew(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
+            CsoportDal.JogeAsync(context, JogKod.PRIMITIVEKMOD);
             return new HelysegDto();
         }
 
         public static async Task DeleteAsync(ossContext context, string sid, HelysegDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
+            CsoportDal.JogeAsync(context, JogKod.PRIMITIVEKMOD);
 
             await HelysegDal.Lock(context, dto.Helysegkod, dto.Modositva);
             await HelysegDal.CheckReferencesAsync(context, dto.Helysegkod);
@@ -41,7 +41,7 @@ namespace ossServer.Controllers.Primitiv.Helyseg
         public static async Task<HelysegDto> GetAsync(ossContext context, string sid, int key)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PRIMITIVEK);
+            CsoportDal.JogeAsync(context, JogKod.PRIMITIVEK);
 
             var entity = await HelysegDal.GetAsync(context, key);
             return ObjectUtils.Convert<Models.Helyseg, HelysegDto>(entity);
@@ -50,7 +50,7 @@ namespace ossServer.Controllers.Primitiv.Helyseg
         public static async Task<List<HelysegDto>> ReadAsync(ossContext context, string sid, string maszk)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PRIMITIVEK);
+            CsoportDal.JogeAsync(context, JogKod.PRIMITIVEK);
 
             var entities = await HelysegDal.ReadAsync(context, maszk);
             return ObjectUtils.Convert<Models.Helyseg, HelysegDto>(entities);
@@ -59,7 +59,7 @@ namespace ossServer.Controllers.Primitiv.Helyseg
         public static async Task<int> UpdateAsync(ossContext context, string sid, HelysegDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
+            CsoportDal.JogeAsync(context, JogKod.PRIMITIVEKMOD);
 
             await HelysegDal.Lock(context, dto.Helysegkod, dto.Modositva);
             var entity = await HelysegDal.GetAsync(context, dto.Helysegkod);
@@ -71,7 +71,7 @@ namespace ossServer.Controllers.Primitiv.Helyseg
         public static async Task ZoomCheckAsync(ossContext context, string sid, int helysegkod, string helysegnev)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PRIMITIVEK);
+            CsoportDal.JogeAsync(context, JogKod.PRIMITIVEK);
 
             await HelysegDal.ZoomCheckAsync(context, helysegkod, helysegnev);
         }

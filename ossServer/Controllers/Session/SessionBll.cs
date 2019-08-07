@@ -5,6 +5,7 @@ using ossServer.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Session
 {
@@ -47,12 +48,12 @@ namespace ossServer.Controllers.Session
             return result;
         }
 
-        public static void UpdateRole(ossContext context, string sid, int particioKod, int csoportKod)
+        public static async Task UpdateRoleAsync(ossContext context, string sid, int particioKod, int csoportKod)
         {
-            CsoportDal.CheckSzerepkor(context, particioKod, csoportKod);
+            await CsoportDal.CheckSzerepkorAsync(context, particioKod, csoportKod);
 
             var entityParticio = ParticioDal.Get(context, particioKod);
-            var entityCsoport = CsoportDal.Get(context, csoportKod);
+            var entityCsoport = await CsoportDal.GetAsync(context, csoportKod);
 
             lock (LockMe)
             {

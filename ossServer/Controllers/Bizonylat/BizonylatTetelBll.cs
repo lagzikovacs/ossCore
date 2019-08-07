@@ -11,7 +11,7 @@ namespace ossServer.Controllers.Bizonylat
             BizonylatTipus bizonylatTipus)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.BIZONYLATMOD);
+            CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
 
             return new BizonylatTetelDto
             {

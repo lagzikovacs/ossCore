@@ -52,7 +52,7 @@ namespace ossServer.Controllers.Logon
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = LogonBll.Szerepkorok(_context, sid);
+                    result.Result = await LogonBll.SzerepkorokAsync(_context, sid);
 
                     tr.Commit();
                 }
@@ -73,7 +73,7 @@ namespace ossServer.Controllers.Logon
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    LogonBll.SzerepkorValasztas(_context, sid, par.ParticioKod, par.CsoportKod);
+                    await LogonBll.SzerepkorValasztasAsync(_context, sid, par.ParticioKod, par.CsoportKod);
 
                     tr.Commit();
                 }

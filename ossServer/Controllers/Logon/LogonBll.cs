@@ -29,11 +29,11 @@ namespace ossServer.Controllers.Logon
             return sid;
         }
 
-        public static List<CsoportDto> Szerepkorok(ossContext context, string sid)
+        public static async Task<List<CsoportDto>> SzerepkorokAsync(ossContext context, string sid)
         {
             SessionBll.Check(context, sid, false);
 
-            var entities = CsoportDal.GetSzerepkorok(context);
+            var entities = await CsoportDal.GetSzerepkorokAsync(context);
             var result = new List<CsoportDto>();
             foreach (var entity in entities)
             {
@@ -46,10 +46,10 @@ namespace ossServer.Controllers.Logon
             return result;
         }
 
-        public static void SzerepkorValasztas(ossContext context, string sid, int particioKod, int csoportKod)
+        public static async Task SzerepkorValasztasAsync(ossContext context, string sid, int particioKod, int csoportKod)
         {
             SessionBll.Check(context, sid, false);
-            SessionBll.UpdateRole(context, sid, particioKod, csoportKod);
+            await SessionBll.UpdateRoleAsync(context, sid, particioKod, csoportKod);
 
             if (context.CurrentSession.Logol)
                 EsemenynaploBll.Bejegyzes(context, EsemenynaploBejegyzesek.SzerepkorValasztas);

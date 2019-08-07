@@ -13,7 +13,7 @@ namespace ossServer.Controllers.Volume
         public static List<VolumeDto> Read(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.VOLUME);
+            CsoportDal.JogeAsync(context, JogKod.VOLUME);
 
             var entities = VolumeDal.Read(context);
             return ObjectUtils.Convert<Models.Volume, VolumeDto>(entities);
@@ -22,7 +22,7 @@ namespace ossServer.Controllers.Volume
         public static List<int> DokumentumkodByVolume(ossContext context, string sid, int volumeKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.VOLUME);
+            CsoportDal.JogeAsync(context, JogKod.VOLUME);
 
             return DokumentumDal.DokumentumkodByVolume(context, volumeKod);
         }

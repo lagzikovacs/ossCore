@@ -13,7 +13,7 @@ namespace ossServer.Controllers.PenztarTetel
         public static PenztarTetelDto CreateNew(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PENZTAR);
+            CsoportDal.JogeAsync(context, JogKod.PENZTAR);
 
             return new PenztarTetelDto { Jogcim = "Pénzfelvét bankból" };
         }
@@ -21,7 +21,7 @@ namespace ossServer.Controllers.PenztarTetel
         public static int Add(ossContext context, string sid, PenztarTetelDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PENZTAR);
+            CsoportDal.JogeAsync(context, JogKod.PENZTAR);
 
             dto.Penztarbizonylatszam =
                 context.KodGen(KodNev.Penztar.ToString() + dto.Penztarkod).ToString("00000") + "/" +
@@ -34,7 +34,7 @@ namespace ossServer.Controllers.PenztarTetel
         public static PenztarTetelDto Get(ossContext context, string sid, int key)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PENZTAR);
+            CsoportDal.JogeAsync(context, JogKod.PENZTAR);
 
             var entity = PenztarTetelDal.Get(context, key);
             return ObjectUtils.Convert<Models.Penztartetel, PenztarTetelDto>(entity);
@@ -44,7 +44,7 @@ namespace ossServer.Controllers.PenztarTetel
             int lapMeret, List<SzMT> szmt, out int osszesRekord)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.Joge(context, JogKod.PENZTAR);
+            CsoportDal.JogeAsync(context, JogKod.PENZTAR);
 
             var qry = PenztarTetelDal.GetQuery(context, szmt);
             osszesRekord = qry.Count();
