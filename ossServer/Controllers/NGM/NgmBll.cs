@@ -16,7 +16,7 @@ namespace ossServer.Controllers.NGM
 {
     public class NgmBll
     {
-        public static string Adatszolgaltatas(ossContext context, string sid,
+        public static async Task<string> AdatszolgaltatasAsync(ossContext context, string sid,
             NGMMode mode, DateTime szamlaKelteTol, DateTime szamlaKelteIg, string szamlaSzamTol, string szamlaSzamIg)
         {
             SessionBll.Check(context, sid);
@@ -27,12 +27,12 @@ namespace ossServer.Controllers.NGM
             switch (mode)
             {
                 case NGMMode.SzamlaKelte:
-                    entities = BizonylatDal.Select_SzamlaKelte(context, szamlaKelteTol, szamlaKelteIg);
+                    entities = await BizonylatDal.Select_SzamlaKelteAsync(context, szamlaKelteTol, szamlaKelteIg);
                     szamlaSzamTol = entities.Select(s => s.Bizonylatszam).Min();
                     szamlaSzamIg = entities.Select(s => s.Bizonylatszam).Max();
                     break;
                 case NGMMode.SzamlaSzam:
-                    entities = BizonylatDal.Select_SzamlaSzam(context, szamlaSzamTol, szamlaSzamIg);
+                    entities = await BizonylatDal.Select_SzamlaSzamAsync(context, szamlaSzamTol, szamlaSzamIg);
                     szamlaKelteTol = entities.Select(s => s.Bizonylatkelte).Min();
                     szamlaKelteIg = entities.Select(s => s.Bizonylatkelte).Max();
                     break;

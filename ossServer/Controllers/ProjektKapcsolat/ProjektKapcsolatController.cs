@@ -205,7 +205,7 @@ namespace ossServer.Controllers.ProjektKapcsolat
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = ProjektKapcsolatBll.UjBizonylatToProjekt(_context, sid, 
+                    result.Result = await ProjektKapcsolatBll.UjBizonylatToProjektAsync(_context, sid, 
                         par.ProjektKod, par.Dto);
 
                     tr.Commit();

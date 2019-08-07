@@ -29,7 +29,7 @@ namespace ossServer.Controllers.NGM
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = NgmBll.Adatszolgaltatas(_context, sid,
+                    result.Result = await NgmBll.AdatszolgaltatasAsync(_context, sid,
                         par.Mode, par.SzamlaKelteTol, par.SzamlaKelteIg, par.SzamlaSzamTol, par.SzamlaSzamIg);
 
                     tr.Commit();

@@ -37,12 +37,12 @@ namespace ossServer.Controllers.BizonylatNyomtatas
             return result;
         }
 
-        private static void UpdateNyomtatottPeldany(ossContext context, int bizonylatKod, int peldanyszam)
+        private static async Task UpdateNyomtatottPeldanyAsync(ossContext context, int bizonylatKod, int peldanyszam)
         {
             // már lockolva van
-            var entity = BizonylatDal.Get(context, bizonylatKod);
+            var entity = await BizonylatDal.GetAsync(context, bizonylatKod);
             entity.Nyomtatottpeldanyokszama = peldanyszam;
-            BizonylatDal.Update(context, entity);
+            await BizonylatDal.UpdateAsync(context, entity);
         }
 
         public static async Task<byte[]> NyomtatasAsync(IConfiguration config, ossContext context, string sid,
@@ -53,7 +53,7 @@ namespace ossServer.Controllers.BizonylatNyomtatas
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.BIZONYLAT);
 
-            var entityBizonylat = BizonylatDal.GetComplex(context, bizonylatKod);
+            var entityBizonylat = await BizonylatDal.GetComplexAsync(context, bizonylatKod);
             await BizonylatDal.Lock(context, bizonylatKod, entityBizonylat.Modositva);
 
             var entityParticio = ParticioDal.Get(context);
@@ -83,7 +83,7 @@ namespace ossServer.Controllers.BizonylatNyomtatas
                         printer.UjPeldany(i.ToString(), "Eredeti");
 
                     if (entityBizonylat.Nyomtatottpeldanyokszama == 0)
-                        UpdateNyomtatottPeldany(context, bizonylatKod, peldanyszam);
+                        await UpdateNyomtatottPeldanyAsync(context, bizonylatKod, peldanyszam);
                     break;
                 case BizonylatNyomtatasTipus.Másolat:
                     if (entityBizonylat.Nyomtatottpeldanyokszama == 0)
@@ -95,7 +95,7 @@ namespace ossServer.Controllers.BizonylatNyomtatas
                     for (var i = sorszamTol; i <= sorszamIg; i++)
                         printer.UjPeldany(i.ToString(), "Másolat");
 
-                    UpdateNyomtatottPeldany(context, bizonylatKod, sorszamIg);
+                    await UpdateNyomtatottPeldanyAsync(context, bizonylatKod, sorszamIg);
                     break;
             }
 

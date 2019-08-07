@@ -74,7 +74,7 @@ namespace ossServer.Controllers.Bizonylat
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<BizonylatDto> { BizonylatBll.Get(_context, sid, bizonylatKod) };
+                    result.Result = new List<BizonylatDto> { await BizonylatBll.GetAsync(_context, sid, bizonylatKod) };
 
                     tr.Commit();
                 }
@@ -96,7 +96,7 @@ namespace ossServer.Controllers.Bizonylat
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<BizonylatComplexDto> { BizonylatBll.GetComplex(_context, sid, bizonylatKod) };
+                    result.Result = new List<BizonylatComplexDto> { await BizonylatBll.GetComplexAsync(_context, sid, bizonylatKod) };
 
                     tr.Commit();
                 }
@@ -292,7 +292,7 @@ namespace ossServer.Controllers.Bizonylat
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = BizonylatBll.SzamlaFormaiEllenorzese(_context, sid, bizonylatKod);
+                    result.Result = await BizonylatBll.SzamlaFormaiEllenorzeseAsync(_context, sid, bizonylatKod);
 
                     tr.Commit();
                 }
@@ -314,7 +314,7 @@ namespace ossServer.Controllers.Bizonylat
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = BizonylatBll.LetoltesOnlineszamlaFormatumban(_context, sid, 
+                    result.Result = await BizonylatBll.LetoltesOnlineszamlaFormatumbanAsync(_context, sid, 
                         bizonylatKod);
 
                     tr.Commit();

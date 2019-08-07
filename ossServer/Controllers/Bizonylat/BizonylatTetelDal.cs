@@ -2,16 +2,17 @@
 using ossServer.Utils;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Bizonylat
 {
     public class BizonylatTetelDal
     {
-        public static int Add(ossContext context, Bizonylattetel entity)
+        public static async Task<int> AddAsync(ossContext context, Bizonylattetel entity)
         {
             Register.Creation(context, entity);
-            context.Bizonylattetel.Add(entity);
-            context.SaveChanges();
+            await context.Bizonylattetel.AddAsync(entity);
+            await context.SaveChangesAsync();
 
             return entity.Bizonylattetelkod;
         }
@@ -23,10 +24,10 @@ namespace ossServer.Controllers.Bizonylat
                 .OrderBy(s => s.Bizonylattetelkod).ToList();
         }
 
-        public static void Delete(ossContext context, Bizonylattetel entity)
+        public static async Task DeleteAsync(ossContext context, Bizonylattetel entity)
         {
             context.Bizonylattetel.Remove(entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
     }
 }

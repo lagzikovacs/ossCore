@@ -5,6 +5,7 @@ using ossServer.Enums;
 using ossServer.Models;
 using ossServer.Utils;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.ProjektKapcsolat
 {
@@ -124,14 +125,14 @@ namespace ossServer.Controllers.ProjektKapcsolat
             ProjektKapcsolatDal.Delete(context, entity);
         }
 
-        public static int UjBizonylatToProjekt(ossContext context, string sid, int projektKod,
+        public static async Task<int> UjBizonylatToProjektAsync(ossContext context, string sid, int projektKod,
             BizonylatDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PROJEKT);
 
             var entity = ObjectUtils.Convert<BizonylatDto, Models.Bizonylat>(dto);
-            var bizonylatKod = BizonylatDal.Add(context, entity);
+            var bizonylatKod = await BizonylatDal.AddAsync(context, entity);
             return AddBizonylatToProjekt(context, sid, projektKod, bizonylatKod);
         }
     }

@@ -11,37 +11,40 @@ namespace ossServer.Controllers.Bizonylat
 {
     public class BizonylatDal
     {
-        public static int Add(ossContext context, Models.Bizonylat entity)
+        public static async Task<int> AddAsync(ossContext context, Models.Bizonylat entity)
         {
             Register.Creation(context, entity);
-            context.Bizonylat.Add(entity);
-            context.SaveChanges();
+            await context.Bizonylat.AddAsync(entity);
+            await context.SaveChangesAsync();
 
             return entity.Bizonylatkod;
         }
 
-        public static Models.Bizonylat Get(ossContext context, int pKey)
+        public static async Task<Models.Bizonylat> GetAsync(ossContext context, int pKey)
         {
-            var result = context.Bizonylat
+            var result = await context.Bizonylat
                 .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
-                .Where(s => s.Bizonylatkod == pKey).ToList();
+                .Where(s => s.Bizonylatkod == pKey).ToListAsync();
+
             if (result.Count != 1)
                 throw new Exception(string.Format(Messages.AdatNemTalalhato, $"{nameof(Models.Bizonylat.Bizonylatkod)}={pKey}"));
+
             return result.First();
         }
 
-        public static Models.Bizonylat GetComplex(ossContext context, int pKey)
+        public static async Task<Models.Bizonylat> GetComplexAsync(ossContext context, int pKey)
         {
-            var result = context.Bizonylat
+            var result = await context.Bizonylat
               .Include(r => r.Bizonylattetel)
               .Include(r => r.Bizonylatafa)
               .Include(r => r.Bizonylattermekdij)
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.Bizonylatkod == pKey)
-              .ToList();
+              .ToListAsync();
 
             if (result.Count != 1)
                 throw new Exception(string.Format(Messages.AdatNemTalalhato, $"{nameof(Models.Bizonylat.Bizonylatkod)}={pKey}"));
+
             return result.First();
         }
 
@@ -50,16 +53,16 @@ namespace ossServer.Controllers.Bizonylat
             await context.ExecuteLockFunction("lockbizonylat", "bizonylatkod", pKey, utoljaraModositva);
         }
 
-        public static void Delete(ossContext context, Models.Bizonylat entity)
+        public static async Task DeleteAsync(ossContext context, Models.Bizonylat entity)
         {
             context.Bizonylat.Remove(entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public static int Update(ossContext context, Models.Bizonylat entity)
+        public static async Task<int> UpdateAsync(ossContext context, Models.Bizonylat entity)
         {
             Register.Modification(context, entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             return entity.Bizonylatkod;
         }
@@ -132,32 +135,32 @@ namespace ossServer.Controllers.Bizonylat
             return (IOrderedQueryable<Models.Bizonylat>)qry;
         }
 
-        public static List<Models.Bizonylat> Select_SzamlaKelte(ossContext context, DateTime tol, DateTime ig)
+        public static async Task<List<Models.Bizonylat>> Select_SzamlaKelteAsync(ossContext context, DateTime tol, DateTime ig)
         {
             var bizonylattipusKod = BizonylatTipus.Szamla.GetHashCode();
 
-            return context.Bizonylat.AsNoTracking()
+            return await context.Bizonylat.AsNoTracking()
               .Include(r => r.Bizonylattetel)
               .Include(r => r.Bizonylatafa)
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.Bizonylattipuskod == bizonylattipusKod)
               .Where(s => s.Bizonylatkelte >= tol.Date)
               .Where(s => s.Bizonylatkelte <= ig.Date)
-              .ToList();
+              .ToListAsync();
         }
 
-        public static List<Models.Bizonylat> Select_SzamlaSzam(ossContext context, string tol, string ig)
+        public static async Task<List<Models.Bizonylat>> Select_SzamlaSzamAsync(ossContext context, string tol, string ig)
         {
             var bizonylattipusKod = BizonylatTipus.Szamla.GetHashCode();
 
-            return context.Bizonylat.AsNoTracking()
+            return await context.Bizonylat.AsNoTracking()
               .Include(r => r.Bizonylattetel)
               .Include(r => r.Bizonylatafa)
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.Bizonylattipuskod == bizonylattipusKod)
               .Where(s => s.Bizonylatszam.CompareTo(tol) >= 0)
               .Where(s => s.Bizonylatszam.CompareTo(ig) <= 0)
-              .ToList();
+              .ToListAsync();
         }
     }
 }

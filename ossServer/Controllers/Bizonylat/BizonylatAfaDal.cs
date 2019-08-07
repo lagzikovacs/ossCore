@@ -2,16 +2,17 @@
 using ossServer.Utils;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Bizonylat
 {
     public class BizonylatAfaDal
     {
-        public static int Add(ossContext context, Bizonylatafa entity)
+        public static async Task<int> AddAsync(ossContext context, Bizonylatafa entity)
         {
             Register.Creation(context, entity);
-            context.Bizonylatafa.Add(entity);
-            context.SaveChanges();
+            await context.Bizonylatafa.AddAsync(entity);
+            await context.SaveChangesAsync();
 
             return entity.Bizonylatafakod;
         }
@@ -22,10 +23,10 @@ namespace ossServer.Controllers.Bizonylat
                 .Where(s => s.Bizonylatkod == bizonylatKod).ToList();
         }
 
-        public static void Delete(ossContext context, Bizonylatafa entity)
+        public static async Task DeleteAsync(ossContext context, Bizonylatafa entity)
         {
             context.Bizonylatafa.Remove(entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
     }
 }
