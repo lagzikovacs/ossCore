@@ -48,7 +48,7 @@ namespace ossServer.Controllers.Projekt
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<ProjektDto> { ProjektBll.CreateNew(_context, sid) };
+                    result.Result = new List<ProjektDto> { await ProjektBll.CreateNewAsync(_context, sid) };
 
                     tr.Commit();
                 }

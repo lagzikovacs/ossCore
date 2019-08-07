@@ -10,14 +10,14 @@ namespace ossServer.Controllers.Primitiv.Fizetesimod
 {
     public class FizetesimodBll
     {
-        public static int Add(ossContext context, string sid, FizetesimodDto dto)
+        public static async Task<int> AddAsync(ossContext context, string sid, FizetesimodDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
 
             var entity = ObjectUtils.Convert<FizetesimodDto, Models.Fizetesimod>(dto);
-            FizetesimodDal.Exists(context, entity);
-            return FizetesimodDal.Add(context, entity);
+            await FizetesimodDal.ExistsAsync(context, entity);
+            return await FizetesimodDal.AddAsync(context, entity);
         }
 
         public static FizetesimodDto CreateNew(ossContext context, string sid)
@@ -33,26 +33,26 @@ namespace ossServer.Controllers.Primitiv.Fizetesimod
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
 
             await FizetesimodDal.Lock(context, dto.Fizetesimodkod, dto.Modositva);
-            FizetesimodDal.CheckReferences(context, dto.Fizetesimodkod);
-            var entity = FizetesimodDal.Get(context, dto.Fizetesimodkod);
-            FizetesimodDal.Delete(context, entity);
+            await FizetesimodDal.CheckReferencesAsync(context, dto.Fizetesimodkod);
+            var entity = await FizetesimodDal.GetAsync(context, dto.Fizetesimodkod);
+            await FizetesimodDal.DeleteAsync(context, entity);
         }
 
-        public static FizetesimodDto Get(ossContext context, string sid, int key)
+        public static async Task<FizetesimodDto> GetAsync(ossContext context, string sid, int key)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);
 
-            var entity = FizetesimodDal.Get(context, key);
+            var entity = await FizetesimodDal.GetAsync(context, key);
             return ObjectUtils.Convert<Models.Fizetesimod, FizetesimodDto>(entity);
         }
 
-        public static List<FizetesimodDto> Read(ossContext context, string sid, string maszk)
+        public static async Task<List<FizetesimodDto>> ReadAsync(ossContext context, string sid, string maszk)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);
 
-            var entities = FizetesimodDal.Read(context, maszk);
+            var entities = await FizetesimodDal.ReadAsync(context, maszk);
             return ObjectUtils.Convert<Models.Fizetesimod, FizetesimodDto>(entities);
         }
 
@@ -62,18 +62,18 @@ namespace ossServer.Controllers.Primitiv.Fizetesimod
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
 
             await FizetesimodDal.Lock(context, dto.Fizetesimodkod, dto.Modositva);
-            var entity = FizetesimodDal.Get(context, dto.Fizetesimodkod);
+            var entity = await FizetesimodDal.GetAsync(context, dto.Fizetesimodkod);
             ObjectUtils.Update(dto, entity);
-            FizetesimodDal.ExistsAnother(context, entity);
-            return FizetesimodDal.Update(context, entity);
+            await FizetesimodDal.ExistsAnotherAsync(context, entity);
+            return await FizetesimodDal.UpdateAsync(context, entity);
         }
 
-        public static void ZoomCheck(ossContext context, string sid, int fizetesimodKod, string fizetesimod)
+        public static async Task ZoomCheckAsync(ossContext context, string sid, int fizetesimodKod, string fizetesimod)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);
 
-            FizetesimodDal.ZoomCheck(context, fizetesimodKod, fizetesimod);
+            await FizetesimodDal.ZoomCheckAsync(context, fizetesimodKod, fizetesimod);
         }
 
         public static List<ColumnSettings> GridColumns()

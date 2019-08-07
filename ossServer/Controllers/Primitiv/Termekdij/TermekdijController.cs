@@ -28,7 +28,7 @@ namespace ossServer.Controllers.Primitiv.Termekdij
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = TermekdijBll.Add(_context, sid, dto);
+                    result.Result = await TermekdijBll.AddAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -91,7 +91,7 @@ namespace ossServer.Controllers.Primitiv.Termekdij
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<TermekdijDto> { TermekdijBll.Get(_context, sid, key) };
+                    result.Result = new List<TermekdijDto> { await TermekdijBll.GetAsync(_context, sid, key) };
 
                     tr.Commit();
                 }
@@ -112,7 +112,7 @@ namespace ossServer.Controllers.Primitiv.Termekdij
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = TermekdijBll.Read(_context, sid, maszk);
+                    result.Result = await TermekdijBll.ReadAsync(_context, sid, maszk);
 
                     tr.Commit();
                 }
@@ -155,7 +155,7 @@ namespace ossServer.Controllers.Primitiv.Termekdij
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    TermekdijBll.ZoomCheck(_context, sid, par.Termekdijkod, par.Termekdijkt);
+                    await TermekdijBll.ZoomCheckAsync(_context, sid, par.Termekdijkod, par.Termekdijkt);
 
                     tr.Commit();
                 }

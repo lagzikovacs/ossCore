@@ -10,18 +10,18 @@ namespace ossServer.Controllers.Primitiv.Me
 {
     public class MennyisegiegysegDal
     {
-        public static void Exists(ossContext context, Mennyisegiegyseg entity)
+        public static async Task ExistsAsync(ossContext context, Mennyisegiegyseg entity)
         {
-            if (context.Mennyisegiegyseg.Any(s => s.Particiokod == entity.Particiokod && 
+            if (await context.Mennyisegiegyseg.AnyAsync(s => s.Particiokod == entity.Particiokod && 
                 s.Me == entity.Me))
                 throw new Exception(string.Format(Messages.MarLetezoTetel, entity.Me));
         }
 
-        public static int Add(ossContext context, Mennyisegiegyseg entity)
+        public static async Task<int> AddAsync(ossContext context, Mennyisegiegyseg entity)
         {
             Register.Creation(context, entity);
-            context.Mennyisegiegyseg.Add(entity);
-            context.SaveChanges();
+            await context.Mennyisegiegyseg.AddAsync(entity);
+            await context.SaveChangesAsync();
 
             return entity.Mekod;
         }
@@ -31,27 +31,29 @@ namespace ossServer.Controllers.Primitiv.Me
             await context.ExecuteLockFunction("lockmennyisegiegyseg", "mekod", pKey, utoljaraModositva);
         }
 
-        public static Mennyisegiegyseg Get(ossContext context, int pKey)
+        public static async Task<Mennyisegiegyseg> GetAsync(ossContext context, int pKey)
         {
-            var result = context.Mennyisegiegyseg
+            var result = await context.Mennyisegiegyseg
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.Mekod == pKey)
-              .ToList();
+              .ToListAsync();
+
             if (result.Count != 1)
                 throw new Exception(string.Format(Messages.AdatNemTalalhato,
                   $"{nameof(Mennyisegiegyseg.Mekod)}={pKey}"));
+
             return result.First();
         }
 
-        public static void CheckReferences(ossContext context, int pKey)
+        public static async Task CheckReferencesAsync(ossContext context, int pKey)
         {
             var result = new Dictionary<string, int>();
 
-            var n = context.Cikk.Count(s => s.Mekod == pKey);
+            var n = await context.Cikk.CountAsync(s => s.Mekod == pKey);
             if (n > 0)
                 result.Add("CIKK.ME", n);
 
-            n = context.Bizonylattetel.Count(s => s.Mekod == pKey);
+            n = await context.Bizonylattetel.CountAsync(s => s.Mekod == pKey);
             if (n > 0)
                 result.Add("BIZONYLATTETEL.ME", n);
 
@@ -65,39 +67,39 @@ namespace ossServer.Controllers.Primitiv.Me
             }
         }
 
-        public static void Delete(ossContext context, Mennyisegiegyseg entity)
+        public static async Task DeleteAsync(ossContext context, Mennyisegiegyseg entity)
         {
             context.Mennyisegiegyseg.Remove(entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public static void ExistsAnother(ossContext context, Mennyisegiegyseg entity)
+        public static async Task ExistsAnotherAsync(ossContext context, Mennyisegiegyseg entity)
         {
-            if (context.Mennyisegiegyseg.Any(s => s.Particiokod == entity.Particiokod && 
+            if (await context.Mennyisegiegyseg.AnyAsync(s => s.Particiokod == entity.Particiokod && 
                 s.Me == entity.Me && s.Mekod != entity.Mekod))
                 throw new Exception(string.Format(Messages.NemMenthetoMarLetezik, entity.Me));
         }
 
-        public static int Update(ossContext context, Mennyisegiegyseg entity)
+        public static async Task<int> UpdateAsync(ossContext context, Mennyisegiegyseg entity)
         {
             Register.Modification(context, entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             return entity.Mekod;
         }
 
-        public static List<Mennyisegiegyseg> Read(ossContext context, string maszk)
+        public static async Task<List<Mennyisegiegyseg>> ReadAsync(ossContext context, string maszk)
         {
-            return context.Mennyisegiegyseg.AsNoTracking()
+            return await context.Mennyisegiegyseg.AsNoTracking()
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.Me.Contains(maszk))
               .OrderBy(s => s.Me)
-              .ToList();
+              .ToListAsync();
         }
 
-        public static void ZoomCheck(ossContext context, int mekod, string me)
+        public static async Task ZoomCheckAsync(ossContext context, int mekod, string me)
         {
-            if (!context.Mennyisegiegyseg.Any(s => s.Particiokod == context.CurrentSession.Particiokod &&
+            if (!await context.Mennyisegiegyseg.AnyAsync(s => s.Particiokod == context.CurrentSession.Particiokod &&
                 s.Mekod == mekod && s.Me == me))
                 throw new Exception(string.Format(Messages.HibasZoom, "mennyiségi egység"));
         }

@@ -10,18 +10,18 @@ namespace ossServer.Controllers.Primitiv.Penznem
 {
     public class PenznemDal
     {
-        public static void Exists(ossContext context, Models.Penznem entity)
+        public static async Task ExistsAsync(ossContext context, Models.Penznem entity)
         {
-            if (context.Penznem.Any(s => s.Particiokod == entity.Particiokod && 
+            if (await context.Penznem.AnyAsync(s => s.Particiokod == entity.Particiokod && 
                 s.Penznem1 == entity.Penznem1))
                 throw new Exception(string.Format(Messages.MarLetezoTetel, entity.Penznem1));
         }
 
-        public static int Add(ossContext context, Models.Penznem entity)
+        public static async Task<int> AddAsync(ossContext context, Models.Penznem entity)
         {
             Register.Creation(context, entity);
-            context.Penznem.Add(entity);
-            context.SaveChanges();
+            await context.Penznem.AddAsync(entity);
+            await context.SaveChangesAsync();
 
             return entity.Penznemkod;
         }
@@ -31,38 +31,40 @@ namespace ossServer.Controllers.Primitiv.Penznem
             await context.ExecuteLockFunction("lockpenznem", "penznemkod", pKey, utoljaraModositva);
         }
 
-        public static Models.Penznem Get(ossContext context, int pKey)
+        public static async Task<Models.Penznem> GetAsync(ossContext context, int pKey)
         {
-            var result = context.Penznem
+            var result = await context.Penznem
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.Penznemkod == pKey)
-              .ToList();
+              .ToListAsync();
+
             if (result.Count != 1)
                 throw new Exception(string.Format(Messages.AdatNemTalalhato, $"{nameof(Models.Penznem.Penznemkod)}={pKey}"));
+
             return result.First();
         }
 
-        public static void CheckReferences(ossContext context, int pKey)
+        public static async Task CheckReferencesAsync(ossContext context, int pKey)
         {
             var result = new Dictionary<string, int>();
 
-            var n = context.Bizonylat.Count(s => s.Penznemkod == pKey);
+            var n = await context.Bizonylat.CountAsync(s => s.Penznemkod == pKey);
             if (n > 0)
                 result.Add("BIZONYLAT.PENZNEM", n);
 
-            n = context.Kifizetes.Count(s => s.Penznemkod == pKey);
+            n = await context.Kifizetes.CountAsync(s => s.Penznemkod == pKey);
             if (n > 0)
                 result.Add("KIFIZETES.PENZNEM", n);
 
-            n = context.Projekt.Count(s => s.Penznemkod == pKey);
+            n = await context.Projekt.CountAsync(s => s.Penznemkod == pKey);
             if (n > 0)
                 result.Add("PROJEKT.PENZNEM", n);
 
-            n = context.Penztar.Count(s => s.Penznemkod == pKey);
+            n = await context.Penztar.CountAsync(s => s.Penznemkod == pKey);
             if (n > 0)
                 result.Add("PENZTAR.PENZNEM", n);
 
-            n = context.Szamlazasirend.Count(s => s.Penznemkod == pKey);
+            n = await context.Szamlazasirend.CountAsync(s => s.Penznemkod == pKey);
             if (n > 0)
                 result.Add("SZAMLAZASIREND.PENZNEM", n);
 
@@ -76,39 +78,39 @@ namespace ossServer.Controllers.Primitiv.Penznem
             }
         }
 
-        public static void Delete(ossContext context, Models.Penznem entity)
+        public static async Task DeleteAsync(ossContext context, Models.Penznem entity)
         {
             context.Penznem.Remove(entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public static void ExistsAnother(ossContext context, Models.Penznem entity)
+        public static async Task ExistsAnotherAsync(ossContext context, Models.Penznem entity)
         {
-            if (context.Penznem.Any(s => s.Particiokod == entity.Particiokod && 
+            if (await context.Penznem.AnyAsync(s => s.Particiokod == entity.Particiokod && 
                 s.Penznem1 == entity.Penznem1 && s.Penznemkod != entity.Penznemkod))
                 throw new Exception(string.Format(Messages.NemMenthetoMarLetezik, entity.Penznem1));
         }
 
-        public static int Update(ossContext context, Models.Penznem entity)
+        public static async Task<int> UpdateAsync(ossContext context, Models.Penznem entity)
         {
             Register.Modification(context, entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             return entity.Penznemkod;
         }
 
-        public static List<Models.Penznem> Read(ossContext context, string maszk)
+        public static async Task<List<Models.Penznem>> ReadAsync(ossContext context, string maszk)
         {
-            return context.Penznem.AsNoTracking()
+            return await context.Penznem.AsNoTracking()
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.Penznem1.Contains(maszk))
               .OrderBy(s => s.Penznem1)
-              .ToList();
+              .ToListAsync();
         }
 
-        public static void ZoomCheck(ossContext context, int penznemkod, string penznem)
+        public static async Task ZoomCheckAsync(ossContext context, int penznemkod, string penznem)
         {
-            if (!context.Penznem.Any(s => s.Particiokod == context.CurrentSession.Particiokod &&
+            if (!await context.Penznem.AnyAsync(s => s.Particiokod == context.CurrentSession.Particiokod &&
                 s.Penznemkod == penznemkod && s.Penznem1 == penznem))
                 throw new Exception(string.Format(Messages.HibasZoom, "pénznem"));
         }

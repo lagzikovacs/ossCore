@@ -48,7 +48,7 @@ namespace ossServer.Controllers.SzamlazasiRend
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<SzamlazasiRendDto> { SzamlazasiRendBll.CreateNew(_context, sid) };
+                    result.Result = new List<SzamlazasiRendDto> { await SzamlazasiRendBll.CreateNewAsync(_context, sid) };
 
                     tr.Commit();
                 }

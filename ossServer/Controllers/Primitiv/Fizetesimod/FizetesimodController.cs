@@ -28,7 +28,7 @@ namespace ossServer.Controllers.Primitiv.Fizetesimod
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = FizetesimodBll.Add(_context, sid, dto);
+                    result.Result = await FizetesimodBll.AddAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -91,7 +91,7 @@ namespace ossServer.Controllers.Primitiv.Fizetesimod
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<FizetesimodDto> { FizetesimodBll.Get(_context, sid, key) };
+                    result.Result = new List<FizetesimodDto> { await FizetesimodBll.GetAsync(_context, sid, key) };
 
                     tr.Commit();
                 }
@@ -112,7 +112,7 @@ namespace ossServer.Controllers.Primitiv.Fizetesimod
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = FizetesimodBll.Read(_context, sid, maszk);
+                    result.Result = await FizetesimodBll.ReadAsync(_context, sid, maszk);
 
                     tr.Commit();
                 }
@@ -154,7 +154,7 @@ namespace ossServer.Controllers.Primitiv.Fizetesimod
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    FizetesimodBll.ZoomCheck(_context, sid, par.FizetesimodKod, par.Fizetesimod);
+                    await FizetesimodBll.ZoomCheckAsync(_context, sid, par.FizetesimodKod, par.Fizetesimod);
 
                     tr.Commit();
                 }

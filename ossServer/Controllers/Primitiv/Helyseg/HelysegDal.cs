@@ -10,18 +10,18 @@ namespace ossServer.Controllers.Primitiv.Helyseg
 {
     public class HelysegDal
     {
-        public static void Exists(ossContext context, Models.Helyseg entity)
+        public static async Task ExistsAsync(ossContext context, Models.Helyseg entity)
         {
-            if (context.Helyseg.Any(s => s.Particiokod == entity.Particiokod && 
+            if (await context.Helyseg.AnyAsync(s => s.Particiokod == entity.Particiokod && 
                 s.Helysegnev == entity.Helysegnev))
                 throw new Exception(string.Format(Messages.MarLetezoTetel, entity.Helysegnev));
         }
 
-        public static int Add(ossContext context, Models.Helyseg entity)
+        public static async Task<int> AddAsync(ossContext context, Models.Helyseg entity)
         {
             Register.Creation(context, entity);
-            context.Helyseg.Add(entity);
-            context.SaveChanges();
+            await context.Helyseg.AddAsync(entity);
+            await context.SaveChangesAsync();
 
             return entity.Helysegkod;
         }
@@ -31,22 +31,24 @@ namespace ossServer.Controllers.Primitiv.Helyseg
             await context.ExecuteLockFunction("lockhelyseg", "helysegkod", pKey, utoljaraModositva);
         }
 
-        public static Models.Helyseg Get(ossContext context, int pKey)
+        public static async Task<Models.Helyseg> GetAsync(ossContext context, int pKey)
         {
-            var result = context.Helyseg
+            var result = await context.Helyseg
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.Helysegkod == pKey)
-              .ToList();
+              .ToListAsync();
+
             if (result.Count != 1)
                 throw new Exception(string.Format(Messages.AdatNemTalalhato, $"{nameof(Models.Helyseg.Helysegkod)}={pKey}"));
+
             return result.First();
         }
 
-        public static void CheckReferences(ossContext context, int pKey)
+        public static async Task CheckReferencesAsync(ossContext context, int pKey)
         {
             var result = new Dictionary<string, int>();
 
-            var n = context.Ugyfel.Count(s => s.Helysegkod == pKey);
+            var n = await context.Ugyfel.CountAsync(s => s.Helysegkod == pKey);
             if (n > 0)
                 result.Add("UGYFEL.HELYSEG", n);
 
@@ -60,39 +62,39 @@ namespace ossServer.Controllers.Primitiv.Helyseg
             }
         }
 
-        public static void Delete(ossContext context, Models.Helyseg entity)
+        public static async Task DeleteAsync(ossContext context, Models.Helyseg entity)
         {
             context.Helyseg.Remove(entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public static void ExistsAnother(ossContext context, Models.Helyseg entity)
+        public static async Task ExistsAnotherAsync(ossContext context, Models.Helyseg entity)
         {
-            if (context.Helyseg.Any(s => s.Particiokod == entity.Particiokod && 
+            if (await context.Helyseg.AnyAsync(s => s.Particiokod == entity.Particiokod && 
                 s.Helysegnev == entity.Helysegnev && s.Helysegkod != entity.Helysegkod))
                 throw new Exception(string.Format(Messages.NemMenthetoMarLetezik, entity.Helysegnev));
         }
 
-        public static int Update(ossContext context, Models.Helyseg entity)
+        public static async Task<int> UpdateAsync(ossContext context, Models.Helyseg entity)
         {
             Register.Modification(context, entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             return entity.Helysegkod;
         }
 
-        public static List<Models.Helyseg> Read(ossContext context, string maszk)
+        public static async Task<List<Models.Helyseg>> ReadAsync(ossContext context, string maszk)
         {
-            return context.Helyseg.AsNoTracking()
+            return await context.Helyseg.AsNoTracking()
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.Helysegnev.Contains(maszk))
               .OrderBy(s => s.Helysegnev)
-              .ToList();
+              .ToListAsync();
         }
 
-        public static void ZoomCheck(ossContext context, int helysegkod, string helysegnev)
+        public static async Task ZoomCheckAsync(ossContext context, int helysegkod, string helysegnev)
         {
-            if (!context.Helyseg.Any(s => s.Particiokod == context.CurrentSession.Particiokod &&
+            if (!await context.Helyseg.AnyAsync(s => s.Particiokod == context.CurrentSession.Particiokod &&
                 s.Helysegkod == helysegkod && s.Helysegnev == helysegnev))
                 throw new Exception(string.Format(Messages.HibasZoom, "helység"));
         }

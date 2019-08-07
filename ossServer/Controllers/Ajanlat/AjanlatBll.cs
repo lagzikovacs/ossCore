@@ -152,7 +152,7 @@ namespace ossServer.Controllers.Ajanlat
             _sheet.Calculate();
 
             const string irattipus = "Ajánlat";
-            var lstIrattipus = IrattipusDal.Read(context, irattipus).Where(s => s.Irattipus1 == irattipus).ToList();
+            var lstIrattipus = (await IrattipusDal.ReadAsync(context, irattipus)).Where(s => s.Irattipus1 == irattipus).ToList();
             if (lstIrattipus.Count != 1)
                 throw new Exception($"Hiányzó irattipus: {irattipus}!");
 

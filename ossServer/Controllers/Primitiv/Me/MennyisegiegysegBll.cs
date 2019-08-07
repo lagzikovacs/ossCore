@@ -10,14 +10,14 @@ namespace ossServer.Controllers.Primitiv.Me
 {
     public class MennyisegiegysegBll
     {
-        public static int Add(ossContext context, string sid, MennyisegiegysegDto dto)
+        public static async Task<int> AddAsync(ossContext context, string sid, MennyisegiegysegDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
 
             var entity = ObjectUtils.Convert<MennyisegiegysegDto, Mennyisegiegyseg>(dto);
-            MennyisegiegysegDal.Exists(context, entity);
-            return MennyisegiegysegDal.Add(context, entity);
+            await MennyisegiegysegDal.ExistsAsync(context, entity);
+            return await MennyisegiegysegDal.AddAsync(context, entity);
         }
 
         public static MennyisegiegysegDto CreateNew(ossContext context, string sid)
@@ -33,26 +33,26 @@ namespace ossServer.Controllers.Primitiv.Me
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
 
             await MennyisegiegysegDal.Lock(context, dto.Mekod, dto.Modositva);
-            MennyisegiegysegDal.CheckReferences(context, dto.Mekod);
-            var entity = MennyisegiegysegDal.Get(context, dto.Mekod);
-            MennyisegiegysegDal.Delete(context, entity);
+            await MennyisegiegysegDal.CheckReferencesAsync(context, dto.Mekod);
+            var entity = await MennyisegiegysegDal.GetAsync(context, dto.Mekod);
+            await MennyisegiegysegDal.DeleteAsync(context, entity);
         }
 
-        public static MennyisegiegysegDto Get(ossContext context, string sid, int key)
+        public static async Task<MennyisegiegysegDto> GetAsync(ossContext context, string sid, int key)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);
 
-            var entity = MennyisegiegysegDal.Get(context, key);
+            var entity = await MennyisegiegysegDal.GetAsync(context, key);
             return ObjectUtils.Convert<Models.Mennyisegiegyseg, MennyisegiegysegDto>(entity);
         }
 
-        public static List<MennyisegiegysegDto> Read(ossContext context, string sid, string maszk)
+        public static async Task<List<MennyisegiegysegDto>> ReadAsync(ossContext context, string sid, string maszk)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);
 
-            var entities = MennyisegiegysegDal.Read(context, maszk);
+            var entities = await MennyisegiegysegDal.ReadAsync(context, maszk);
             return ObjectUtils.Convert<Models.Mennyisegiegyseg, MennyisegiegysegDto>(entities);
         }
 
@@ -62,18 +62,18 @@ namespace ossServer.Controllers.Primitiv.Me
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
 
             await MennyisegiegysegDal.Lock(context, dto.Mekod, dto.Modositva);
-            var entity = MennyisegiegysegDal.Get(context, dto.Mekod);
+            var entity = await MennyisegiegysegDal.GetAsync(context, dto.Mekod);
             ObjectUtils.Update(dto, entity);
-            MennyisegiegysegDal.ExistsAnother(context, entity);
-            return MennyisegiegysegDal.Update(context, entity);
+            await MennyisegiegysegDal.ExistsAnotherAsync(context, entity);
+            return await MennyisegiegysegDal.UpdateAsync(context, entity);
         }
 
-        public static void ZoomCheck(ossContext context, string sid, int mekod, string me)
+        public static async Task ZoomCheckAsync(ossContext context, string sid, int mekod, string me)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);
 
-            MennyisegiegysegDal.ZoomCheck(context, mekod, me);
+            await MennyisegiegysegDal.ZoomCheckAsync(context, mekod, me);
         }
 
         public static List<ColumnSettings> GridColumns()

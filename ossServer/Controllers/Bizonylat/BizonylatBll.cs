@@ -103,7 +103,7 @@ namespace ossServer.Controllers.Bizonylat
             return Bl[bizonylatTipus.GetHashCode()];
         }
 
-        public static BizonylatComplexDto CreateNewComplex(ossContext context, string sid)
+        public static async Task<BizonylatComplexDto> CreateNewComplexAsync(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.BIZONYLATMOD);
@@ -145,7 +145,7 @@ namespace ossServer.Controllers.Bizonylat
             };
 
             const string penznem = "HUF";
-            var lstPenznem = PenznemDal.Read(context, penznem);
+            var lstPenznem = await PenznemDal.ReadAsync(context, penznem);
             if (lstPenznem.Count == 1)
             {
                 result.Dto.Penznemkod = lstPenznem[0].Penznemkod;

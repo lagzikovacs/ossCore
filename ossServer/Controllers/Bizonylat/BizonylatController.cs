@@ -52,7 +52,7 @@ namespace ossServer.Controllers.Bizonylat
                 {
                     result.Result = new List<BizonylatComplexDto>
                     {
-                        BizonylatBll.CreateNewComplex(_context, sid)
+                        await BizonylatBll.CreateNewComplexAsync(_context, sid)
                     };
 
                     tr.Commit();

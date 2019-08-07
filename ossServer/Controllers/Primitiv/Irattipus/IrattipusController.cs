@@ -28,7 +28,7 @@ namespace ossServer.Controllers.Primitiv.Irattipus
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = IrattipusBll.Add(_context, sid, dto);
+                    result.Result = await IrattipusBll.AddAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -91,7 +91,7 @@ namespace ossServer.Controllers.Primitiv.Irattipus
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<IrattipusDto> { IrattipusBll.Get(_context, sid, key) };
+                    result.Result = new List<IrattipusDto> { await IrattipusBll.GetAsync(_context, sid, key) };
 
                     tr.Commit();
                 }
@@ -112,7 +112,7 @@ namespace ossServer.Controllers.Primitiv.Irattipus
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = IrattipusBll.Read(_context, sid, maszk);
+                    result.Result = await IrattipusBll.ReadAsync(_context, sid, maszk);
 
                     tr.Commit();
                 }
@@ -154,7 +154,7 @@ namespace ossServer.Controllers.Primitiv.Irattipus
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    IrattipusBll.ZoomCheck(_context, sid, par.Irattipuskod, par.Irattipus);
+                    await IrattipusBll.ZoomCheckAsync(_context, sid, par.Irattipuskod, par.Irattipus);
 
                     tr.Commit();
                 }

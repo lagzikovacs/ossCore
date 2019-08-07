@@ -10,18 +10,18 @@ namespace ossServer.Controllers.Primitiv.Termekdij
 {
     public class TermekdijDal
     {
-        public static void Exists(ossContext context, Models.Termekdij entity)
+        public static async Task ExistsAsync(ossContext context, Models.Termekdij entity)
         {
-            if (context.Termekdij.Any(s => s.Particiokod == entity.Particiokod && 
+            if (await context.Termekdij.AnyAsync(s => s.Particiokod == entity.Particiokod && 
                 s.Termekdijkt == entity.Termekdijkt))
                 throw new Exception(string.Format(Messages.MarLetezoTetel, entity.Termekdijkt));
         }
 
-        public static int Add(ossContext context, Models.Termekdij entity)
+        public static async Task<int> AddAsync(ossContext context, Models.Termekdij entity)
         {
             Register.Creation(context, entity);
-            context.Termekdij.Add(entity);
-            context.SaveChanges();
+            await context.Termekdij.AddAsync(entity);
+            await context.SaveChangesAsync();
 
             return entity.Termekdijkod;
         }
@@ -31,26 +31,28 @@ namespace ossServer.Controllers.Primitiv.Termekdij
             await context.ExecuteLockFunction("locktermekdij", "termekdijkod", pKey, utoljaraModositva);
         }
 
-        public static Models.Termekdij Get(ossContext context, int pKey)
+        public static async Task<Models.Termekdij> GetAsync(ossContext context, int pKey)
         {
-            var result = context.Termekdij
+            var result = await context.Termekdij
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.Termekdijkod == pKey)
-              .ToList();
+              .ToListAsync();
+
             if (result.Count != 1)
                 throw new Exception(string.Format(Messages.AdatNemTalalhato, $"{nameof(Models.Termekdij.Termekdijkod)}={pKey}"));
+
             return result.First();
         }
 
-        public static void CheckReferences(ossContext context, int pKey)
+        public static async Task CheckReferencesAsync(ossContext context, int pKey)
         {
             var result = new Dictionary<string, int>();
 
-            var n = context.Cikk.Count(s => s.Termekdijkod == pKey);
+            var n = await context.Cikk.CountAsync(s => s.Termekdijkod == pKey);
             if (n > 0)
                 result.Add("CIKK.TERMEKDIJ", n);
 
-            n = context.Bizonylattetel.Count(s => s.Termekdijkod == pKey);
+            n = await context.Bizonylattetel.CountAsync(s => s.Termekdijkod == pKey);
             if (n > 0)
                 result.Add("BIZONYLATTETEL.TERMEKDIJ", n);
 
@@ -64,40 +66,40 @@ namespace ossServer.Controllers.Primitiv.Termekdij
             }
         }
 
-        public static void Delete(ossContext context, Models.Termekdij entity)
+        public static async Task DeleteAsync(ossContext context, Models.Termekdij entity)
         {
             context.Termekdij.Remove(entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public static void ExistsAnother(ossContext context, Models.Termekdij entity)
+        public static async Task ExistsAnotherAsync(ossContext context, Models.Termekdij entity)
         {
-            if (context.Termekdij.Any(s =>
+            if (await context.Termekdij.AnyAsync(s =>
                 s.Particiokod == entity.Particiokod && s.Termekdijkt == entity.Termekdijkt && 
                 s.Termekdijkod != entity.Termekdijkod))
                 throw new Exception(string.Format(Messages.NemMenthetoMarLetezik, entity.Termekdijkt));
         }
 
-        public static int Update(ossContext context, Models.Termekdij entity)
+        public static async Task<int> UpdateAsync(ossContext context, Models.Termekdij entity)
         {
             Register.Modification(context, entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             return entity.Termekdijkod;
         }
 
-        public static List<Models.Termekdij> Read(ossContext context, string maszk)
+        public static async Task<List<Models.Termekdij>> ReadAsync(ossContext context, string maszk)
         {
-            return context.Termekdij.AsNoTracking()
+            return await context.Termekdij.AsNoTracking()
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.Termekdijkt.Contains(maszk))
               .OrderBy(s => s.Termekdijkt)
-              .ToList();
+              .ToListAsync();
         }
 
-        public static void ZoomCheck(ossContext context, int termekdijkod, string termekdijkt)
+        public static async Task ZoomCheckAsync(ossContext context, int termekdijkod, string termekdijkt)
         {
-            if (!context.Termekdij.Any(s => s.Particiokod == context.CurrentSession.Particiokod &&
+            if (!await context.Termekdij.AnyAsync(s => s.Particiokod == context.CurrentSession.Particiokod &&
                 s.Termekdijkod == termekdijkod && s.Termekdijkt == termekdijkt))
                 throw new Exception(string.Format(Messages.HibasZoom, "termékdíj"));
         }

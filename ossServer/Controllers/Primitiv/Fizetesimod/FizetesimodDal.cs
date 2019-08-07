@@ -10,18 +10,18 @@ namespace ossServer.Controllers.Primitiv.Fizetesimod
 {
     public class FizetesimodDal
     {
-        public static void Exists(ossContext context, Models.Fizetesimod entity)
+        public static async Task ExistsAsync(ossContext context, Models.Fizetesimod entity)
         {
-            if (context.Fizetesimod.Any(s => s.Particiokod == entity.Particiokod && 
+            if (await context.Fizetesimod.AnyAsync(s => s.Particiokod == entity.Particiokod && 
                 s.Fizetesimod1 == entity.Fizetesimod1))
                 throw new Exception(string.Format(Messages.MarLetezoTetel, entity.Fizetesimod1));
         }
 
-        public static int Add(ossContext context, Models.Fizetesimod entity)
+        public static async Task<int> AddAsync(ossContext context, Models.Fizetesimod entity)
         {
             Register.Creation(context, entity);
-            context.Fizetesimod.Add(entity);
-            context.SaveChanges();
+            await context.Fizetesimod.AddAsync(entity);
+            await context.SaveChangesAsync();
 
             return entity.Fizetesimodkod;
         }
@@ -31,27 +31,29 @@ namespace ossServer.Controllers.Primitiv.Fizetesimod
             await context.ExecuteLockFunction("lockfizetesimod", "fizetesimodkod", pKey, utoljaraModositva);
         }
 
-        public static Models.Fizetesimod Get(ossContext context, int pKey)
+        public static async Task<Models.Fizetesimod> GetAsync(ossContext context, int pKey)
         {
-            var result = context.Fizetesimod
+            var result = await context.Fizetesimod
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.Fizetesimodkod == pKey)
-              .ToList();
+              .ToListAsync();
+
             if (result.Count != 1)
                 throw new Exception(string.Format(Messages.AdatNemTalalhato,
                   $"{nameof(Models.Fizetesimod.Fizetesimodkod)}={pKey}"));
+
             return result.First();
         }
 
-        public static void CheckReferences(ossContext context, int pKey)
+        public static async Task CheckReferencesAsync(ossContext context, int pKey)
         {
             var result = new Dictionary<string, int>();
 
-            var n = context.Bizonylat.Count(s => s.Fizetesimodkod == pKey);
+            var n = await context.Bizonylat.CountAsync(s => s.Fizetesimodkod == pKey);
             if (n > 0)
                 result.Add("BIZONYLAT.FIZETESIMOD", n);
 
-            n = context.Kifizetes.Count(s => s.Fizetesimodkod == pKey);
+            n = await context.Kifizetes.CountAsync(s => s.Fizetesimodkod == pKey);
             if (n > 0)
                 result.Add("KIFIZETES.FIZETESIMOD", n);
 
@@ -65,39 +67,39 @@ namespace ossServer.Controllers.Primitiv.Fizetesimod
             }
         }
 
-        public static void Delete(ossContext context, Models.Fizetesimod entity)
+        public static async Task DeleteAsync(ossContext context, Models.Fizetesimod entity)
         {
             context.Fizetesimod.Remove(entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public static void ExistsAnother(ossContext context, Models.Fizetesimod entity)
+        public static async Task ExistsAnotherAsync(ossContext context, Models.Fizetesimod entity)
         {
-            if (context.Fizetesimod.Any(s => s.Particiokod == entity.Particiokod && 
+            if (await context.Fizetesimod.AnyAsync(s => s.Particiokod == entity.Particiokod && 
                 s.Fizetesimod1 == entity.Fizetesimod1 && s.Fizetesimodkod != entity.Fizetesimodkod))
                 throw new Exception(string.Format(Messages.NemMenthetoMarLetezik, entity.Fizetesimod1));
         }
 
-        public static int Update(ossContext context, Models.Fizetesimod entity)
+        public static async Task<int> UpdateAsync(ossContext context, Models.Fizetesimod entity)
         {
             Register.Modification(context, entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             return entity.Fizetesimodkod;
         }
 
-        public static List<Models.Fizetesimod> Read(ossContext context, string maszk)
+        public static async Task<List<Models.Fizetesimod>> ReadAsync(ossContext context, string maszk)
         {
-            return context.Fizetesimod.AsNoTracking()
+            return await context.Fizetesimod.AsNoTracking()
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.Fizetesimod1.Contains(maszk))
               .OrderBy(s => s.Fizetesimod1)
-              .ToList();
+              .ToListAsync();
         }
 
-        public static void ZoomCheck(ossContext context, int fizetesimodKod, string fizetesimod)
+        public static async Task ZoomCheckAsync(ossContext context, int fizetesimodKod, string fizetesimod)
         {
-            if (!context.Fizetesimod.Any(s => s.Particiokod == context.CurrentSession.Particiokod &&
+            if (!await context.Fizetesimod.AnyAsync(s => s.Particiokod == context.CurrentSession.Particiokod &&
                 s.Fizetesimodkod == fizetesimodKod && s.Fizetesimod1 == fizetesimod))
                 throw new Exception(string.Format(Messages.HibasZoom, "fizetési mód"));
         }

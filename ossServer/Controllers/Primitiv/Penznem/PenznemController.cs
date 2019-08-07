@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ossServer.BaseResults;
 using ossServer.Models;
 using ossServer.Utils;
@@ -28,7 +27,7 @@ namespace ossServer.Controllers.Primitiv.Penznem
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = PenznemBll.Add(_context, sid, dto);
+                    result.Result = await PenznemBll.AddAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -91,7 +90,7 @@ namespace ossServer.Controllers.Primitiv.Penznem
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<PenznemDto> { PenznemBll.Get(_context, sid, key) };
+                    result.Result = new List<PenznemDto> { await PenznemBll.GetAsync(_context, sid, key) };
 
                     tr.Commit();
                 }
@@ -112,7 +111,7 @@ namespace ossServer.Controllers.Primitiv.Penznem
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = PenznemBll.Read(_context, sid, maszk);
+                    result.Result = await PenznemBll.ReadAsync(_context, sid, maszk);
 
                     tr.Commit();
                 }
@@ -154,7 +153,7 @@ namespace ossServer.Controllers.Primitiv.Penznem
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    PenznemBll.ZoomCheck(_context, sid, par.Penznemkod, par.Penznem);
+                    await PenznemBll.ZoomCheckAsync(_context, sid, par.Penznemkod, par.Penznem);
 
                     tr.Commit();
                 }

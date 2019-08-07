@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ossServer.BaseResults;
 using ossServer.Models;
 using ossServer.Utils;
@@ -28,7 +27,7 @@ namespace ossServer.Controllers.Primitiv.Teendo
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = TeendoBll.Add(_context, sid, dto);
+                    result.Result = await TeendoBll.AddAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -91,7 +90,7 @@ namespace ossServer.Controllers.Primitiv.Teendo
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<TeendoDto> { TeendoBll.Get(_context, sid, key) };
+                    result.Result = new List<TeendoDto> { await TeendoBll.GetAsync(_context, sid, key) };
 
                     tr.Commit();
                 }
@@ -112,7 +111,7 @@ namespace ossServer.Controllers.Primitiv.Teendo
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = TeendoBll.Read(_context, sid, maszk);
+                    result.Result = await TeendoBll.ReadAsync(_context, sid, maszk);
 
                     tr.Commit();
                 }
@@ -154,7 +153,7 @@ namespace ossServer.Controllers.Primitiv.Teendo
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    TeendoBll.ZoomCheck(_context, sid, par.Teendokod, par.Teendo);
+                    await TeendoBll.ZoomCheckAsync(_context, sid, par.Teendokod, par.Teendo);
 
                     tr.Commit();
                 }

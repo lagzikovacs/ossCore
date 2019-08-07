@@ -23,7 +23,7 @@ namespace ossServer.Controllers.Projekt
             return ProjektDal.Add(context, entity);
         }
 
-        public static ProjektDto CreateNew(ossContext context, string sid)
+        public static async Task<ProjektDto> CreateNewAsync(ossContext context, string sid)
         {
             const string minta = "HUF";
 
@@ -38,7 +38,7 @@ namespace ossServer.Controllers.Projekt
                 Inverterallapot = "",
                 Napelemallapot = ""
             };
-            var lst = PenznemDal.Read(context, minta);
+            var lst = await PenznemDal.ReadAsync(context, minta);
             if (lst.Count == 1)
             {
                 result.Penznemkod = lst[0].Penznemkod;

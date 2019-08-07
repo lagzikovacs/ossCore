@@ -10,14 +10,14 @@ namespace ossServer.Controllers.Primitiv.Helyseg
 {
     public class HelysegBll
     {
-        public static int Add(ossContext context, string sid, HelysegDto dto)
+        public static async Task<int> AddAsync(ossContext context, string sid, HelysegDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
 
             var entity = ObjectUtils.Convert<HelysegDto, Models.Helyseg>(dto);
-            HelysegDal.Exists(context, entity);
-            return HelysegDal.Add(context, entity);
+            await HelysegDal.ExistsAsync(context, entity);
+            return await HelysegDal.AddAsync(context, entity);
         }
 
         public static HelysegDto CreateNew(ossContext context, string sid)
@@ -33,26 +33,26 @@ namespace ossServer.Controllers.Primitiv.Helyseg
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
 
             await HelysegDal.Lock(context, dto.Helysegkod, dto.Modositva);
-            HelysegDal.CheckReferences(context, dto.Helysegkod);
-            var entity = HelysegDal.Get(context, dto.Helysegkod);
-            HelysegDal.Delete(context, entity);
+            await HelysegDal.CheckReferencesAsync(context, dto.Helysegkod);
+            var entity = await HelysegDal.GetAsync(context, dto.Helysegkod);
+            await HelysegDal.DeleteAsync(context, entity);
         }
 
-        public static HelysegDto Get(ossContext context, string sid, int key)
+        public static async Task<HelysegDto> GetAsync(ossContext context, string sid, int key)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);
 
-            var entity = HelysegDal.Get(context, key);
+            var entity = await HelysegDal.GetAsync(context, key);
             return ObjectUtils.Convert<Models.Helyseg, HelysegDto>(entity);
         }
 
-        public static List<HelysegDto> Read(ossContext context, string sid, string maszk)
+        public static async Task<List<HelysegDto>> ReadAsync(ossContext context, string sid, string maszk)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);
 
-            var entities = HelysegDal.Read(context, maszk);
+            var entities = await HelysegDal.ReadAsync(context, maszk);
             return ObjectUtils.Convert<Models.Helyseg, HelysegDto>(entities);
         }
 
@@ -62,18 +62,18 @@ namespace ossServer.Controllers.Primitiv.Helyseg
             CsoportDal.Joge(context, JogKod.PRIMITIVEKMOD);
 
             await HelysegDal.Lock(context, dto.Helysegkod, dto.Modositva);
-            var entity = HelysegDal.Get(context, dto.Helysegkod);
+            var entity = await HelysegDal.GetAsync(context, dto.Helysegkod);
             ObjectUtils.Update(dto, entity);
-            HelysegDal.ExistsAnother(context, entity);
-            return HelysegDal.Update(context, entity);
+            await HelysegDal.ExistsAnotherAsync(context, entity);
+            return await HelysegDal.UpdateAsync(context, entity);
         }
 
-        public static void ZoomCheck(ossContext context, string sid, int helysegkod, string helysegnev)
+        public static async Task ZoomCheckAsync(ossContext context, string sid, int helysegkod, string helysegnev)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.PRIMITIVEK);
 
-            HelysegDal.ZoomCheck(context, helysegkod, helysegnev);
+            await HelysegDal.ZoomCheckAsync(context, helysegkod, helysegnev);
         }
 
         public static List<ColumnSettings> GridColumns()

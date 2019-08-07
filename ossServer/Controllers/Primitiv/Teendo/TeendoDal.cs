@@ -10,18 +10,18 @@ namespace ossServer.Controllers.Primitiv.Teendo
 {
     public class TeendoDal
     {
-        public static void Exists(ossContext context, Models.Teendo entity)
+        public static async Task ExistsAsync(ossContext context, Models.Teendo entity)
         {
-            if (context.Teendo.Any(s => s.Particiokod == entity.Particiokod && 
+            if (await context.Teendo.AnyAsync(s => s.Particiokod == entity.Particiokod && 
                 s.Teendo1 == entity.Teendo1))
                 throw new Exception(string.Format(Messages.MarLetezoTetel, entity.Teendo1));
         }
 
-        public static int Add(ossContext context, Models.Teendo entity)
+        public static async Task<int> AddAsync(ossContext context, Models.Teendo entity)
         {
             Register.Creation(context, entity);
-            context.Teendo.Add(entity);
-            context.SaveChanges();
+            await context.Teendo.AddAsync(entity);
+            await context.SaveChangesAsync();
 
             return entity.Teendokod;
         }
@@ -31,22 +31,24 @@ namespace ossServer.Controllers.Primitiv.Teendo
             await context.ExecuteLockFunction("lockteendo", "teendokod", pKey, utoljaraModositva);
         }
 
-        public static Models.Teendo Get(ossContext context, int pKey)
+        public static async Task<Models.Teendo> GetAsync(ossContext context, int pKey)
         {
-            var result = context.Teendo
+            var result = await context.Teendo
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.Teendokod == pKey)
-              .ToList();
+              .ToListAsync();
+
             if (result.Count != 1)
                 throw new Exception(string.Format(Messages.AdatNemTalalhato, $"{nameof(Models.Teendo.Teendokod)}={pKey}"));
+
             return result.First();
         }
 
-        public static void CheckReferences(ossContext context, int pKey)
+        public static async Task CheckReferencesAsync(ossContext context, int pKey)
         {
             var result = new Dictionary<string, int>();
 
-            var n = context.Projektteendo.Count(s => s.Teendokod == pKey);
+            var n = await context.Projektteendo.CountAsync(s => s.Teendokod == pKey);
             if (n > 0)
                 result.Add("PROJEKTTEENDO.TEENDO", n);
 
@@ -60,40 +62,40 @@ namespace ossServer.Controllers.Primitiv.Teendo
             }
         }
 
-        public static void Delete(ossContext context, Models.Teendo entity)
+        public static async Task DeleteAsync(ossContext context, Models.Teendo entity)
         {
             context.Teendo.Remove(entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public static void ExistsAnother(ossContext context, Models.Teendo entity)
+        public static async Task ExistsAnotherAsync(ossContext context, Models.Teendo entity)
         {
-            if (context.Teendo.Any(s =>
+            if (await context.Teendo.AnyAsync(s =>
                 s.Particiokod == entity.Particiokod && s.Teendo1 == entity.Teendo1 && 
                 s.Teendokod != entity.Teendokod))
                 throw new Exception(string.Format(Messages.NemMenthetoMarLetezik, entity.Teendo1));
         }
 
-        public static int Update(ossContext context, Models.Teendo entity)
+        public static async Task<int> UpdateAsync(ossContext context, Models.Teendo entity)
         {
             Register.Modification(context, entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             return entity.Teendokod;
         }
 
-        public static List<Models.Teendo> Read(ossContext context, string maszk)
+        public static async Task<List<Models.Teendo>> ReadAsync(ossContext context, string maszk)
         {
-            return context.Teendo.AsNoTracking()
+            return await context.Teendo.AsNoTracking()
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.Teendo1.Contains(maszk))
               .OrderBy(s => s.Teendo1)
-              .ToList();
+              .ToListAsync();
         }
 
-        public static void ZoomCheck(ossContext context, int teendoKod, string teendo)
+        public static async Task ZoomCheckAsync(ossContext context, int teendoKod, string teendo)
         {
-            if (!context.Teendo.Any(s => s.Particiokod == context.CurrentSession.Particiokod &&
+            if (!await context.Teendo.AnyAsync(s => s.Particiokod == context.CurrentSession.Particiokod &&
                 s.Teendokod == teendoKod && s.Teendo1 == teendo))
                 throw new Exception(string.Format(Messages.HibasZoom, "teendő"));
         }

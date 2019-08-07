@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ossServer.BaseResults;
 using ossServer.Models;
 using ossServer.Utils;
@@ -28,7 +27,7 @@ namespace ossServer.Controllers.Primitiv.Helyseg
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = HelysegBll.Add(_context, sid, dto);
+                    result.Result = await HelysegBll.AddAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -91,7 +90,7 @@ namespace ossServer.Controllers.Primitiv.Helyseg
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<HelysegDto> { HelysegBll.Get(_context, sid, key) };
+                    result.Result = new List<HelysegDto> { await HelysegBll.GetAsync(_context, sid, key) };
 
                     tr.Commit();
                 }
@@ -112,7 +111,7 @@ namespace ossServer.Controllers.Primitiv.Helyseg
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = HelysegBll.Read(_context, sid, maszk);
+                    result.Result = await HelysegBll.ReadAsync(_context, sid, maszk);
 
                     tr.Commit();
                 }
@@ -154,7 +153,7 @@ namespace ossServer.Controllers.Primitiv.Helyseg
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    HelysegBll.ZoomCheck(_context, sid, par.Helysegkod, par.Helysegnev);
+                    await HelysegBll.ZoomCheckAsync(_context, sid, par.Helysegkod, par.Helysegnev);
 
                     tr.Commit();
                 }

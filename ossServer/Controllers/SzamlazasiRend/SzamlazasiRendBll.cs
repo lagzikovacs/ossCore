@@ -23,7 +23,7 @@ namespace ossServer.Controllers.SzamlazasiRend
             return result;
         }
 
-        public static SzamlazasiRendDto CreateNew(ossContext context, string sid)
+        public static async Task<SzamlazasiRendDto> CreateNewAsync(ossContext context, string sid)
         {
             const string minta = "HUF";
 
@@ -31,7 +31,7 @@ namespace ossServer.Controllers.SzamlazasiRend
             CsoportDal.Joge(context, JogKod.PROJEKT);
 
             var result = new SzamlazasiRendDto();
-            var lst = PenznemDal.Read(context, minta);
+            var lst = await PenznemDal.ReadAsync(context, minta);
             if (lst.Count == 1)
             {
                 result.Penznemkod = lst[0].Penznemkod;
