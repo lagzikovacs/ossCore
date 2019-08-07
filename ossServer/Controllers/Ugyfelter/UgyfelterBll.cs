@@ -125,7 +125,7 @@ namespace ossServer.Controllers.Ugyfelter
             LogonBll.SzerepkorValasztas(context, result.sid, csoport[0].Particiokod, csoport[0].Csoportkod);
 
             // ügyféltér log
-            UgyfelterLogDal.Add(context, new Models.Ugyfelterlog { Ugyfelkod = up.Ugyfelkod });
+            await UgyfelterLogDal.AddAsync(context, new Models.Ugyfelterlog { Ugyfelkod = up.Ugyfelkod });
 
             result.ugyfelDto = await UgyfelBll.GetAsync(context, result.sid, up.Ugyfelkod);
 

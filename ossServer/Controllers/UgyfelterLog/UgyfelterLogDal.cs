@@ -57,11 +57,11 @@ namespace ossServer.Controllers.UgyfelterLog
             return (IOrderedQueryable<Ugyfelterlog>)qry;
         }
 
-        public static int Add(ossContext model, Models.Ugyfelterlog entity)
+        public static async System.Threading.Tasks.Task<int> AddAsync(ossContext model, Models.Ugyfelterlog entity)
         {
             Register.Creation(model, entity);
-            model.Ugyfelterlog.Add(entity);
-            model.SaveChanges();
+            await model.Ugyfelterlog.AddAsync(entity);
+            await model.SaveChangesAsync();
 
             return entity.Ugyfelterlogkod;
         }
