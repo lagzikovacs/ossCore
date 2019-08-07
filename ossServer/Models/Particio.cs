@@ -20,7 +20,6 @@ namespace ossServer.Models
             Csoportjog = new HashSet<Csoportjog>();
             Dokumentum = new HashSet<Dokumentum>();
             Esemenynaplo = new HashSet<Esemenynaplo>();
-            Fajlrendszer = new HashSet<Fajlrendszer>();
             Fizetesimod = new HashSet<Fizetesimod>();
             Helyseg = new HashSet<Helyseg>();
             Irat = new HashSet<Irat>();
@@ -100,7 +99,6 @@ namespace ossServer.Models
         public virtual ICollection<Csoportjog> Csoportjog { get; set; }
         public virtual ICollection<Dokumentum> Dokumentum { get; set; }
         public virtual ICollection<Esemenynaplo> Esemenynaplo { get; set; }
-        public virtual ICollection<Fajlrendszer> Fajlrendszer { get; set; }
         public virtual ICollection<Fizetesimod> Fizetesimod { get; set; }
         public virtual ICollection<Helyseg> Helyseg { get; set; }
         public virtual ICollection<Irat> Irat { get; set; }

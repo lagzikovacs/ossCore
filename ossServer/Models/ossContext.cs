@@ -1,6 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace ossServer.Models
 {
@@ -28,7 +26,6 @@ namespace ossServer.Models
         public virtual DbSet<Csoportjog> Csoportjog { get; set; }
         public virtual DbSet<Dokumentum> Dokumentum { get; set; }
         public virtual DbSet<Esemenynaplo> Esemenynaplo { get; set; }
-        public virtual DbSet<Fajlrendszer> Fajlrendszer { get; set; }
         public virtual DbSet<Felhasznalo> Felhasznalo { get; set; }
         public virtual DbSet<Fizetesimod> Fizetesimod { get; set; }
         public virtual DbSet<Helyseg> Helyseg { get; set; }
@@ -1183,23 +1180,6 @@ namespace ossServer.Models
                     .WithMany(p => p.Esemenynaplo)
                     .HasForeignKey(d => d.Particiokod)
                     .HasConstraintName("FK_ESEMENYNAPLO_PARTICIO");
-            });
-
-            modelBuilder.Entity<Fajlrendszer>(entity =>
-            {
-                entity.HasKey(e => e.Fajlrendszerkod);
-
-                entity.ToTable("FAJLRENDSZER");
-
-                entity.Property(e => e.Fajlrendszerkod).HasColumnName("FAJLRENDSZERKOD");
-
-                entity.Property(e => e.Particiokod).HasColumnName("PARTICIOKOD");
-
-                entity.HasOne(d => d.ParticiokodNavigation)
-                    .WithMany(p => p.Fajlrendszer)
-                    .HasForeignKey(d => d.Particiokod)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_FAJLRENDSZER_PARTICIO");
             });
 
             modelBuilder.Entity<Felhasznalo>(entity =>
@@ -2696,13 +2676,21 @@ namespace ossServer.Models
 
                 entity.ToTable("UGYFEL");
 
-                entity.HasIndex(e => e.Email);
-
                 entity.HasIndex(e => e.Helysegkod);
 
-                entity.HasIndex(e => e.Nev);
-
                 entity.HasIndex(e => e.Particiokod);
+
+                entity.HasIndex(e => new { e.Csoport, e.Ceg })
+                    .HasName("IX_UGYFEL_CEG");
+
+                entity.HasIndex(e => new { e.Csoport, e.Email })
+                    .HasName("IX_UGYFEL_EMAIL");
+
+                entity.HasIndex(e => new { e.Csoport, e.Nev })
+                    .HasName("IX_UGYFEL_NEV");
+
+                entity.HasIndex(e => new { e.Csoport, e.Telefon })
+                    .HasName("IX_UGYFEL_TELEFON");
 
                 entity.Property(e => e.Ugyfelkod).HasColumnName("UGYFELKOD");
 
