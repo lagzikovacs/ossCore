@@ -27,7 +27,7 @@ namespace ossServer.Controllers.BizonylatKapcsolat
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = BizonylatKapcsolatBll.AddIratToBizonylat(_context, sid, 
+                    result.Result = await BizonylatKapcsolatBll.AddIratToBizonylatAsync(_context, sid, 
                         par.BizonylatKod, par.IratKod);
 
                     tr.Commit();
@@ -49,7 +49,7 @@ namespace ossServer.Controllers.BizonylatKapcsolat
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    BizonylatKapcsolatBll.Delete(_context, sid, dto);
+                    await BizonylatKapcsolatBll.DeleteAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -72,7 +72,7 @@ namespace ossServer.Controllers.BizonylatKapcsolat
                 {
                     result.Result = new List<BizonylatKapcsolatDto>
                     {
-                        BizonylatKapcsolatBll.Get(_context, sid, bizonylatkapcsolatKod)
+                        await BizonylatKapcsolatBll.GetAsync(_context, sid, bizonylatkapcsolatKod)
                     };
 
                     tr.Commit();
@@ -94,7 +94,7 @@ namespace ossServer.Controllers.BizonylatKapcsolat
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = BizonylatKapcsolatBll.Select(_context, sid, bizonylatKod);
+                    result.Result = await BizonylatKapcsolatBll.SelectAsync(_context, sid, bizonylatKod);
 
                     tr.Commit();
                 }

@@ -4,44 +4,47 @@ using ossServer.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.BizonylatKapcsolat
 {
     public class BizonylatKapcsolatDal
     {
-        internal static List<Models.Bizonylatkapcsolat> Select(ossContext context, int bizonylatKod)
+        internal static async Task<List<Bizonylatkapcsolat>> SelectAsync(ossContext context, int bizonylatKod)
         {
-            return context.Bizonylatkapcsolat
+            return await context.Bizonylatkapcsolat
                 .Include(r => r.IratkodNavigation).ThenInclude(r => r.IrattipuskodNavigation)
                 .Where(s => s.Bizonylatkod == bizonylatKod)
-                .OrderByDescending(s => s.Bizonylatkapcsolatkod).ToList();
+                .OrderByDescending(s => s.Bizonylatkapcsolatkod).ToListAsync();
         }
 
-        internal static int Add(ossContext context, Models.Bizonylatkapcsolat entity)
+        internal static async Task<int> AddAsync(ossContext context, Models.Bizonylatkapcsolat entity)
         {
             Register.Creation(context, entity);
-            context.Bizonylatkapcsolat.Add(entity);
-            context.SaveChanges();
+            await context.Bizonylatkapcsolat.AddAsync(entity);
+            await context.SaveChangesAsync();
 
             return entity.Bizonylatkapcsolatkod;
         }
 
-        internal static Models.Bizonylatkapcsolat Get(ossContext context, int pKey)
+        internal static async Task<Bizonylatkapcsolat> GetAsync(ossContext context, int pKey)
         {
-            var result = context.Bizonylatkapcsolat
+            var result = await context.Bizonylatkapcsolat
                 .Include(r => r.IratkodNavigation).ThenInclude(r => r.IrattipuskodNavigation)
                 .Where(s => s.Bizonylatkapcsolatkod == pKey)
-                .ToList();
+                .ToListAsync();
+
             if (result.Count != 1)
                 throw new Exception(string.Format(Messages.AdatNemTalalhato,
                   $"{nameof(Models.Bizonylatkapcsolat.Bizonylatkapcsolatkod)}={pKey}"));
+
             return result.First();
         }
 
-        internal static void Delete(ossContext context, Models.Bizonylatkapcsolat entity)
+        internal static async Task DeleteAsync(ossContext context, Models.Bizonylatkapcsolat entity)
         {
             context.Bizonylatkapcsolat.Remove(entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
     }
 }

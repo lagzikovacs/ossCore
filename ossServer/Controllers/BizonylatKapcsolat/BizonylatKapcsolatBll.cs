@@ -5,12 +5,13 @@ using ossServer.Models;
 using ossServer.Utils;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.BizonylatKapcsolat
 {
     public class BizonylatKapcsolatBll
     {
-        public static int AddIratToBizonylat(ossContext context, string sid, int bizonylatKod, int iratKod)
+        public static async Task<int> AddIratToBizonylatAsync(ossContext context, string sid, int bizonylatKod, int iratKod)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.BIZONYLATMOD);
@@ -20,16 +21,16 @@ namespace ossServer.Controllers.BizonylatKapcsolat
                 Bizonylatkod = bizonylatKod,
                 Iratkod = iratKod
             };
-            return BizonylatKapcsolatDal.Add(context, entity);
+            return await BizonylatKapcsolatDal.AddAsync(context, entity);
         }
 
-        public static void Delete(ossContext context, string sid, BizonylatKapcsolatDto dto)
+        public static async Task DeleteAsync(ossContext context, string sid, BizonylatKapcsolatDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.BIZONYLATMOD);
 
-            var entity = BizonylatKapcsolatDal.Get(context, dto.Bizonylatkapcsolatkod);
-            BizonylatKapcsolatDal.Delete(context, entity);
+            var entity = await BizonylatKapcsolatDal.GetAsync(context, dto.Bizonylatkapcsolatkod);
+            await BizonylatKapcsolatDal.DeleteAsync(context, entity);
         }
 
         private static BizonylatKapcsolatDto Calc(Models.Bizonylatkapcsolat entity)
@@ -46,21 +47,21 @@ namespace ossServer.Controllers.BizonylatKapcsolat
             return dto;
         }
 
-        public static BizonylatKapcsolatDto Get(ossContext context, string sid, int bizonylatkapcsolatKod)
+        public static async Task<BizonylatKapcsolatDto> GetAsync(ossContext context, string sid, int bizonylatkapcsolatKod)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.BIZONYLATMOD);
 
-            var entity = BizonylatKapcsolatDal.Get(context, bizonylatkapcsolatKod);
+            var entity = await BizonylatKapcsolatDal.GetAsync(context, bizonylatkapcsolatKod);
             return Calc(entity);
         }
 
-        public static List<BizonylatKapcsolatDto> Select(ossContext context, string sid, int bizonylatKod)
+        public static async Task<List<BizonylatKapcsolatDto>> SelectAsync(ossContext context, string sid, int bizonylatKod)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.BIZONYLATMOD);
 
-            var entities = BizonylatKapcsolatDal.Select(context, bizonylatKod);
+            var entities = await BizonylatKapcsolatDal.SelectAsync(context, bizonylatKod);
             var result = new List<BizonylatKapcsolatDto>();
 
             foreach (var entity in entities)
