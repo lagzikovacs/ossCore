@@ -1,13 +1,9 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using ossServer.Controllers.Bizonylat;
 using ossServer.Controllers.Csoport;
-using ossServer.Controllers.Dokumentum;
-using ossServer.Controllers.Irat;
 using ossServer.Controllers.Logon;
 using ossServer.Controllers.Projekt;
-using ossServer.Controllers.ProjektKapcsolat;
 using ossServer.Controllers.Session;
 using ossServer.Controllers.Ugyfel;
 using ossServer.Controllers.UgyfelterLog;
@@ -40,7 +36,7 @@ namespace ossServer.Controllers.Ugyfelter
             CsoportDal.Joge(context, JogKod.UGYFELEKMOD);
 
             await UgyfelDal.Lock(context, dto.Ugyfelkod, dto.Modositva);
-            var entity = UgyfelDal.Get(context, dto.Ugyfelkod);
+            var entity = await UgyfelDal.GetAsync(context, dto.Ugyfelkod);
 
             var kikuldesikod = Guid.NewGuid().ToString();
             var up = new UgyfelterParam
@@ -52,7 +48,7 @@ namespace ossServer.Controllers.Ugyfelter
 
             entity.Kikuldesikod = kikuldesikod;
             entity.Kikuldesikodidopontja = DateTime.Now;
-            UgyfelDal.Update(context, entity);
+            await UgyfelDal.UpdateAsync(context, entity);
 
             return Link(up);
         }
@@ -63,7 +59,7 @@ namespace ossServer.Controllers.Ugyfelter
             CsoportDal.Joge(context, JogKod.UGYFELEKMOD);
 
             await UgyfelDal.Lock(context, dto.Ugyfelkod, dto.Modositva);
-            var entity = UgyfelDal.Get(context, dto.Ugyfelkod);
+            var entity = await UgyfelDal.GetAsync(context, dto.Ugyfelkod);
             if (entity.Kikuldesikod == null)
                 throw new Exception("Ez az ügyfél még nem kapott ügyféltér linket!");
 
@@ -83,11 +79,11 @@ namespace ossServer.Controllers.Ugyfelter
             CsoportDal.Joge(context, JogKod.UGYFELEKMOD);
 
             await UgyfelDal.Lock(context, dto.Ugyfelkod, dto.Modositva);
-            var entity = UgyfelDal.Get(context, dto.Ugyfelkod);
+            var entity = await UgyfelDal.GetAsync(context, dto.Ugyfelkod);
 
             entity.Kikuldesikod = null;
             entity.Kikuldesikodidopontja = null;
-            UgyfelDal.Update(context, entity);
+            await UgyfelDal.UpdateAsync(context, entity);
         }
 
         public static async Task<UgyfelterDto> UgyfelterCheckAsync(ossContext context, IHubContext<OssHub> hubcontext,
@@ -106,7 +102,7 @@ namespace ossServer.Controllers.Ugyfelter
                 throw new Exception(string.Format(uh, 1));
             }
             // adott particióban létezi-e az ügyfél a kiküldési kóddal
-            UgyfelDal.UgyfelterCheck(context, up.Particiokod, up.Ugyfelkod, up.Kikuldesikod);
+            await UgyfelDal.UgyfelterCheckAsync(context, up.Particiokod, up.Ugyfelkod, up.Kikuldesikod);
 
             var result = new UgyfelterDto();
 
@@ -131,7 +127,7 @@ namespace ossServer.Controllers.Ugyfelter
             // ügyféltér log
             UgyfelterLogDal.Add(context, new Models.Ugyfelterlog { Ugyfelkod = up.Ugyfelkod });
 
-            result.ugyfelDto = UgyfelBll.Get(context, result.sid, up.Ugyfelkod);
+            result.ugyfelDto = await UgyfelBll.GetAsync(context, result.sid, up.Ugyfelkod);
 
             result.lstProjektDto = ProjektBll.Select(context, result.sid, 0, int.MaxValue, 0,
                 new List<SzMT> { new SzMT { Szempont = Szempont.UgyfelKod, Minta = up.Ugyfelkod.ToString() } }, out _);

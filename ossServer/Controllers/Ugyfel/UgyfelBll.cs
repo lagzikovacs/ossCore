@@ -3,7 +3,6 @@ using ossServer.Controllers.Session;
 using ossServer.Enums;
 using ossServer.Models;
 using ossServer.Utils;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,14 +12,14 @@ namespace ossServer.Controllers.Ugyfel
 {
     public class UgyfelBll
     {
-        public static int Add(ossContext context, string sid, UgyfelDto dto)
+        public static async Task<int> AddAsync(ossContext context, string sid, UgyfelDto dto)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.UGYFELEKMOD);
 
             var entity = ObjectUtils.Convert<UgyfelDto, Models.Ugyfel>(dto);
-            UgyfelDal.Exists(context, entity);
-            return UgyfelDal.Add(context, entity);
+            await UgyfelDal.ExistsAsync(context, entity);
+            return await UgyfelDal.AddAsync(context, entity);
         }
 
         public static UgyfelDto CreateNew(ossContext context, string sid)
@@ -37,9 +36,9 @@ namespace ossServer.Controllers.Ugyfel
             CsoportDal.Joge(context, JogKod.UGYFELEKMOD);
 
             await UgyfelDal.Lock(context, dto.Ugyfelkod, dto.Modositva);
-            UgyfelDal.CheckReferences(context, dto.Ugyfelkod);
-            var entity = UgyfelDal.Get(context, dto.Ugyfelkod);
-            UgyfelDal.Delete(context, entity);
+            await UgyfelDal.CheckReferencesAsync(context, dto.Ugyfelkod);
+            var entity = await UgyfelDal.GetAsync(context, dto.Ugyfelkod);
+            await UgyfelDal.DeleteAsync(context, entity);
         }
 
         public static string Cim(Models.Ugyfel entity)
@@ -64,21 +63,21 @@ namespace ossServer.Controllers.Ugyfel
             return result;
         }
 
-        public static UgyfelDto Get(ossContext context, string sid, int key)
+        public static async Task<UgyfelDto> GetAsync(ossContext context, string sid, int key)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.UGYFELEK);
 
-            var entity = UgyfelDal.Get(context, key);
+            var entity = await UgyfelDal.GetAsync(context, key);
             return Calc(entity);
         }
 
-        public static List<UgyfelDto> Read(ossContext context, string sid, string maszk)
+        public static async Task<List<UgyfelDto>> ReadAsync(ossContext context, string sid, string maszk)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.UGYFELEK);
 
-            var entities = UgyfelDal.Read(context, maszk);
+            var entities = await UgyfelDal.ReadAsync(context, maszk);
             var result = new List<UgyfelDto>();
 
             foreach (var entity in entities)
@@ -109,28 +108,28 @@ namespace ossServer.Controllers.Ugyfel
             CsoportDal.Joge(context, JogKod.UGYFELEKMOD);
 
             await UgyfelDal.Lock(context, dto.Ugyfelkod, dto.Modositva);
-            var entity = UgyfelDal.Get(context, dto.Ugyfelkod);
+            var entity = await UgyfelDal.GetAsync(context, dto.Ugyfelkod);
 
             ObjectUtils.Update(dto, entity);
-            UgyfelDal.ExistsAnother(context, entity);
-            return UgyfelDal.Update(context, entity);
+            await UgyfelDal.ExistsAnotherAsync(context, entity);
+            return await UgyfelDal.UpdateAsync(context, entity);
         }
 
-        public static void ZoomCheck(ossContext context, string sid, int ugyfelkod, string ugyfel)
+        public static async Task ZoomCheckAsync(ossContext context, string sid, int ugyfelkod, string ugyfel)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.UGYFELEK);
 
-            UgyfelDal.ZoomCheck(context, ugyfelkod, ugyfel);
+            await UgyfelDal.ZoomCheckAsync(context, ugyfelkod, ugyfel);
         }
 
         // TODO
-        public static string vCard(ossContext context, string sid, int ugyfelkod)
+        public static async Task<string> vCardAsync(ossContext context, string sid, int ugyfelkod)
         {
             SessionBll.Check(context, sid);
             CsoportDal.Joge(context, JogKod.UGYFELEK);
 
-            var entity = UgyfelDal.Get(context, ugyfelkod);
+            var entity = await UgyfelDal.GetAsync(context, ugyfelkod);
 
             var b = new StringBuilder();
             b.Append("BEGIN:VCARD\r\nVERSION:2.1\r\n");

@@ -102,19 +102,19 @@ namespace ossServer.Controllers.Ugyfel
             return (IOrderedQueryable<Models.Ugyfel>)qry;
         }
 
-        public static void Exists(ossContext context, Models.Ugyfel entity)
+        public static async Task ExistsAsync(ossContext context, Models.Ugyfel entity)
         {
-            if (context.Ugyfel.Any(s => s.Particiokod == entity.Particiokod &&
+            if (await context.Ugyfel.AnyAsync(s => s.Particiokod == entity.Particiokod &&
                 s.Nev == entity.Nev && s.Helysegkod == entity.Helysegkod && s.Kozterulet == entity.Kozterulet && 
                 s.Kozterulettipus == entity.Kozterulettipus && s.Hazszam == entity.Hazszam))
                 throw new Exception(string.Format(Messages.MarLetezoTetel, entity.Nev));
         }
 
-        public static int Add(ossContext context, Models.Ugyfel entity)
+        public static async Task<int> AddAsync(ossContext context, Models.Ugyfel entity)
         {
             Register.Creation(context, entity);
-            context.Ugyfel.Add(entity);
-            context.SaveChanges();
+            await context.Ugyfel.AddAsync(entity);
+            await context.SaveChangesAsync();
 
             return entity.Ugyfelkod;
         }
@@ -124,35 +124,37 @@ namespace ossServer.Controllers.Ugyfel
             await context.ExecuteLockFunction("lockugyfel", "ugyfelkod", pKey, utoljaraModositva);
         }
 
-        public static Models.Ugyfel Get(ossContext context, int pKey)
+        public static async Task<Models.Ugyfel> GetAsync(ossContext context, int pKey)
         {
-            var result = context.Ugyfel
+            var result = await context.Ugyfel
               .Include(r => r.HelysegkodNavigation)
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
-              .Where(s => s.Ugyfelkod == pKey).ToList();
+              .Where(s => s.Ugyfelkod == pKey).ToListAsync();
+
             if (result.Count != 1)
                 throw new Exception(string.Format(Messages.AdatNemTalalhato, 
                     $"{nameof(Models.Ugyfel.Ugyfelkod)}={pKey}"));
+
             return result.First();
         }
 
-        public static void CheckReferences(ossContext context, int pKey)
+        public static async Task CheckReferencesAsync(ossContext context, int pKey)
         {
             var result = new Dictionary<string, int>();
 
-            var n = context.Irat.Count(s => s.Ugyfelkod == pKey);
+            var n = await context.Irat.CountAsync(s => s.Ugyfelkod == pKey);
             if (n > 0)
                 result.Add("IRAT.UGYFELKOD", n);
 
-            n = context.Projekt.Count(s => s.Ugyfelkod == pKey);
+            n = await context.Projekt.CountAsync(s => s.Ugyfelkod == pKey);
             if (n > 0)
                 result.Add("PROJEKT.UGYFELKOD", n);
 
-            n = context.Bizonylat.Count(s => s.Ugyfelkod == pKey);
+            n = await context.Bizonylat.CountAsync(s => s.Ugyfelkod == pKey);
             if (n > 0)
                 result.Add("BIZONYLAT.UGYFELKOD", n);
 
-            n = context.Penztartetel.Count(s => s.Ugyfelkod == pKey);
+            n = await context.Penztartetel.CountAsync(s => s.Ugyfelkod == pKey);
             if (n > 0)
                 result.Add("PENZTARTETEL.UGYFELKOD", n);
 
@@ -166,49 +168,49 @@ namespace ossServer.Controllers.Ugyfel
             }
         }
 
-        public static void Delete(ossContext context, Models.Ugyfel entity)
+        public static async Task DeleteAsync(ossContext context, Models.Ugyfel entity)
         {
             context.Ugyfel.Remove(entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public static void ExistsAnother(ossContext context, Models.Ugyfel entity)
+        public static async Task ExistsAnotherAsync(ossContext context, Models.Ugyfel entity)
         {
-            if (context.Ugyfel.Any(s => s.Particiokod == entity.Particiokod &&
+            if (await context.Ugyfel.AnyAsync(s => s.Particiokod == entity.Particiokod &&
                 s.Nev == entity.Nev && s.Helysegkod == entity.Helysegkod &&
                 s.Kozterulet == entity.Kozterulet && s.Kozterulettipus == entity.Kozterulettipus &&
                 s.Hazszam == entity.Hazszam && s.Ugyfelkod != entity.Ugyfelkod))
                 throw new Exception(string.Format(Messages.NemMenthetoMarLetezik, entity.Nev));
         }
 
-        public static int Update(ossContext context, Models.Ugyfel entity)
+        public static async Task<int> UpdateAsync(ossContext context, Models.Ugyfel entity)
         {
             Register.Modification(context, entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             return entity.Ugyfelkod;
         }
 
-        public static List<Models.Ugyfel> Read(ossContext context, string maszk)
+        public static async Task<List<Models.Ugyfel>> ReadAsync(ossContext context, string maszk)
         {
-            return context.Ugyfel.AsNoTracking()
+            return await context.Ugyfel.AsNoTracking()
               .Include(r => r.HelysegkodNavigation)
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod && s.Nev.Contains(maszk))
               .OrderBy(s => s.Nev)
-              .ToList();
+              .ToListAsync();
         }
 
-        public static void ZoomCheck(ossContext context, int ugyfelkod, string ugyfel)
+        public static async Task ZoomCheckAsync(ossContext context, int ugyfelkod, string ugyfel)
         {
-            if (!context.Ugyfel.Any(s => s.Particiokod == context.CurrentSession.Particiokod &&
+            if (!await context.Ugyfel.AnyAsync(s => s.Particiokod == context.CurrentSession.Particiokod &&
                 s.Ugyfelkod == ugyfelkod && s.Nev == ugyfel))
                 throw new Exception(string.Format(Messages.HibasZoom, "ügyfél"));
         }
 
-        public static void UgyfelterCheck(ossContext context, int particiokod, int ugyfelkod, string kikuldesikod)
+        public static async Task UgyfelterCheckAsync(ossContext context, int particiokod, int ugyfelkod, string kikuldesikod)
         {
-            var list = context.Ugyfel.Where(s => s.Particiokod == particiokod &&
-                s.Ugyfelkod == ugyfelkod && s.Kikuldesikod == kikuldesikod).ToList();
+            var list = await context.Ugyfel.Where(s => s.Particiokod == particiokod &&
+                s.Ugyfelkod == ugyfelkod && s.Kikuldesikod == kikuldesikod).ToListAsync();
             if (list.Count != 1)
                 throw new Exception("Nem juthat be az ügyféltérbe - hibás paraméterek!");
         }

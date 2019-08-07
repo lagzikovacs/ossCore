@@ -27,7 +27,7 @@ namespace ossServer.Controllers.Ugyfel
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = UgyfelBll.Add(_context, sid, dto);
+                    result.Result = await UgyfelBll.AddAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -90,7 +90,7 @@ namespace ossServer.Controllers.Ugyfel
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<UgyfelDto> { UgyfelBll.Get(_context, sid, key) };
+                    result.Result = new List<UgyfelDto> { await UgyfelBll.GetAsync(_context, sid, key) };
 
                     tr.Commit();
                 }
@@ -111,7 +111,7 @@ namespace ossServer.Controllers.Ugyfel
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = UgyfelBll.Read(_context, sid, maszk);
+                    result.Result = await UgyfelBll.ReadAsync(_context, sid, maszk);
 
                     tr.Commit();
                 }
@@ -176,7 +176,7 @@ namespace ossServer.Controllers.Ugyfel
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    UgyfelBll.ZoomCheck(_context, sid, par.Ugyfelkod, par.Ugyfelnev);
+                    await UgyfelBll.ZoomCheckAsync(_context, sid, par.Ugyfelkod, par.Ugyfelnev);
 
                     tr.Commit();
                 }
@@ -197,7 +197,7 @@ namespace ossServer.Controllers.Ugyfel
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = UgyfelBll.vCard(_context, sid, key);
+                    result.Result = await UgyfelBll.vCardAsync(_context, sid, key);
 
                     tr.Commit();
                 }
