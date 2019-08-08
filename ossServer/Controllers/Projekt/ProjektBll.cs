@@ -20,7 +20,7 @@ namespace ossServer.Controllers.Projekt
             await CsoportDal.JogeAsync(context, JogKod.PROJEKTMOD);
 
             var entity = ObjectUtils.Convert<ProjektDto, Models.Projekt>(dto);
-            return ProjektDal.Add(context, entity);
+            return await ProjektDal.AddAsync(context, entity);
         }
 
         public static async Task<ProjektDto> CreateNewAsync(ossContext context, string sid)
@@ -54,9 +54,9 @@ namespace ossServer.Controllers.Projekt
             await CsoportDal.JogeAsync(context, JogKod.PROJEKTMOD);
 
             await ProjektDal.Lock(context, dto.Projektkod, dto.Modositva);
-            ProjektDal.CheckReferences(context, dto.Projektkod);
-            var entity = ProjektDal.Get(context, dto.Projektkod);
-            ProjektDal.Delete(context, entity);
+            await ProjektDal.CheckReferencesAsync(context, dto.Projektkod);
+            var entity = await ProjektDal.GetAsync(context, dto.Projektkod);
+            await ProjektDal.DeleteAsync(context, entity);
         }
 
         private static ProjektDto Calc(Models.Projekt entity)
@@ -77,7 +77,7 @@ namespace ossServer.Controllers.Projekt
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
-            var entity = ProjektDal.Get(context, key);
+            var entity = await ProjektDal.GetAsync(context, key);
             return Calc(entity);
         }
 
@@ -104,10 +104,10 @@ namespace ossServer.Controllers.Projekt
             await CsoportDal.JogeAsync(context, JogKod.PROJEKTMOD);
 
             await ProjektDal.Lock(context, dto.Projektkod, dto.Modositva);
-            var entity = ProjektDal.Get(context, dto.Projektkod);
+            var entity = await ProjektDal.GetAsync(context, dto.Projektkod);
 
             ObjectUtils.Update(dto, entity);
-            return ProjektDal.Update(context, entity);
+            return await ProjektDal.UpdateAsync(context, entity);
         }
 
         public static List<ColumnSettings> GridColumns()

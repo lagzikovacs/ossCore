@@ -179,11 +179,11 @@ namespace ossServer.Controllers.Projekt
             return (IOrderedQueryable<Models.Projekt>)qry;
         }
 
-        public static int Add(ossContext context, Models.Projekt entity)
+        public static async Task<int> AddAsync(ossContext context, Models.Projekt entity)
         {
             Register.Creation(context, entity);
-            context.Projekt.Add(entity);
-            context.SaveChanges();
+            await context.Projekt.AddAsync(entity);
+            await context.SaveChangesAsync();
 
             return entity.Projektkod;
         }
@@ -193,31 +193,33 @@ namespace ossServer.Controllers.Projekt
             await context.ExecuteLockFunction("lockprojekt", "projektkod", pKey, utoljaraModositva);
         }
 
-        public static Models.Projekt Get(ossContext context, int pKey)
+        public static async Task<Models.Projekt> GetAsync(ossContext context, int pKey)
         {
-            var result = context.Projekt
+            var result = await context.Projekt
               .Include(r => r.PenznemkodNavigation)
               .Include(r1 => r1.UgyfelkodNavigation).ThenInclude(r => r.HelysegkodNavigation)
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
-              .Where(s => s.Projektkod == pKey).ToList();
+              .Where(s => s.Projektkod == pKey).ToListAsync();
+
             if (result.Count != 1)
                 throw new Exception(string.Format(Messages.AdatNemTalalhato, $"{nameof(Models.Projekt.Projektkod)}={pKey}"));
+
             return result.First();
         }
 
-        public static void CheckReferences(ossContext context, int pKey)
+        public static async Task CheckReferencesAsync(ossContext context, int pKey)
         {
             var result = new Dictionary<string, int>();
 
-            var n = context.Projektkapcsolat.Count(s => s.Projektkod == pKey);
+            var n = await context.Projektkapcsolat.CountAsync(s => s.Projektkod == pKey);
             if (n > 0)
                 result.Add("PROJEKTKAPCSOLAT.PROJEKTKOD", n);
 
-            n = context.Projektteendo.Count(s => s.Projektkod == pKey);
+            n = await context.Projektteendo.CountAsync(s => s.Projektkod == pKey);
             if (n > 0)
                 result.Add("PROJEKTTEENDO.PROJEKTKOD", n);
 
-            n = context.Szamlazasirend.Count(s => s.Projektkod == pKey);
+            n = await context.Szamlazasirend.CountAsync(s => s.Projektkod == pKey);
             if (n > 0)
                 result.Add("SZAMLAZASIREND.PROJEKTKOD", n);
 
@@ -231,16 +233,16 @@ namespace ossServer.Controllers.Projekt
             }
         }
 
-        public static void Delete(ossContext context, Models.Projekt entity)
+        public static async Task DeleteAsync(ossContext context, Models.Projekt entity)
         {
             context.Projekt.Remove(entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public static int Update(ossContext context, Models.Projekt entity)
+        public static async Task<int> UpdateAsync(ossContext context, Models.Projekt entity)
         {
             Register.Modification(context, entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             return entity.Projektkod;
         }
