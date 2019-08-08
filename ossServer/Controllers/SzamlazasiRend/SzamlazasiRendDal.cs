@@ -10,11 +10,11 @@ namespace ossServer.Controllers.SzamlazasiRend
 {
     public class SzamlazasiRendDal
     {
-        public static int Add(ossContext context, Models.Szamlazasirend entity)
+        public static async Task<int> AddAsync(ossContext context, Models.Szamlazasirend entity)
         {
             Register.Creation(context, entity);
-            context.Szamlazasirend.Add(entity);
-            context.SaveChanges();
+            await context.Szamlazasirend.AddAsync(entity);
+            await context.SaveChangesAsync();
 
             return entity.Szamlazasirendkod;
         }
@@ -24,41 +24,43 @@ namespace ossServer.Controllers.SzamlazasiRend
             await context.ExecuteLockFunction("lockszamlazasirend", "szamlazasirendkod", pKey, utoljaraModositva);
         }
 
-        public static Models.Szamlazasirend Get(ossContext context, int pKey)
+        public static async Task<Szamlazasirend> GetAsync(ossContext context, int pKey)
         {
-            var result = context.Szamlazasirend
+            var result = await context.Szamlazasirend
               .Include(r => r.PenznemkodNavigation)
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.Szamlazasirendkod == pKey)
-              .ToList();
+              .ToListAsync();
+
             if (result.Count != 1)
                 throw new Exception(string.Format(Messages.AdatNemTalalhato,
                   $"{nameof(Models.Szamlazasirend.Szamlazasirendkod)}={pKey}"));
+
             return result.First();
         }
 
-        public static void Delete(ossContext context, Models.Szamlazasirend entity)
+        public static async Task DeleteAsync(ossContext context, Models.Szamlazasirend entity)
         {
             context.Szamlazasirend.Remove(entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public static int Update(ossContext context, Models.Szamlazasirend entity)
+        public static async Task<int> UpdateAsync(ossContext context, Models.Szamlazasirend entity)
         {
             Register.Modification(context, entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             return entity.Szamlazasirendkod;
         }
 
-        public static List<Models.Szamlazasirend> Select(ossContext context, int projektKod)
+        public static async Task<List<Szamlazasirend>> SelectAsync(ossContext context, int projektKod)
         {
-            return context.Szamlazasirend.AsNoTracking()
+            return await context.Szamlazasirend.AsNoTracking()
               .Include(r => r.PenznemkodNavigation)
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.Projektkod == projektKod)
               .OrderBy(s => s.Szamlazasirendkod)
-              .ToList();
+              .ToListAsync();
         }
     }
 }

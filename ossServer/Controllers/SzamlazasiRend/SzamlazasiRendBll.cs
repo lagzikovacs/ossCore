@@ -16,7 +16,7 @@ namespace ossServer.Controllers.SzamlazasiRend
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
-            var entity = SzamlazasiRendDal.Get(context, key);
+            var entity = await SzamlazasiRendDal.GetAsync(context, key);
             var result = ObjectUtils.Convert<Szamlazasirend, SzamlazasiRendDto>(entity);
             result.Penznem = entity.PenznemkodNavigation.Penznem1;
 
@@ -47,7 +47,7 @@ namespace ossServer.Controllers.SzamlazasiRend
             await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
             var entity = ObjectUtils.Convert<SzamlazasiRendDto, Szamlazasirend>(dto);
-            return SzamlazasiRendDal.Add(context, entity);
+            return await SzamlazasiRendDal.AddAsync(context, entity);
         }
 
         public static async Task<List<SzamlazasiRendDto>> SelectAsync(ossContext context, string sid, int projektKod)
@@ -55,7 +55,7 @@ namespace ossServer.Controllers.SzamlazasiRend
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
-            var entities = SzamlazasiRendDal.Select(context, projektKod);
+            var entities = await SzamlazasiRendDal.SelectAsync(context, projektKod);
             var result = new List<SzamlazasiRendDto>();
 
             foreach (var entity in entities)
@@ -75,8 +75,8 @@ namespace ossServer.Controllers.SzamlazasiRend
             await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
             await SzamlazasiRendDal.Lock(context, dto.Szamlazasirendkod, dto.Modositva);
-            var entity = SzamlazasiRendDal.Get(context, dto.Szamlazasirendkod);
-            SzamlazasiRendDal.Delete(context, entity);
+            var entity = await SzamlazasiRendDal.GetAsync(context, dto.Szamlazasirendkod);
+            await SzamlazasiRendDal.DeleteAsync(context, entity);
         }
 
         public static async Task<int> UpdateAsync(ossContext context, string sid, SzamlazasiRendDto dto)
@@ -85,9 +85,9 @@ namespace ossServer.Controllers.SzamlazasiRend
             await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
             await SzamlazasiRendDal.Lock(context, dto.Szamlazasirendkod, dto.Modositva);
-            var entity = SzamlazasiRendDal.Get(context, dto.Szamlazasirendkod);
+            var entity = await SzamlazasiRendDal.GetAsync(context, dto.Szamlazasirendkod);
             ObjectUtils.Update(dto, entity);
-            return SzamlazasiRendDal.Update(context, entity);
+            return await SzamlazasiRendDal.UpdateAsync(context, entity);
         }
 
         public static List<ColumnSettings> GridColumns()
