@@ -475,7 +475,7 @@ namespace ossServer.Controllers.Riport
 
             SpreadsheetInfo.SetLicense(licKey);
 
-            var penztar = PenztarDal.Get(context, penztarKod);
+            var penztar = await PenztarDal.GetAsync(context, penztarKod);
 
             BeginReport("Pénztártételek");
 

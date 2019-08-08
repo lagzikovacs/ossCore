@@ -1,4 +1,5 @@
-﻿using ossServer.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using ossServer.Models;
 using ossServer.Utils;
 using System;
 using System.Collections.Generic;
@@ -9,18 +10,18 @@ namespace ossServer.Controllers.Penztar
 {
     public class PenztarDal
     {
-        public static void Exists(ossContext context, Models.Penztar entity)
+        public static async Task ExistsAsync(ossContext context, Models.Penztar entity)
         {
-            if (context.Penztar.Any(s => s.Particiokod == context.CurrentSession.Particiokod && 
+            if (await context.Penztar.AnyAsync(s => s.Particiokod == context.CurrentSession.Particiokod && 
                 s.Penztar1 == entity.Penztar1 && s.Penznem == entity.Penznem))
                 throw new Exception(string.Format(Messages.MarLetezoTetel, entity.Penztar1));
         }
 
-        public static int Add(ossContext context, Models.Penztar entity)
+        public static async Task<int> AddAsync(ossContext context, Models.Penztar entity)
         {
             Register.Creation(context, entity);
-            context.Penztar.Add(entity);
-            context.SaveChanges();
+            await context.Penztar.AddAsync(entity);
+            await context.SaveChangesAsync();
 
             return entity.Penztarkod;
         }
@@ -30,11 +31,11 @@ namespace ossServer.Controllers.Penztar
             await context.ExecuteLockFunction("lockpenztar", "penztarkod", pKey, utoljaraModositva);
         }
 
-        public static void CheckReferences(ossContext context, int pKey)
+        public static async Task CheckReferencesAsync(ossContext context, int pKey)
         {
             var result = new Dictionary<string, int>();
 
-            var n = context.Penztartetel.Count(s => s.Penztarkod == pKey);
+            var n = await context.Penztartetel.CountAsync(s => s.Penztarkod == pKey);
             if (n > 0)
                 result.Add("PENZTARTETEL.PENZTARKOD", n);
 
@@ -48,42 +49,45 @@ namespace ossServer.Controllers.Penztar
             }
         }
 
-        public static void Delete(ossContext context, Models.Penztar entity)
+        public static async Task DeleteAsync(ossContext context, Models.Penztar entity)
         {
             context.Penztar.Remove(entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public static void ExistsAnother(ossContext context, Models.Penztar entity)
+        public static async Task ExistsAnotherAsync(ossContext context, Models.Penztar entity)
         {
-            if (context.Penztar.Any(s => s.Particiokod == context.CurrentSession.Particiokod && 
+            if (await context.Penztar
+                .AnyAsync(s => s.Particiokod == context.CurrentSession.Particiokod && 
                 s.Penztar1 == entity.Penztar1 && s.Penztarkod != entity.Penztarkod))
                 throw new Exception(string.Format(Messages.NemMenthetoMarLetezik, entity.Penztar1));
         }
 
-        public static int Update(ossContext context, Models.Penztar entity)
+        public static async Task<int> UpdateAsync(ossContext context, Models.Penztar entity)
         {
             Register.Modification(context, entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             return entity.Penztarkod;
         }
 
-        public static Models.Penztar Get(ossContext context, int pKey)
+        public static async Task<Models.Penztar> GetAsync(ossContext context, int pKey)
         {
-            var result = context.Penztar
+            var result = await context.Penztar
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.Penztarkod == pKey)
-              .ToList();
+              .ToListAsync();
+
             if (result.Count != 1)
                 throw new Exception(string.Format(Messages.AdatNemTalalhato, $"{nameof(Models.Penztar.Penztarkod)}={pKey}"));
+
             return result.First();
         }
 
         //egyből dto-t állít elő
-        public static List<PenztarDto> Read(IOrderedQueryable<Models.Penztar> qry)
+        public static async Task<List<PenztarDto>> ReadAsync(IOrderedQueryable<Models.Penztar> qry)
         {
-            return qry.Select(s => new PenztarDto
+            return await qry.Select(s => new PenztarDto
             {
                 Penztarkod = s.Penztarkod,
                 Penztar1 = s.Penztar1,
@@ -97,34 +101,34 @@ namespace ossServer.Controllers.Penztar
                 Letrehozta = s.Letrehozta,
                 Modositva = s.Modositva,
                 Modositotta = s.Modositotta
-            }).ToList();
+            }).ToListAsync();
         }
-        public static List<PenztarDto> Read(ossContext context, string maszk)
+        public static async Task<List<PenztarDto>> ReadAsync(ossContext context, string maszk)
         {
             var qry = context.Penztar
                 .Where(s => s.Particiokod == context.CurrentSession.Particiokod && 
                     s.Penztar1.Contains(maszk))
                 .OrderBy(s => s.Penztar1);
 
-            return Read(qry);
+            return await ReadAsync(qry);
         }
-        public static List<PenztarDto> Read(ossContext context, int penztarkod)
+        public static async Task<List<PenztarDto>> ReadAsync(ossContext context, int penztarkod)
         {
             var qry = context.Penztar
                 .Where(s => s.Particiokod == context.CurrentSession.Particiokod && 
                     s.Penztarkod == penztarkod)
                 .OrderBy(s => s.Penztar1);
 
-            return Read(qry);
+            return await ReadAsync(qry);
         }
-        public static List<PenztarDto> ReadByCurrencyOpened(ossContext context, int penznemkod)
+        public static async Task<List<PenztarDto>> ReadByCurrencyOpenedAsync(ossContext context, int penznemkod)
         {
             var qry = context.Penztar
                 .Where(s => s.Particiokod == context.CurrentSession.Particiokod && 
                     s.Penznemkod == penznemkod && s.Nyitva)
                 .OrderBy(s => s.Penztar1);
 
-            return Read(qry);
+            return await ReadAsync(qry);
         }
     }
 }

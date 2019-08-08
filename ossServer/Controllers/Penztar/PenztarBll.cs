@@ -16,8 +16,8 @@ namespace ossServer.Controllers.Penztar
             await CsoportDal.JogeAsync(context, JogKod.PENZTARMOD);
 
             var entity = ObjectUtils.Convert<PenztarDto, Models.Penztar>(dto);
-            PenztarDal.Exists(context, entity);
-            return PenztarDal.Add(context, entity);
+            await PenztarDal.ExistsAsync(context, entity);
+            return await PenztarDal.AddAsync(context, entity);
         }
 
         public static async Task<PenztarDto> CreateNewAsync(ossContext context, string sid)
@@ -34,9 +34,9 @@ namespace ossServer.Controllers.Penztar
             await CsoportDal.JogeAsync(context, JogKod.PENZTARMOD);
 
             await PenztarDal.Lock(context, dto.Penztarkod, dto.Modositva);
-            PenztarDal.CheckReferences(context, dto.Penztarkod);
-            var entity = PenztarDal.Get(context, dto.Penztarkod);
-            PenztarDal.Delete(context, entity);
+            await PenztarDal.CheckReferencesAsync(context, dto.Penztarkod);
+            var entity = await PenztarDal.GetAsync(context, dto.Penztarkod);
+            await PenztarDal.DeleteAsync(context, entity);
         }
 
         public static async Task<PenztarDto> GetAsync(ossContext context, string sid, int key)
@@ -44,7 +44,7 @@ namespace ossServer.Controllers.Penztar
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.PENZTAR);
 
-            var entity = PenztarDal.Get(context, key);
+            var entity = await PenztarDal.GetAsync(context, key);
             return ObjectUtils.Convert<Models.Penztar, PenztarDto>(entity);
         }
 
@@ -53,21 +53,21 @@ namespace ossServer.Controllers.Penztar
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.PENZTAR);
 
-            return PenztarDal.Read(context, maszk);
+            return await PenztarDal.ReadAsync(context, maszk);
         }
         public static async Task<List<PenztarDto>> ReadAsync(ossContext context, string sid, int penztarkod)
         {
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.PENZTAR);
 
-            return PenztarDal.Read(context, penztarkod);
+            return await PenztarDal.ReadAsync(context, penztarkod);
         }
         public static async Task<List<PenztarDto>> ReadByCurrencyOpenedAsync(ossContext context, string sid, int penznemkod)
         {
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.PENZTAR);
 
-            return PenztarDal.ReadByCurrencyOpened(context, penznemkod);
+            return await PenztarDal.ReadByCurrencyOpenedAsync(context, penznemkod);
         }
 
         public static async Task<int> UpdateAsync(ossContext context, string sid, PenztarDto dto)
@@ -76,10 +76,10 @@ namespace ossServer.Controllers.Penztar
             await CsoportDal.JogeAsync(context, JogKod.PENZTARMOD);
 
             await PenztarDal.Lock(context, dto.Penztarkod, dto.Modositva);
-            var entity = PenztarDal.Get(context, dto.Penztarkod);
+            var entity = await PenztarDal.GetAsync(context, dto.Penztarkod);
             ObjectUtils.Update(dto, entity);
-            PenztarDal.ExistsAnother(context, entity);
-            return PenztarDal.Update(context, entity);
+            await PenztarDal.ExistsAnotherAsync(context, entity);
+            return await PenztarDal.UpdateAsync(context, entity);
         }
 
         public static List<ColumnSettings> GridColumns()
