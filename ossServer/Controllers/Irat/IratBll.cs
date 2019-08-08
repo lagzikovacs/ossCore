@@ -14,19 +14,19 @@ namespace ossServer.Controllers.Irat
 {
     public class IratBll
     {
-        public static int Add(ossContext context, string sid, IratDto dto)
+        public static async Task<int> AddAsync(ossContext context, string sid, IratDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.IRAT);
+            await CsoportDal.JogeAsync(context, JogKod.IRAT);
 
             var entity = ObjectUtils.Convert<IratDto, Models.Irat>(dto);
             return IratDal.Add(context, entity);
         }
 
-        public static IratDto CreateNew(ossContext context, string sid)
+        public static async Task<IratDto> CreateNewAsync(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.IRAT);
+            await CsoportDal.JogeAsync(context, JogKod.IRAT);
 
             return new IratDto { Keletkezett = DateTime.Now.Date, Irany = "Belső" };
         }
@@ -34,7 +34,7 @@ namespace ossServer.Controllers.Irat
         public static async Task DeleteAsync(ossContext context, string sid, IratDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.IRATMOD);
+            await CsoportDal.JogeAsync(context, JogKod.IRATMOD);
 
             await IratDal.Lock(context, dto.Iratkod, dto.Modositva);
             IratDal.CheckReferences(context, dto.Iratkod);
@@ -56,36 +56,36 @@ namespace ossServer.Controllers.Irat
             return result;
         }
 
-        public static IratDto Get(ossContext context, string sid, int key)
+        public static async Task<IratDto> GetAsync(ossContext context, string sid, int key)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.IRAT);
+            await CsoportDal.JogeAsync(context, JogKod.IRAT);
 
             var entity = IratDal.Get(context, key);
             return Calc(entity);
         }
 
-        public static List<IratDto> Select(ossContext context, string sid, int rekordTol, int lapMeret, 
-            List<SzMT> szmt, out int osszesRekord)
+        public static async Task<Tuple<List<IratDto>, int>> SelectAsync(ossContext context, string sid, int rekordTol, int lapMeret, 
+            List<SzMT> szmt)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.IRAT);
+            await CsoportDal.JogeAsync(context, JogKod.IRAT);
 
             var qry = IratDal.GetQuery(context, szmt);
-            osszesRekord = qry.Count();
+            var osszesRekord = qry.Count();
             var entities = qry.Skip(rekordTol).Take(lapMeret).ToList();
 
             var result = new List<IratDto>();
             foreach (var entity in entities)
                 result.Add(Calc(entity));
 
-            return result;
+            return new Tuple<List<IratDto>, int>(result, osszesRekord);
         }
 
         public static async Task<int> UpdateAsync(ossContext context, string sid, IratDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.IRATMOD);
+            await CsoportDal.JogeAsync(context, JogKod.IRATMOD);
 
             await IratDal.Lock(context, dto.Iratkod, dto.Modositva);
             var entity = IratDal.Get(context, dto.Iratkod);
@@ -95,14 +95,14 @@ namespace ossServer.Controllers.Irat
 
 
         //sql tranzakcióban működik, kis fájlok legyenek
-        public static FajlBuf Letoltes(ossContext context, string sid, int iratKod)
+        public static async Task<FajlBuf> LetoltesAsync(ossContext context, string sid, int iratKod)
         {
             IratDal.Get(context, iratKod);
             var lstDokumentum = DokumentumDal.Select(context, iratKod);
             if (lstDokumentum.Count != 1)
                 throw new Exception("Nincs pontosan egy dokumentum!");
 
-            var entityDokumentum = DokumentumBll.Letoltes(context, sid, lstDokumentum[0].Dokumentumkod);
+            var entityDokumentum = await DokumentumBll.LetoltesAsync(context, sid, lstDokumentum[0].Dokumentumkod);
             var fb = DokumentumBll.LetoltesFajl(entityDokumentum, 0, lstDokumentum[0].Meret);
 
             return fb;

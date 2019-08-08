@@ -3,6 +3,7 @@ using ossServer.Controllers.Session;
 using ossServer.Enums;
 using ossServer.Models;
 using ossServer.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,17 +16,17 @@ namespace ossServer.Controllers.Ugyfel
         public static async Task<int> AddAsync(ossContext context, string sid, UgyfelDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.UGYFELEKMOD);
+            await CsoportDal.JogeAsync(context, JogKod.UGYFELEKMOD);
 
             var entity = ObjectUtils.Convert<UgyfelDto, Models.Ugyfel>(dto);
             await UgyfelDal.ExistsAsync(context, entity);
             return await UgyfelDal.AddAsync(context, entity);
         }
 
-        public static UgyfelDto CreateNew(ossContext context, string sid)
+        public static async Task<UgyfelDto> CreateNewAsync(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.UGYFELEKMOD);
+            await CsoportDal.JogeAsync(context, JogKod.UGYFELEKMOD);
 
             return new UgyfelDto { Csoport = 0 };
         }
@@ -33,7 +34,7 @@ namespace ossServer.Controllers.Ugyfel
         public static async Task DeleteAsync(ossContext context, string sid, UgyfelDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.UGYFELEKMOD);
+            await CsoportDal.JogeAsync(context, JogKod.UGYFELEKMOD);
 
             await UgyfelDal.Lock(context, dto.Ugyfelkod, dto.Modositva);
             await UgyfelDal.CheckReferencesAsync(context, dto.Ugyfelkod);
@@ -66,7 +67,7 @@ namespace ossServer.Controllers.Ugyfel
         public static async Task<UgyfelDto> GetAsync(ossContext context, string sid, int key)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.UGYFELEK);
+            await CsoportDal.JogeAsync(context, JogKod.UGYFELEK);
 
             var entity = await UgyfelDal.GetAsync(context, key);
             return Calc(entity);
@@ -75,7 +76,7 @@ namespace ossServer.Controllers.Ugyfel
         public static async Task<List<UgyfelDto>> ReadAsync(ossContext context, string sid, string maszk)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.UGYFELEK);
+            await CsoportDal.JogeAsync(context, JogKod.UGYFELEK);
 
             var entities = await UgyfelDal.ReadAsync(context, maszk);
             var result = new List<UgyfelDto>();
@@ -85,27 +86,27 @@ namespace ossServer.Controllers.Ugyfel
             return result;
         }
 
-        public static List<UgyfelDto> Select(ossContext context, string sid, int rekordTol, int lapMeret,
-            int csoport, List<SzMT> szmt, out int osszesRekord)
+        public static async Task<Tuple<List<UgyfelDto>, int>> SelectAsync(ossContext context, string sid, int rekordTol, int lapMeret,
+            int csoport, List<SzMT> szmt)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.UGYFELEK);
+            await CsoportDal.JogeAsync(context, JogKod.UGYFELEK);
 
             var qry = UgyfelDal.GetQuery(context, csoport, szmt);
-            osszesRekord = qry.Count();
+            var osszesRekord = qry.Count();
             var entities = qry.Skip(rekordTol).Take(lapMeret).ToList();
             var result = new List<UgyfelDto>();
 
             foreach (var entity in entities)
                 result.Add(Calc(entity));
 
-            return result;
+            return new Tuple<List<UgyfelDto>, int>(result, osszesRekord);
         }
 
         public static async Task<int> UpdateAsync(ossContext context, string sid, UgyfelDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.UGYFELEKMOD);
+            await CsoportDal.JogeAsync(context, JogKod.UGYFELEKMOD);
 
             await UgyfelDal.Lock(context, dto.Ugyfelkod, dto.Modositva);
             var entity = await UgyfelDal.GetAsync(context, dto.Ugyfelkod);
@@ -118,7 +119,7 @@ namespace ossServer.Controllers.Ugyfel
         public static async Task ZoomCheckAsync(ossContext context, string sid, int ugyfelkod, string ugyfel)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.UGYFELEK);
+            await CsoportDal.JogeAsync(context, JogKod.UGYFELEK);
 
             await UgyfelDal.ZoomCheckAsync(context, ugyfelkod, ugyfel);
         }
@@ -127,7 +128,7 @@ namespace ossServer.Controllers.Ugyfel
         public static async Task<string> vCardAsync(ossContext context, string sid, int ugyfelkod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.UGYFELEK);
+            await CsoportDal.JogeAsync(context, JogKod.UGYFELEK);
 
             var entity = await UgyfelDal.GetAsync(context, ugyfelkod);
 

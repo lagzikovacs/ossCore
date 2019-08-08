@@ -3,25 +3,27 @@ using ossServer.Controllers.Session;
 using ossServer.Enums;
 using ossServer.Models;
 using ossServer.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.PenztarTetel
 {
     public class PenztarTetelBll
     {
-        public static PenztarTetelDto CreateNew(ossContext context, string sid)
+        public static async System.Threading.Tasks.Task<PenztarTetelDto> CreateNewAsync(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PENZTAR);
+            await CsoportDal.JogeAsync(context, JogKod.PENZTAR);
 
             return new PenztarTetelDto { Jogcim = "Pénzfelvét bankból" };
         }
 
-        public static int Add(ossContext context, string sid, PenztarTetelDto dto)
+        public static async System.Threading.Tasks.Task<int> AddAsync(ossContext context, string sid, PenztarTetelDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PENZTAR);
+            await CsoportDal.JogeAsync(context, JogKod.PENZTAR);
 
             dto.Penztarbizonylatszam =
                 context.KodGen(KodNev.Penztar.ToString() + dto.Penztarkod).ToString("00000") + "/" +
@@ -31,25 +33,25 @@ namespace ossServer.Controllers.PenztarTetel
             return PenztarTetelDal.Add(context, entity);
         }
 
-        public static PenztarTetelDto Get(ossContext context, string sid, int key)
+        public static async System.Threading.Tasks.Task<PenztarTetelDto> GetAsync(ossContext context, string sid, int key)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PENZTAR);
+            await CsoportDal.JogeAsync(context, JogKod.PENZTAR);
 
             var entity = PenztarTetelDal.Get(context, key);
             return ObjectUtils.Convert<Models.Penztartetel, PenztarTetelDto>(entity);
         }
 
-        public static List<PenztarTetelDto> Select(ossContext context, string sid, int rekordTol, 
-            int lapMeret, List<SzMT> szmt, out int osszesRekord)
+        public static async Task<Tuple<List<PenztarTetelDto>, int>> SelectAsync(ossContext context, string sid, int rekordTol, 
+            int lapMeret, List<SzMT> szmt)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PENZTAR);
+            await CsoportDal.JogeAsync(context, JogKod.PENZTAR);
 
             var qry = PenztarTetelDal.GetQuery(context, szmt);
-            osszesRekord = qry.Count();
+            var osszesRekord = qry.Count();
             var entities = qry.Skip(rekordTol).Take(lapMeret).ToList();
-            return ObjectUtils.Convert<Models.Penztartetel, PenztarTetelDto>(entities);
+            return new Tuple<List<PenztarTetelDto>, int>(ObjectUtils.Convert<Models.Penztartetel, PenztarTetelDto>(entities), osszesRekord);
         }
 
         public static List<ColumnSettings> GridColumns()

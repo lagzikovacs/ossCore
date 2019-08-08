@@ -69,7 +69,7 @@ namespace ossServer.Controllers.Ajanlatkeres
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<AjanlatkeresDto> { AjanlatkeresBll.CreateNew(_context, sid) };
+                    result.Result = new List<AjanlatkeresDto> { await AjanlatkeresBll.CreateNewAsync(_context, sid) };
 
                     tr.Commit();
                 }
@@ -133,9 +133,9 @@ namespace ossServer.Controllers.Ajanlatkeres
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = AjanlatkeresBll.Select(_context, sid, par.RekordTol, par.LapMeret, 
-                        par.Fi, out var osszesRekord);
-                    result.OsszesRekord = osszesRekord;
+                    var t = await AjanlatkeresBll.SelectAsync(_context, sid, par.RekordTol, par.LapMeret, par.Fi);
+                    result.Result = t.Item1;
+                    result.OsszesRekord = t.Item2;
 
                     tr.Commit();
                 }

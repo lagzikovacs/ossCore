@@ -7,11 +7,11 @@ namespace ossServer.Controllers.Bizonylat
 {
     public class BizonylatTetelBll
     {
-        public static BizonylatTetelDto CreateNew(ossContext context, string sid, 
+        public static async System.Threading.Tasks.Task<BizonylatTetelDto> CreateNewAsync(ossContext context, string sid, 
             BizonylatTipus bizonylatTipus)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
+            await CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
 
             return new BizonylatTetelDto
             {

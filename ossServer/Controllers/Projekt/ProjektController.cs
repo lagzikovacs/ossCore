@@ -27,7 +27,7 @@ namespace ossServer.Controllers.Projekt
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = ProjektBll.Add(_context, sid, dto);
+                    result.Result = await ProjektBll.AddAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -90,7 +90,7 @@ namespace ossServer.Controllers.Projekt
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<ProjektDto> { ProjektBll.Get(_context, sid, key) };
+                    result.Result = new List<ProjektDto> { await ProjektBll.GetAsync(_context, sid, key) };
 
                     tr.Commit();
                 }
@@ -132,9 +132,10 @@ namespace ossServer.Controllers.Projekt
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = ProjektBll.Select(_context, sid, par.RekordTol, par.LapMeret, 
-                        par.Statusz, par.Fi, out var osszesRekord);
-                    result.OsszesRekord = osszesRekord;
+                    var t = await ProjektBll.SelectAsync(_context, sid, par.RekordTol, par.LapMeret, 
+                        par.Statusz, par.Fi);
+                    result.Result = t.Item1;
+                    result.OsszesRekord = t.Item2;
 
                     tr.Commit();
                 }

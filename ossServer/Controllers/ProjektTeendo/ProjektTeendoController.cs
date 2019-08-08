@@ -29,7 +29,7 @@ namespace ossServer.Controllers.ProjektTeendo
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = ProjektTeendoBll.Add(_context, sid, dto);
+                    result.Result = await ProjektTeendoBll.AddAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -50,7 +50,7 @@ namespace ossServer.Controllers.ProjektTeendo
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<ProjektTeendoDto> { ProjektTeendoBll.CreateNew(_context, sid) };
+                    result.Result = new List<ProjektTeendoDto> { await ProjektTeendoBll.CreateNewAsync(_context, sid) };
 
                     tr.Commit();
                 }
@@ -92,7 +92,7 @@ namespace ossServer.Controllers.ProjektTeendo
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<ProjektTeendoDto> { ProjektTeendoBll.Get(_context, sid, key) };
+                    result.Result = new List<ProjektTeendoDto> { await ProjektTeendoBll.GetAsync(_context, sid, key) };
 
                     tr.Commit();
                 }
@@ -134,7 +134,7 @@ namespace ossServer.Controllers.ProjektTeendo
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = ProjektTeendoBll.Select(_context, sid, projektKod);
+                    result.Result = await ProjektTeendoBll.SelectAsync(_context, sid, projektKod);
 
                     tr.Commit();
                 }

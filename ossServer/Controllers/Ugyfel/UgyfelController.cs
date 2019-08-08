@@ -48,7 +48,7 @@ namespace ossServer.Controllers.Ugyfel
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<UgyfelDto> { UgyfelBll.CreateNew(_context, sid) };
+                    result.Result = new List<UgyfelDto> { await UgyfelBll.CreateNewAsync(_context, sid) };
 
                     tr.Commit();
                 }
@@ -153,9 +153,10 @@ namespace ossServer.Controllers.Ugyfel
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = UgyfelBll.Select(_context, sid, par.RekordTol, par.LapMeret, 
-                        par.Csoport, par.Fi, out var osszesRekord);
-                    result.OsszesRekord = osszesRekord;
+                    var t = await UgyfelBll.SelectAsync(_context, sid, par.RekordTol, par.LapMeret, 
+                        par.Csoport, par.Fi);
+                    result.Result = t.Item1;
+                    result.OsszesRekord = t.Item2;
 
                     tr.Commit();
                 }

@@ -59,11 +59,11 @@ namespace ossServer.Controllers.Ajanlat
             };
         }
 
-        public static async System.Threading.Tasks.Task<int> AjanlatKesztitesAsync(ossContext context, string sid, 
+        public static async Task<int> AjanlatKesztitesAsync(ossContext context, string sid, 
             int projektKod, List<AjanlatBuf> ajanlatBuf, List<SzMT> fi)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.AJANLATKESZITES);
+            await CsoportDal.JogeAsync(context, JogKod.AJANLATKESZITES);
 
             ExcelFile _excel;
             ExcelWorksheet _sheet;
@@ -80,7 +80,7 @@ namespace ossServer.Controllers.Ajanlat
             var entityParticio = ParticioDal.Get(context);
             var iratKod = entityParticio.ProjektAjanlatIratkod != null ?
                 (int)entityParticio.ProjektAjanlatIratkod : throw new Exception(string.Format(Messages.ParticioHiba, "PROJEKT_AJANLAT_IRATKOD"));
-            var fb = IratBll.Letoltes(context, sid, iratKod);
+            var fb = await IratBll.LetoltesAsync(context, sid, iratKod);
 
             using (var msExcel = new MemoryStream())
             {
@@ -183,16 +183,16 @@ namespace ossServer.Controllers.Ajanlat
                     b = stream.ToArray()
                 };
 
-                DokumentumBll.Feltoltes(context, sid, fajlBuf);
+                await DokumentumBll.FeltoltesAsync(context, sid, fajlBuf);
             }
             
-            return ProjektKapcsolatBll.AddIratToProjekt(context, sid, projektKod, ujIratKod);
+            return await ProjektKapcsolatBll.AddIratToProjektAsync(context, sid, projektKod, ujIratKod);
         }
 
-        public static AjanlatParam AjanlatCalc(ossContext context, string sid, AjanlatParam ap)
+        public static async Task<AjanlatParam> AjanlatCalcAsync(ossContext context, string sid, AjanlatParam ap)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.AJANLATKESZITES);
+            await CsoportDal.JogeAsync(context, JogKod.AJANLATKESZITES);
 
             foreach (var buf in ap.AjanlatBuf)
             {

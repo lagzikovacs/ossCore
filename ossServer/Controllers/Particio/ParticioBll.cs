@@ -71,10 +71,10 @@ namespace ossServer.Controllers.Particio
                 throw new Exception($"Az Smtp Jelszó{kot}");
         }
 
-        public static ParticioDto Get(ossContext context, string sid)
+        public static async Task<ParticioDto> GetAsync(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PARTICIO);
+            await CsoportDal.JogeAsync(context, JogKod.PARTICIO);
 
             var entity = ParticioDal.Get(context);
             var dto = ObjectUtils.Convert<Models.Particio, ParticioDto>(entity);
@@ -87,7 +87,7 @@ namespace ossServer.Controllers.Particio
         public static async Task<int> UpdateAsync(ossContext context, string sid, ParticioDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PARTICIO);
+            await CsoportDal.JogeAsync(context, JogKod.PARTICIO);
 
             // csak akkor, ha NAV feltöltés van
             // CheckDto(dto);

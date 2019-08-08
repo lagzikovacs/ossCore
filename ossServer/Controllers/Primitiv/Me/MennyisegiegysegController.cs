@@ -49,7 +49,7 @@ namespace ossServer.Controllers.Primitiv.Me
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<MennyisegiegysegDto> { MennyisegiegysegBll.CreateNew(_context, sid) };
+                    result.Result = new List<MennyisegiegysegDto> { await MennyisegiegysegBll.CreateNewAsync(_context, sid) };
 
                     tr.Commit();
                 }

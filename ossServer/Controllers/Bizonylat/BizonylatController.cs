@@ -29,7 +29,7 @@ namespace ossServer.Controllers.Bizonylat
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = BizonylatBll.BizonylatLeiro(_context, sid, bizonylatTipus);
+                    result.Result = await BizonylatBll.BizonylatLeiroAsync(_context, sid, bizonylatTipus);
 
                     tr.Commit();
                 }
@@ -138,9 +138,10 @@ namespace ossServer.Controllers.Bizonylat
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = BizonylatBll.Select(_context, sid, par.RekordTol, par.LapMeret, 
-                        par.BizonylatTipus, par.Fi, out var osszesRekord);
-                    result.OsszesRekord = osszesRekord;
+                    var t = await BizonylatBll.SelectAsync(_context, sid, par.RekordTol, par.LapMeret, 
+                        par.BizonylatTipus, par.Fi);
+                    result.Result = t.Item1;
+                    result.OsszesRekord = t.Item2;
 
                     tr.Commit();
                 }
@@ -337,7 +338,7 @@ namespace ossServer.Controllers.Bizonylat
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<BizonylatTetelDto> { BizonylatBll.BizonylattetelCalc(_context, sid, dto) };
+                    result.Result = new List<BizonylatTetelDto> { await BizonylatBll.BizonylattetelCalcAsync(_context, sid, dto) };
 
                     tr.Commit();
                 }
@@ -361,7 +362,7 @@ namespace ossServer.Controllers.Bizonylat
                 {
                     result.Result = new List<BizonylatTetelDto>
                     {
-                        BizonylatBll.Bruttobol(_context, sid, par.dto, par.brutto)
+                        await BizonylatBll.BruttobolAsync(_context, sid, par.dto, par.brutto)
                     };
 
                     tr.Commit();
@@ -386,7 +387,7 @@ namespace ossServer.Controllers.Bizonylat
                 {
                     result.Result = new List<BizonylatTetelDto>
                     {
-                        BizonylatTetelBll.CreateNew(_context, sid, bizonylatTipus)
+                        await BizonylatTetelBll.CreateNewAsync(_context, sid, bizonylatTipus)
                     };
 
                     tr.Commit();
@@ -409,7 +410,7 @@ namespace ossServer.Controllers.Bizonylat
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<BizonylatComplexDto> { BizonylatBll.SumEsAfaEsTermekdij(_context, sid, dto) };
+                    result.Result = new List<BizonylatComplexDto> { await BizonylatBll.SumEsAfaEsTermekdijAsync(_context, sid, dto) };
 
                     tr.Commit();
                 }

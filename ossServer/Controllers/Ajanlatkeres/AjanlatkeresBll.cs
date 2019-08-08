@@ -66,16 +66,16 @@ namespace ossServer.Controllers.Ajanlatkeres
         public static async Task<int> AddAsync(ossContext context, string sid, AjanlatkeresDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.AJANLATKERESMOD);
+            await CsoportDal.JogeAsync(context, JogKod.AJANLATKERESMOD);
 
             var entity = ObjectUtils.Convert<AjanlatkeresDto, Models.Ajanlatkeres>(dto);
             return await AjanlatkeresDal.AddAsync(context, entity);
         }
 
-        public static AjanlatkeresDto CreateNew(ossContext context, string sid)
+        public static async Task<AjanlatkeresDto> CreateNewAsync(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.AJANLATKERESMOD);
+            await CsoportDal.JogeAsync(context, JogKod.AJANLATKERESMOD);
 
             return new AjanlatkeresDto { Ugynoknev = context.CurrentSession.Felhasznalo };
         }
@@ -83,7 +83,7 @@ namespace ossServer.Controllers.Ajanlatkeres
         public static async Task DeleteAsync(ossContext context, string sid, AjanlatkeresDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.AJANLATKERESMOD);
+            await CsoportDal.JogeAsync(context, JogKod.AJANLATKERESMOD);
 
             await AjanlatkeresDal.Lock(context, dto.Ajanlatkereskod, dto.Modositva);
             var entity = await AjanlatkeresDal.GetAsync(context, dto.Ajanlatkereskod);
@@ -93,28 +93,28 @@ namespace ossServer.Controllers.Ajanlatkeres
         public static async Task<AjanlatkeresDto> GetAsync(ossContext context, string sid, int key)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.AJANLATKERES);
+            await CsoportDal.JogeAsync(context, JogKod.AJANLATKERES);
 
             var entity = await AjanlatkeresDal.GetAsync(context, key);
             return ObjectUtils.Convert<Models.Ajanlatkeres, AjanlatkeresDto>(entity);
         }
 
-        public static List<AjanlatkeresDto> Select(ossContext context, string sid, int rekordTol, 
-            int lapMeret, List<SzMT> szmt, out int osszesRekord)
+        public static async Task<Tuple<List<AjanlatkeresDto>, int>> SelectAsync(ossContext context, string sid, int rekordTol, 
+            int lapMeret, List<SzMT> szmt)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.AJANLATKERES);
+            await CsoportDal.JogeAsync(context, JogKod.AJANLATKERES);
 
             var qry = AjanlatkeresDal.GetQuery(context, szmt);
-            osszesRekord = qry.Count();
+            var osszesRekord = qry.Count();
             var entities = qry.Skip(rekordTol).Take(lapMeret).ToList();
-            return ObjectUtils.Convert<Models.Ajanlatkeres, AjanlatkeresDto>(entities);
+            return new Tuple<List<AjanlatkeresDto>, int>(ObjectUtils.Convert<Models.Ajanlatkeres, AjanlatkeresDto>(entities), osszesRekord);
         }
 
         public static async Task<int> UpdateAsync(ossContext context, string sid, AjanlatkeresDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.AJANLATKERESMOD);
+            await CsoportDal.JogeAsync(context, JogKod.AJANLATKERESMOD);
 
             await AjanlatkeresDal.Lock(context, dto.Ajanlatkereskod, dto.Modositva);
             var entity = await AjanlatkeresDal.GetAsync(context, dto.Ajanlatkereskod);

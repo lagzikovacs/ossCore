@@ -4,7 +4,6 @@ using ossServer.Models;
 using ossServer.Utils;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Irat
@@ -28,7 +27,7 @@ namespace ossServer.Controllers.Irat
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = IratBll.Add(_context, sid, dto);
+                    result.Result = await IratBll.AddAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -49,7 +48,7 @@ namespace ossServer.Controllers.Irat
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<IratDto> { IratBll.CreateNew(_context, sid) };
+                    result.Result = new List<IratDto> { await IratBll.CreateNewAsync(_context, sid) };
 
                     tr.Commit();
                 }
@@ -91,7 +90,7 @@ namespace ossServer.Controllers.Irat
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<IratDto> { IratBll.Get(_context, sid, key) };
+                    result.Result = new List<IratDto> { await IratBll.GetAsync(_context, sid, key) };
 
                     tr.Commit();
                 }
@@ -133,9 +132,10 @@ namespace ossServer.Controllers.Irat
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = IratBll.Select(_context, sid, par.RekordTol, par.LapMeret, 
-                        par.Fi, out var osszesRekord);
-                    result.OsszesRekord = osszesRekord;
+                    var t = await IratBll.SelectAsync(_context, sid, par.RekordTol, par.LapMeret, 
+                        par.Fi);
+                    result.Result = t.Item1;
+                    result.OsszesRekord = t.Item2;
 
                     tr.Commit();
                 }

@@ -48,7 +48,7 @@ namespace ossServer.Controllers.Primitiv.Helyseg
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<HelysegDto> { HelysegBll.CreateNew(_context, sid) };
+                    result.Result = new List<HelysegDto> { await HelysegBll.CreateNewAsync(_context, sid) };
 
                     tr.Commit();
                 }

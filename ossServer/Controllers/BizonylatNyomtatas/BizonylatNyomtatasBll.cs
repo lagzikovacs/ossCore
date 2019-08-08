@@ -51,7 +51,7 @@ namespace ossServer.Controllers.BizonylatNyomtatas
             const string minta = "!!! MINTA !!!";
 
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.BIZONYLAT);
+            await CsoportDal.JogeAsync(context, JogKod.BIZONYLAT);
 
             var entityBizonylat = await BizonylatDal.GetComplexAsync(context, bizonylatKod);
             await BizonylatDal.Lock(context, bizonylatKod, entityBizonylat.Modositva);
@@ -60,7 +60,7 @@ namespace ossServer.Controllers.BizonylatNyomtatas
             var iratKod = entityParticio.BizonylatBizonylatkepIratkod != null ?
                 (int)entityParticio.BizonylatBizonylatkepIratkod : throw new Exception(string.Format(Messages.ParticioHiba, "BizonylatBizonylatkepIratkod"));
 
-            var szamlakep = IratBll.Letoltes(context, sid, iratKod);
+            var szamlakep = await IratBll.LetoltesAsync(context, sid, iratKod);
             var v = VerzioDal.Get(context);
 
             var fejlec = BizonylatBll.Bl[entityBizonylat.Bizonylattipuskod].BizonylatFejlec;

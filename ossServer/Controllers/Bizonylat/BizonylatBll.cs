@@ -94,11 +94,11 @@ namespace ossServer.Controllers.Bizonylat
           }
         };
 
-        public static BizonylatTipusLeiro BizonylatLeiro(ossContext context, string sid, 
+        public static async Task<BizonylatTipusLeiro> BizonylatLeiroAsync(ossContext context, string sid, 
             BizonylatTipus bizonylatTipus)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.BIZONYLAT);
+            await CsoportDal.JogeAsync(context, JogKod.BIZONYLAT);
 
             return Bl[bizonylatTipus.GetHashCode()];
         }
@@ -106,7 +106,7 @@ namespace ossServer.Controllers.Bizonylat
         public static async Task<BizonylatComplexDto> CreateNewComplexAsync(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
+            await CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
 
             var particio = ParticioDal.Get(context);
 
@@ -169,7 +169,7 @@ namespace ossServer.Controllers.Bizonylat
         public static async Task<BizonylatDto> GetAsync(ossContext context, string sid, int bizonylatKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.BIZONYLAT);
+            await CsoportDal.JogeAsync(context, JogKod.BIZONYLAT);
 
             var entity = await BizonylatDal.GetAsync(context, bizonylatKod);
             var dto = ObjectUtils.Convert<Models.Bizonylat, BizonylatDto>(entity);
@@ -180,7 +180,7 @@ namespace ossServer.Controllers.Bizonylat
         public static async Task<BizonylatComplexDto> GetComplexAsync(ossContext context, string sid, int bizonylatKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.BIZONYLAT);
+            await CsoportDal.JogeAsync(context, JogKod.BIZONYLAT);
 
             var entitycomplex = await BizonylatDal.GetComplexAsync(context, bizonylatKod);
             var dto = ObjectUtils.Convert<Models.Bizonylat, BizonylatDto>(entitycomplex);
@@ -206,27 +206,27 @@ namespace ossServer.Controllers.Bizonylat
         public static async Task DeleteAsync(ossContext context, string sid, BizonylatDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
+            await CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
 
             await BizonylatDal.Lock(context, dto.Bizonylatkod, dto.Modositva);
             var entity = await BizonylatDal.GetAsync(context, dto.Bizonylatkod);
             await BizonylatDal.DeleteAsync(context, entity);
         }
 
-        public static List<BizonylatDto> Select(ossContext context, string sid, int rekordTol, int lapMeret, 
-            BizonylatTipus bizonylatTipus, List<SzMT> szmt, out int osszesRekord)
+        public static async Task<Tuple<List<BizonylatDto>, int>> SelectAsync(ossContext context, string sid, int rekordTol, int lapMeret, 
+            BizonylatTipus bizonylatTipus, List<SzMT> szmt)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.BIZONYLAT);
+            await CsoportDal.JogeAsync(context, JogKod.BIZONYLAT);
 
             var qry = BizonylatDal.GetQuery(context, bizonylatTipus, szmt);
-            osszesRekord = qry.Count();
+            var osszesRekord = qry.Count();
             var entities = qry.Skip(rekordTol).Take(lapMeret).ToList();
             var result = ObjectUtils.Convert<Models.Bizonylat, BizonylatDto>(entities);
             foreach (var r in result)
                 CalcCim(r);
 
-            return result;
+            return new Tuple<List<BizonylatDto>, int>(result, osszesRekord);
         }
 
 
@@ -241,7 +241,7 @@ namespace ossServer.Controllers.Bizonylat
         public static async Task<int> SaveAsync(ossContext context, string sid, BizonylatComplexDto complexDto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
+            await CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
 
             if (!string.IsNullOrEmpty(complexDto.Dto.Bizonylatszam))
                 throw new Exception($"Ez a bizonylat már nem módosítható: {complexDto.Dto.Bizonylatszam}!");
@@ -316,7 +316,7 @@ namespace ossServer.Controllers.Bizonylat
             int bizonylatKod, BizonylatTipus bizonylatTipus)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
+            await CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
 
             var entity = await BizonylatDal.GetComplexAsync(context, bizonylatKod);
 
@@ -347,7 +347,7 @@ namespace ossServer.Controllers.Bizonylat
         public static async Task<int> StornoAsync(ossContext context, string sid, BizonylatDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
+            await CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
 
             await BizonylatDal.Lock(context, dto.Bizonylatkod, dto.Modositva);
 
@@ -451,7 +451,7 @@ namespace ossServer.Controllers.Bizonylat
             BizonylatDto dto, string bizonylatszam)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
+            await CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
 
             await BizonylatDal.Lock(context, dto.Bizonylatkod, dto.Modositva);
             var entity = await BizonylatDal.GetAsync(context, dto.Bizonylatkod);
@@ -497,7 +497,7 @@ namespace ossServer.Controllers.Bizonylat
         public static async Task<int> KifizetesRendbenAsync(ossContext context, string sid, BizonylatDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
+            await CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
 
             await BizonylatDal.Lock(context, dto.Bizonylatkod, dto.Modositva);
             var entity = await BizonylatDal.GetAsync(context, dto.Bizonylatkod);
@@ -511,7 +511,7 @@ namespace ossServer.Controllers.Bizonylat
         public static async Task<int> KiszallitvaAsync(ossContext context, string sid, BizonylatDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
+            await CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
 
             await BizonylatDal.Lock(context, dto.Bizonylatkod, dto.Modositva);
             var entity = await BizonylatDal.GetAsync(context, dto.Bizonylatkod);
@@ -525,7 +525,7 @@ namespace ossServer.Controllers.Bizonylat
         public static async Task<string> SzamlaFormaiEllenorzeseAsync(ossContext context, string sid, int bizonylatKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.BIZONYLAT);
+            await CsoportDal.JogeAsync(context, JogKod.BIZONYLAT);
 
             var dto = await GetComplexAsync(context, sid, bizonylatKod);
             return OnlineszamlaBll.SzamlaFormaiEllenorzese(dto);
@@ -535,37 +535,37 @@ namespace ossServer.Controllers.Bizonylat
             int bizonylatKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.BIZONYLAT);
+            await CsoportDal.JogeAsync(context, JogKod.BIZONYLAT);
 
             var dto = await GetComplexAsync(context, sid, bizonylatKod);
             return OnlineszamlaBll.LetoltesOnlineszamlaFormatumban(dto);
         }
 
-        public static BizonylatTetelDto BizonylattetelCalc(ossContext context, string sid, 
+        public static async Task<BizonylatTetelDto> BizonylattetelCalcAsync(ossContext context, string sid, 
             BizonylatTetelDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
+            await CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
 
             BizonylatUtils.BizonylattetelCalc(dto);
             return dto;
         }
 
-        public static BizonylatTetelDto Bruttobol(ossContext context, string sid, 
+        public static async Task<BizonylatTetelDto> BruttobolAsync(ossContext context, string sid, 
             BizonylatTetelDto dto, decimal brutto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
+            await CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
 
             BizonylatUtils.Bruttobol(dto, brutto);
             return dto;
         }
 
-        public static BizonylatComplexDto SumEsAfaEsTermekdij(ossContext context, string sid, 
+        public static async Task<BizonylatComplexDto> SumEsAfaEsTermekdijAsync(ossContext context, string sid, 
             BizonylatComplexDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
+            await CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
 
             BizonylatUtils.SumEsAfaEsTermekdij(dto.Dto, dto.LstTetelDto, dto.LstAfaDto, dto.LstTermekdijDto);
             return dto;

@@ -179,7 +179,7 @@ namespace ossServer.Controllers.Csoport
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = CsoportBll.SelectCsoportJog(_context, sid, csoportKod);
+                    result.Result = await CsoportBll.SelectCsoportJogAsync(_context, sid, csoportKod);
 
                     tr.Commit();
                 }
@@ -201,7 +201,7 @@ namespace ossServer.Controllers.Csoport
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    CsoportBll.CsoportFelhasznaloBeKi(_context, sid, 
+                    await CsoportBll.CsoportFelhasznaloBeKiAsync(_context, sid, 
                         par.CsoportKod, par.FelhasznaloKod, par.Be);
 
                     tr.Commit();
@@ -224,7 +224,7 @@ namespace ossServer.Controllers.Csoport
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    CsoportBll.CsoportJogBeKi(_context, sid, 
+                    await CsoportBll.CsoportJogBeKiAsync(_context, sid, 
                         par.CsoportKod, par.LehetsegesJogKod, par.Be);
 
                     tr.Commit();
@@ -246,7 +246,7 @@ namespace ossServer.Controllers.Csoport
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = CsoportBll.Jogaim(_context, sid);
+                    result.Result = await CsoportBll.JogaimAsync(_context, sid);
 
                     tr.Commit();
                 }

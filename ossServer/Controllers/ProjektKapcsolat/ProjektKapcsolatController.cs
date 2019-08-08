@@ -27,7 +27,7 @@ namespace ossServer.Controllers.ProjektKapcsolat
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = ProjektKapcsolatBll.Get(_context, sid, projektkapcsolatKod);
+                    result.Result = await ProjektKapcsolatBll.GetAsync(_context, sid, projektkapcsolatKod);
 
                     tr.Commit();
                 }
@@ -49,7 +49,7 @@ namespace ossServer.Controllers.ProjektKapcsolat
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    ProjektKapcsolatBll.Delete(_context, sid, projektKapcsolatKod);
+                    await ProjektKapcsolatBll.DeleteAsync(_context, sid, projektKapcsolatKod);
 
                     tr.Commit();
                 }
@@ -71,7 +71,7 @@ namespace ossServer.Controllers.ProjektKapcsolat
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = ProjektKapcsolatBll.Select(_context, sid, projektKod);
+                    result.Result = await ProjektKapcsolatBll.SelectAsync(_context, sid, projektKod);
 
                     tr.Commit();
                 }
@@ -93,7 +93,7 @@ namespace ossServer.Controllers.ProjektKapcsolat
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = ProjektKapcsolatBll.Select(_context, sid, projektKod, true);
+                    result.Result = await ProjektKapcsolatBll.SelectAsync(_context, sid, projektKod, true);
 
                     tr.Commit();
                 }
@@ -159,7 +159,7 @@ namespace ossServer.Controllers.ProjektKapcsolat
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = ProjektKapcsolatBll.AddBizonylatToProjekt(_context, sid, 
+                    result.Result = await ProjektKapcsolatBll.AddBizonylatToProjektAsync(_context, sid, 
                         par.ProjektKod, par.BizonylatKod);
 
                     tr.Commit();
@@ -182,7 +182,7 @@ namespace ossServer.Controllers.ProjektKapcsolat
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = ProjektKapcsolatBll.AddIratToProjekt(_context, sid, 
+                    result.Result = await ProjektKapcsolatBll.AddIratToProjektAsync(_context, sid, 
                         par.ProjektKod, par.IratKod);
 
                     tr.Commit();

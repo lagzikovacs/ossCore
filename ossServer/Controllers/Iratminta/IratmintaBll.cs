@@ -9,7 +9,6 @@ using ossServer.Enums;
 using ossServer.Models;
 using ossServer.Utils;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -21,17 +20,17 @@ namespace ossServer.Controllers.Iratminta
     {
         private static readonly string serialKey = "D873-P6FI-T8I0-4WLW";
 
-        public static byte[] Elegedettseg(ossContext context, string sid, int projektKod)
+        public static async Task<byte[]> ElegedettsegAsync(ossContext context, string sid, int projektKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PROJEKT);
+            await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
             var entityProjekt = ProjektDal.Get(context, projektKod);
             var entityParticio = ParticioDal.Get(context);
             var iratKod = entityParticio.ProjektElegedettsegifelmeresIratkod != null ?
               (int)entityParticio.ProjektElegedettsegifelmeresIratkod : throw new Exception(string.Format(Messages.ParticioHiba, "ProjektElegedettsegifelmeresIratkod"));
 
-            var original = IratBll.Letoltes(context, sid, iratKod);
+            var original = await IratBll.LetoltesAsync(context, sid, iratKod);
 
             ComponentInfo.SetLicense(serialKey);
 
@@ -62,17 +61,17 @@ namespace ossServer.Controllers.Iratminta
             return result;
         }
 
-        public static byte[] KeszrejelentesNkm(ossContext context, string sid, int projektKod)
+        public static async Task<byte[]> KeszrejelentesNkmAsync(ossContext context, string sid, int projektKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PROJEKT);
+            await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
             var entityProjekt = ProjektDal.Get(context, projektKod);
             var entityParticio = ParticioDal.Get(context);
             var iratKod = entityParticio.ProjektKeszrejelentesDemaszIratkod != null ?
               (int)entityParticio.ProjektKeszrejelentesDemaszIratkod : throw new Exception(string.Format(Messages.ParticioHiba, "ProjektKeszrejelentesDemaszIratkod"));
 
-            var original = IratBll.Letoltes(context, sid, iratKod);
+            var original = await IratBll.LetoltesAsync(context, sid, iratKod);
 
             ComponentInfo.SetLicense(serialKey);
 
@@ -106,17 +105,17 @@ namespace ossServer.Controllers.Iratminta
 
             return result;
         }
-        public static byte[] KeszrejelentesElmuEmasz(ossContext context, string sid, int projektKod)
+        public static async Task<byte[]> KeszrejelentesElmuEmaszAsync(ossContext context, string sid, int projektKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PROJEKT);
+            await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
             var entityProjekt = ProjektDal.Get(context, projektKod);
             var entityParticio = ParticioDal.Get(context);
             var iratKod = entityParticio.ProjektKeszrejelentesElmuemaszIratkod != null ?
               (int)entityParticio.ProjektKeszrejelentesElmuemaszIratkod : throw new Exception(string.Format(Messages.ParticioHiba, "ProjektKeszrejelentesElmuemaszIratkod"));
 
-            var original = IratBll.Letoltes(context, sid, iratKod);
+            var original = await IratBll.LetoltesAsync(context, sid, iratKod);
 
             ComponentInfo.SetLicense(serialKey);
 
@@ -150,17 +149,17 @@ namespace ossServer.Controllers.Iratminta
 
             return result;
         }
-        public static byte[] KeszrejelentesEon(ossContext context, string sid, int projektKod)
+        public static async Task<byte[]> KeszrejelentesEonAsync(ossContext context, string sid, int projektKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PROJEKT);
+            await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
             var entityProjekt = ProjektDal.Get(context, projektKod);
             var entityParticio = ParticioDal.Get(context);
             var iratKod = entityParticio.ProjektKeszrejelentesEonIratkod != null ?
               (int)entityParticio.ProjektKeszrejelentesEonIratkod : throw new Exception(string.Format(Messages.ParticioHiba, "ProjektKeszrejelentesEonIratkod"));
 
-            var original = IratBll.Letoltes(context, sid, iratKod);
+            var original = await IratBll.LetoltesAsync(context, sid, iratKod);
 
             ComponentInfo.SetLicense(serialKey);
 
@@ -194,10 +193,10 @@ namespace ossServer.Controllers.Iratminta
 
             return result;
         }
-        public static byte[] Munkalap(ossContext context, string sid, int projektKod)
+        public static async Task<byte[]> MunkalapAsync(ossContext context, string sid, int projektKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PROJEKT);
+            await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
             var entityProjekt = ProjektDal.Get(context, projektKod);
             var entityParticio = ParticioDal.Get(context);
@@ -210,7 +209,7 @@ namespace ossServer.Controllers.Iratminta
                 ProjektDal.Update(context, entityProjekt);
                 ProjektDal.Get(context, projektKod);
             }
-            var original = IratBll.Letoltes(context, sid, iratKod);
+            var original = await IratBll.LetoltesAsync(context, sid, iratKod);
 
             ComponentInfo.SetLicense(serialKey);
 
@@ -248,16 +247,16 @@ namespace ossServer.Controllers.Iratminta
             return result;
         }
 
-        public static byte[] SzallitasiSzerzodes(ossContext context, string sid, int projektKod)
+        public static async Task<byte[]> SzallitasiSzerzodesAsync(ossContext context, string sid, int projektKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PROJEKT);
+            await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
             var entityProjekt = ProjektDal.Get(context, projektKod);
             var entityParticio = ParticioDal.Get(context);
             var iratKod = entityParticio.ProjektSzallitasiszerzodesIratkod != null ?
               (int)entityParticio.ProjektSzallitasiszerzodesIratkod : throw new Exception(string.Format(Messages.ParticioHiba, "ProjektSzallitasiszerzodesIratkod"));
-            var original = IratBll.Letoltes(context, sid, iratKod);
+            var original = await IratBll.LetoltesAsync(context, sid, iratKod);
 
             NumberFormatInfo nfi = new CultureInfo("hu-HU", false).NumberFormat;
             nfi.NumberGroupSeparator = ".";
@@ -304,16 +303,16 @@ namespace ossServer.Controllers.Iratminta
 
             return result;
         }
-        public static byte[] FeltetelesSzerzodes(ossContext context, string sid, int projektKod)
+        public static async Task<byte[]> FeltetelesSzerzodesAsync(ossContext context, string sid, int projektKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PROJEKT);
+            await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
             var entityProjekt = ProjektDal.Get(context, projektKod);
             var entityParticio = ParticioDal.Get(context);
             var iratKod = entityParticio.ProjektFeltetelesszerzodesIratkod != null ?
               (int)entityParticio.ProjektFeltetelesszerzodesIratkod : throw new Exception(string.Format(Messages.ParticioHiba, "ProjektFeltetelesszerzodesIratkod"));
-            var original = IratBll.Letoltes(context, sid, iratKod);
+            var original = await IratBll.LetoltesAsync(context, sid, iratKod);
 
             NumberFormatInfo nfi = new CultureInfo("hu-HU", false).NumberFormat;
             nfi.NumberGroupSeparator = ".";
@@ -358,16 +357,16 @@ namespace ossServer.Controllers.Iratminta
 
             return result;
         }
-        public static byte[] Szerzodes(ossContext context, string sid, int projektKod)
+        public static async Task<byte[]> SzerzodesAsync(ossContext context, string sid, int projektKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PROJEKT);
+            await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
             var entityProjekt = ProjektDal.Get(context, projektKod);
             var entityParticio = ParticioDal.Get(context);
             var iratKod = entityParticio.ProjektSzerzodesIratkod != null ?
               (int)entityParticio.ProjektSzerzodesIratkod : throw new Exception(string.Format(Messages.ParticioHiba, "ProjektSzerzodesIratkod"));
-            var original = IratBll.Letoltes(context, sid, iratKod);
+            var original = await IratBll.LetoltesAsync(context, sid, iratKod);
 
             NumberFormatInfo nfi = new CultureInfo("hu-HU", false).NumberFormat;
             nfi.NumberGroupSeparator = ".";

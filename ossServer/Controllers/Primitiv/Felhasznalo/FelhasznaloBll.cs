@@ -14,7 +14,7 @@ namespace ossServer.Controllers.Primitiv.Felhasznalo
         public static async Task<int> AddAsync(ossContext context, string sid, FelhasznaloDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.FELHASZNALOMOD);
+            await CsoportDal.JogeAsync(context, JogKod.FELHASZNALOMOD);
 
             var entity = ObjectUtils.Convert<FelhasznaloDto, Models.Felhasznalo>(dto);
             entity.Jelszo = Crypt.MD5Hash("");
@@ -22,17 +22,17 @@ namespace ossServer.Controllers.Primitiv.Felhasznalo
             return await FelhasznaloDal.AddAsync(context, entity);
         }
 
-        public static FelhasznaloDto CreateNew(ossContext context, string sid)
+        public static async Task<FelhasznaloDto> CreateNewAsync(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PRIMITIVEKMOD);
+            await CsoportDal.JogeAsync(context, JogKod.PRIMITIVEKMOD);
             return new FelhasznaloDto { Statusz = "OK", Statuszkelte = DateTime.Now.Date, Logonlog = true };
         }
 
         public static async Task<FelhasznaloDto> GetAsync(ossContext context, string sid, int key)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.FELHASZNALO);
+            await CsoportDal.JogeAsync(context, JogKod.FELHASZNALO);
 
             var entity = await FelhasznaloDal.GetAsync(context, key);
             return ObjectUtils.Convert<Models.Felhasznalo, FelhasznaloDto>(entity);
@@ -41,7 +41,7 @@ namespace ossServer.Controllers.Primitiv.Felhasznalo
         public static async Task<List<FelhasznaloDto>> ReadAsync(ossContext context, string sid, string maszk)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.FELHASZNALO);
+            await CsoportDal.JogeAsync(context, JogKod.FELHASZNALO);
 
             var entities = await FelhasznaloDal.ReadAsync(context, maszk);
             return ObjectUtils.Convert<Models.Felhasznalo, FelhasznaloDto>(entities);
@@ -50,7 +50,7 @@ namespace ossServer.Controllers.Primitiv.Felhasznalo
         public static async Task<int> UpdateAsync(ossContext context, string sid, FelhasznaloDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.FELHASZNALOMOD);
+            await CsoportDal.JogeAsync(context, JogKod.FELHASZNALOMOD);
 
             await FelhasznaloDal.Lock(context, dto.Felhasznalokod, dto.Modositva);
             var entity = await FelhasznaloDal.GetAsync(context, dto.Felhasznalokod);
@@ -66,7 +66,7 @@ namespace ossServer.Controllers.Primitiv.Felhasznalo
         public static async Task DeleteAsync(ossContext context, string sid, FelhasznaloDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.FELHASZNALOMOD);
+            await CsoportDal.JogeAsync(context, JogKod.FELHASZNALOMOD);
 
             await FelhasznaloDal.Lock(context, dto.Felhasznalokod, dto.Modositva);
             await FelhasznaloDal.CheckReferencesAsync(context, dto.Felhasznalokod);
@@ -80,7 +80,7 @@ namespace ossServer.Controllers.Primitiv.Felhasznalo
         {
             SessionBll.Check(context, sid);
             // TODO: külön jog legyen ehhez
-            CsoportDal.JogeAsync(context, JogKod.FELHASZNALOMOD);
+            await CsoportDal.JogeAsync(context, JogKod.FELHASZNALOMOD);
 
             await FelhasznaloDal.Lock(context, felhasznaloKod, utolsoModositas);
             var entity = await FelhasznaloDal.GetAsync(context, felhasznaloKod);

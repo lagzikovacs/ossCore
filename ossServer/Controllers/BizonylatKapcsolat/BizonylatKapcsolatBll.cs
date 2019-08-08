@@ -14,7 +14,7 @@ namespace ossServer.Controllers.BizonylatKapcsolat
         public static async Task<int> AddIratToBizonylatAsync(ossContext context, string sid, int bizonylatKod, int iratKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
+            await CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
 
             var entity = new Models.Bizonylatkapcsolat
             {
@@ -27,7 +27,7 @@ namespace ossServer.Controllers.BizonylatKapcsolat
         public static async Task DeleteAsync(ossContext context, string sid, BizonylatKapcsolatDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
+            await CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
 
             var entity = await BizonylatKapcsolatDal.GetAsync(context, dto.Bizonylatkapcsolatkod);
             await BizonylatKapcsolatDal.DeleteAsync(context, entity);
@@ -50,7 +50,7 @@ namespace ossServer.Controllers.BizonylatKapcsolat
         public static async Task<BizonylatKapcsolatDto> GetAsync(ossContext context, string sid, int bizonylatkapcsolatKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
+            await CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
 
             var entity = await BizonylatKapcsolatDal.GetAsync(context, bizonylatkapcsolatKod);
             return Calc(entity);
@@ -59,7 +59,7 @@ namespace ossServer.Controllers.BizonylatKapcsolat
         public static async Task<List<BizonylatKapcsolatDto>> SelectAsync(ossContext context, string sid, int bizonylatKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
+            await CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
 
             var entities = await BizonylatKapcsolatDal.SelectAsync(context, bizonylatKod);
             var result = new List<BizonylatKapcsolatDto>();

@@ -25,7 +25,7 @@ namespace ossServer.Controllers.Menu
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = MenuBll.AngularMenu(_context, sid);
+                    result.Result = await MenuBll.AngularMenuAsync(_context, sid);
 
                     tr.Commit();
                 }

@@ -27,7 +27,7 @@ namespace ossServer.Controllers.Particio
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<ParticioDto> { ParticioBll.Get(_context, sid) };
+                    result.Result = new List<ParticioDto> { await ParticioBll.GetAsync(_context, sid) };
 
                     tr.Commit();
                 }

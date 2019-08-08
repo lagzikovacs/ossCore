@@ -48,7 +48,7 @@ namespace ossServer.Controllers.Primitiv.Penznem
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<PenznemDto> { PenznemBll.CreateNew(_context, sid) };
+                    result.Result = new List<PenznemDto> { await PenznemBll.CreateNewAsync(_context, sid) };
 
                     tr.Commit();
                 }

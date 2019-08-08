@@ -17,19 +17,19 @@ namespace ossServer.Controllers.Dokumentum
     {
         private static readonly object LockMe = new object();
 
-        public static DokumentumDto Get(ossContext context, string sid, int dokumentumKod)
+        public static async Task<DokumentumDto> GetAsync(ossContext context, string sid, int dokumentumKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.IRAT);
+            await CsoportDal.JogeAsync(context, JogKod.IRAT);
 
             var entity = DokumentumDal.Get(context, dokumentumKod);
             return ObjectUtils.Convert<Models.Dokumentum, DokumentumDto>(entity);
         }
 
-        public static List<DokumentumDto> Select(ossContext context, string sid, int iratKod)
+        public static async Task<List<DokumentumDto>> SelectAsync(ossContext context, string sid, int iratKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.IRAT);
+            await CsoportDal.JogeAsync(context, JogKod.IRAT);
 
             var entities = DokumentumDal.Select(context, iratKod);
             return ObjectUtils.Convert<Models.Dokumentum, DokumentumDto>(entities);
@@ -38,7 +38,7 @@ namespace ossServer.Controllers.Dokumentum
         public static async Task DeleteAsync(ossContext context, string sid, DokumentumDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.IRAT);
+            await CsoportDal.JogeAsync(context, JogKod.IRAT);
 
             await DokumentumDal.Lock(context, dto.Dokumentumkod, dto.Modositva);
             var entity = DokumentumDal.Get(context, dto.Dokumentumkod);
@@ -83,10 +83,10 @@ namespace ossServer.Controllers.Dokumentum
             return result;
         }
 
-        public static Models.Dokumentum Bejegyzes(ossContext context, string sid, FajlBuf fajlBuf)
+        public static async Task<Models.Dokumentum> BejegyzesAsync(ossContext context, string sid, FajlBuf fajlBuf)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.IRAT);
+            await CsoportDal.JogeAsync(context, JogKod.IRAT);
 
             Models.Volume entityVolume;
             int ujFajlMerete = fajlBuf.Meret;
@@ -167,10 +167,10 @@ namespace ossServer.Controllers.Dokumentum
             return entityDokumentum.Dokumentumkod;
         }
 
-        public static Models.Dokumentum Ellenorzes(ossContext context, string sid, int dokumentumKod)
+        public static async Task<Models.Dokumentum> EllenorzesAsync(ossContext context, string sid, int dokumentumKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.IRAT);
+            await CsoportDal.JogeAsync(context, JogKod.IRAT);
 
             return DokumentumDal.GetWithVolume(context, dokumentumKod);
         }
@@ -186,10 +186,10 @@ namespace ossServer.Controllers.Dokumentum
                 throw new Exception("Hash hiba!");
         }
 
-        public static Models.Dokumentum Feltoltes(ossContext context, string sid, int dokumentumKod)
+        public static async Task<Models.Dokumentum> FeltoltesAsync(ossContext context, string sid, int dokumentumKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.IRAT);
+            await CsoportDal.JogeAsync(context, JogKod.IRAT);
 
             return DokumentumDal.GetWithVolume(context, dokumentumKod);
         }
@@ -217,10 +217,10 @@ namespace ossServer.Controllers.Dokumentum
             }
         }
 
-        public static Models.Dokumentum Letoltes(ossContext context, string sid, int dokumentumKod)
+        public static async Task<Models.Dokumentum> LetoltesAsync(ossContext context, string sid, int dokumentumKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.IRAT);
+            await CsoportDal.JogeAsync(context, JogKod.IRAT);
 
             return DokumentumDal.GetWithVolume(context, dokumentumKod);
         }
@@ -269,19 +269,19 @@ namespace ossServer.Controllers.Dokumentum
         }
 
         //sql tranzakcióban működik, kis fájlok legyenek
-        public static void Feltoltes(ossContext context, string sid, FajlBuf fajlBuf)
+        public static async Task FeltoltesAsync(ossContext context, string sid, FajlBuf fajlBuf)
         {
-            var entityDokumentum = Bejegyzes(context, sid, fajlBuf);
+            var entityDokumentum = await BejegyzesAsync(context, sid, fajlBuf);
             BejegyzesFajl(entityDokumentum);
             FeltoltesFajl(entityDokumentum, fajlBuf);
         }
 
-        public static Models.Dokumentum LetoltesPDF(ossContext context, string sid, int dokumentumKod)
+        public static async Task<Models.Dokumentum> LetoltesPDFAsync(ossContext context, string sid, int dokumentumKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.IRAT);
+            await CsoportDal.JogeAsync(context, JogKod.IRAT);
 
-            return Letoltes(context, sid, dokumentumKod);
+            return await LetoltesAsync(context, sid, dokumentumKod);
         }
 
         public static byte[] LetoltesPDFFajl(IConfiguration config, Models.Dokumentum entityDokumentum)

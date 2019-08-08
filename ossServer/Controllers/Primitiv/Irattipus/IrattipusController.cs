@@ -49,7 +49,7 @@ namespace ossServer.Controllers.Primitiv.Irattipus
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<IrattipusDto> { IrattipusBll.CreateNew(_context, sid) };
+                    result.Result = new List<IrattipusDto> { await IrattipusBll.CreateNewAsync(_context, sid) };
 
                     tr.Commit();
                 }

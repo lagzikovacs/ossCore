@@ -20,7 +20,7 @@ namespace ossServer.Controllers.NGM
             NGMMode mode, DateTime szamlaKelteTol, DateTime szamlaKelteIg, string szamlaSzamTol, string szamlaSzamIg)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.LEKERDEZES);
+            await CsoportDal.JogeAsync(context, JogKod.LEKERDEZES);
 
             //az xml-hez mind a 4 paraméter szükséges
             List<Models.Bizonylat> entities;

@@ -27,7 +27,7 @@ namespace ossServer.Controllers.SzamlazasiRend
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = SzamlazasiRendBll.Add(_context, sid, dto);
+                    result.Result = await SzamlazasiRendBll.AddAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -90,7 +90,7 @@ namespace ossServer.Controllers.SzamlazasiRend
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<SzamlazasiRendDto> { SzamlazasiRendBll.Get(_context, sid, key) };
+                    result.Result = new List<SzamlazasiRendDto> { await SzamlazasiRendBll.GetAsync(_context, sid, key) };
 
                     tr.Commit();
                 }
@@ -132,7 +132,7 @@ namespace ossServer.Controllers.SzamlazasiRend
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = SzamlazasiRendBll.Select(_context, sid, projektKod);
+                    result.Result = await SzamlazasiRendBll.SelectAsync(_context, sid, projektKod);
 
                     tr.Commit();
                 }

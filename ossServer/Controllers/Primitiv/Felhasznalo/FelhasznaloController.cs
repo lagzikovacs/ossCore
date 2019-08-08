@@ -48,7 +48,7 @@ namespace ossServer.Controllers.Primitiv.Felhasznalo
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<FelhasznaloDto> { FelhasznaloBll.CreateNew(_context, sid) };
+                    result.Result = new List<FelhasznaloDto> { await FelhasznaloBll.CreateNewAsync(_context, sid) };
 
                     tr.Commit();
                 }

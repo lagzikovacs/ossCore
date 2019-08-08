@@ -29,7 +29,7 @@ namespace ossServer.Controllers.Kifizetes
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = KifizetesBll.Add(_context, sid, dto);
+                    result.Result = await KifizetesBll.AddAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -50,7 +50,7 @@ namespace ossServer.Controllers.Kifizetes
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<KifizetesDto> { KifizetesBll.CreateNew(_context, sid) };
+                    result.Result = new List<KifizetesDto> { await KifizetesBll.CreateNewAsync(_context, sid) };
 
                     tr.Commit();
                 }
@@ -93,7 +93,7 @@ namespace ossServer.Controllers.Kifizetes
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<KifizetesDto> { KifizetesBll.Get(_context, sid, key) };
+                    result.Result = new List<KifizetesDto> { await KifizetesBll.GetAsync(_context, sid, key) };
 
                     tr.Commit();
                 }
@@ -135,7 +135,7 @@ namespace ossServer.Controllers.Kifizetes
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = KifizetesBll.Select(_context, sid, bizonylatKod);
+                    result.Result = await KifizetesBll.SelectAsync(_context, sid, bizonylatKod);
 
                     tr.Commit();
                 }

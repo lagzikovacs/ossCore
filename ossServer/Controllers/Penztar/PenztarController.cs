@@ -27,7 +27,7 @@ namespace ossServer.Controllers.Penztar
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = PenztarBll.Add(_context, sid, dto);
+                    result.Result = await PenztarBll.AddAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -48,7 +48,7 @@ namespace ossServer.Controllers.Penztar
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<PenztarDto> { PenztarBll.CreateNew(_context, sid) };
+                    result.Result = new List<PenztarDto> { await PenztarBll.CreateNewAsync(_context, sid) };
 
                     tr.Commit();
                 }
@@ -90,7 +90,7 @@ namespace ossServer.Controllers.Penztar
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<PenztarDto> { PenztarBll.Get(_context, sid, key) };
+                    result.Result = new List<PenztarDto> { await PenztarBll.GetAsync(_context, sid, key) };
 
                     tr.Commit();
                 }
@@ -111,7 +111,7 @@ namespace ossServer.Controllers.Penztar
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = PenztarBll.Read(_context, sid, maszk);
+                    result.Result = await PenztarBll.ReadAsync(_context, sid, maszk);
 
                     tr.Commit();
                 }
@@ -132,7 +132,7 @@ namespace ossServer.Controllers.Penztar
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = PenztarBll.Read(_context, sid, penztarkod);
+                    result.Result = await PenztarBll.ReadAsync(_context, sid, penztarkod);
 
                     tr.Commit();
                 }
@@ -153,7 +153,7 @@ namespace ossServer.Controllers.Penztar
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = PenztarBll.ReadByCurrencyOpened(_context, sid, penznemkod);
+                    result.Result = await PenztarBll.ReadByCurrencyOpenedAsync(_context, sid, penznemkod);
 
                     tr.Commit();
                 }

@@ -26,7 +26,7 @@ namespace ossServer.Controllers.Iratminta
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = IratmintaBll.Elegedettseg(_context, sid, projektKod);
+                    result.Result = await IratmintaBll.ElegedettsegAsync(_context, sid, projektKod);
 
                     tr.Commit();
                 }
@@ -48,7 +48,7 @@ namespace ossServer.Controllers.Iratminta
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = IratmintaBll.KeszrejelentesNkm(_context, sid, projektKod);
+                    result.Result = await IratmintaBll.KeszrejelentesNkmAsync(_context, sid, projektKod);
 
                     tr.Commit();
                 }
@@ -70,7 +70,7 @@ namespace ossServer.Controllers.Iratminta
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = IratmintaBll.KeszrejelentesElmuEmasz(_context, sid, projektKod);
+                    result.Result = await IratmintaBll.KeszrejelentesElmuEmaszAsync(_context, sid, projektKod);
 
                     tr.Commit();
                 }
@@ -92,7 +92,7 @@ namespace ossServer.Controllers.Iratminta
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = IratmintaBll.KeszrejelentesEon(_context, sid, projektKod);
+                    result.Result = await IratmintaBll.KeszrejelentesEonAsync(_context, sid, projektKod);
 
                     tr.Commit();
                 }
@@ -113,7 +113,7 @@ namespace ossServer.Controllers.Iratminta
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = IratmintaBll.Munkalap(_context, sid, projektKod);
+                    result.Result = await IratmintaBll.MunkalapAsync(_context, sid, projektKod);
 
                     tr.Commit();
                 }
@@ -135,7 +135,7 @@ namespace ossServer.Controllers.Iratminta
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = IratmintaBll.SzallitasiSzerzodes(_context, sid, projektKod);
+                    result.Result = await IratmintaBll.SzallitasiSzerzodesAsync(_context, sid, projektKod);
 
                     tr.Commit();
                 }
@@ -157,7 +157,7 @@ namespace ossServer.Controllers.Iratminta
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = IratmintaBll.FeltetelesSzerzodes(_context, sid, projektKod);
+                    result.Result = await IratmintaBll.FeltetelesSzerzodesAsync(_context, sid, projektKod);
 
                     tr.Commit();
                 }
@@ -178,7 +178,7 @@ namespace ossServer.Controllers.Iratminta
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = IratmintaBll.Szerzodes(_context, sid, projektKod);
+                    result.Result = await IratmintaBll.SzerzodesAsync(_context, sid, projektKod);
 
                     tr.Commit();
                 }

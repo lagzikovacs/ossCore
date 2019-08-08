@@ -49,7 +49,7 @@ namespace ossServer.Controllers.Primitiv.Termekdij
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<TermekdijDto> { TermekdijBll.CreateNew(_context, sid) };
+                    result.Result = new List<TermekdijDto> { await TermekdijBll.CreateNewAsync(_context, sid) };
 
                     tr.Commit();
                 }

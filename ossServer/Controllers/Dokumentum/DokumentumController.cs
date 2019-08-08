@@ -31,7 +31,7 @@ namespace ossServer.Controllers.Dokumentum
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    var entityDokumentum = DokumentumBll.Bejegyzes(_context, sid, fajlbuf);
+                    var entityDokumentum = await DokumentumBll.BejegyzesAsync(_context, sid, fajlbuf);
 
                     tr.Commit();
 
@@ -61,7 +61,7 @@ namespace ossServer.Controllers.Dokumentum
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    var entityDokumentum = DokumentumBll.Feltoltes(_context, sid, par.DokumentumKod);
+                    var entityDokumentum = await DokumentumBll.FeltoltesAsync(_context, sid, par.DokumentumKod);
 
                     tr.Commit();
 
@@ -93,7 +93,7 @@ namespace ossServer.Controllers.Dokumentum
                 {
                     result.Result = new List<DokumentumDto>
                     {
-                        DokumentumBll.Get(_context, sid, dokumentumKod)
+                        await DokumentumBll.GetAsync(_context, sid, dokumentumKod)
                     };
 
                     tr.Commit();
@@ -115,7 +115,7 @@ namespace ossServer.Controllers.Dokumentum
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    var entityDokumentum = DokumentumBll.Letoltes(_context, sid, par.DokumentumKod);
+                    var entityDokumentum = await DokumentumBll.LetoltesAsync(_context, sid, par.DokumentumKod);
 
                     tr.Commit();
 
@@ -146,7 +146,7 @@ namespace ossServer.Controllers.Dokumentum
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = DokumentumBll.Select(_context, sid, iratkod);
+                    result.Result = await DokumentumBll.SelectAsync(_context, sid, iratkod);
                     tr.Commit();
                 }
                 catch (Exception ex)
@@ -187,7 +187,7 @@ namespace ossServer.Controllers.Dokumentum
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    var entityDokumentum = DokumentumBll.Ellenorzes(_context, sid, dokumentumKod);
+                    var entityDokumentum = await DokumentumBll.EllenorzesAsync(_context, sid, dokumentumKod);
 
                     tr.Commit();
 
@@ -222,7 +222,7 @@ namespace ossServer.Controllers.Dokumentum
                     if (string.IsNullOrEmpty(par.Megjegyzes))
                         par.Megjegyzes = Path.GetFileNameWithoutExtension(par.Fajlnev);
 
-                    var entityDokumentum = DokumentumBll.Bejegyzes(_context, sid, par);
+                    var entityDokumentum = await DokumentumBll.BejegyzesAsync(_context, sid, par);
 
                     tr.Commit();
 
@@ -255,7 +255,7 @@ namespace ossServer.Controllers.Dokumentum
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    var entity = DokumentumBll.LetoltesPDF(_context, sid, dokumentumKod);
+                    var entity = await DokumentumBll.LetoltesPDFAsync(_context, sid, dokumentumKod);
 
                     tr.Commit();
 

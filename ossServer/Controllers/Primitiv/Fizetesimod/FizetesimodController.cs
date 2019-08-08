@@ -49,7 +49,7 @@ namespace ossServer.Controllers.Primitiv.Fizetesimod
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<FizetesimodDto> { FizetesimodBll.CreateNew(_context, sid) };
+                    result.Result = new List<FizetesimodDto> { await FizetesimodBll.CreateNewAsync(_context, sid) };
 
                     tr.Commit();
                 }

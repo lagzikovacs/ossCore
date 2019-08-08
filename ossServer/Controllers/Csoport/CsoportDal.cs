@@ -136,32 +136,32 @@ namespace ossServer.Controllers.Csoport
                 throw new Exception("Hm... acces denied!");
         }
 
-        public static List<string> Jogaim(ossContext context)
+        public static async Task<List<string>> JogaimAsync(ossContext context)
         {
-            return context.Csoportjog
+            return await context.Csoportjog
                 .Include(r => r.LehetsegesjogkodNavigation)
                 .Where(s => s.Csoportkod == context.CurrentSession.Csoportkod)
                 .Select(s => s.LehetsegesjogkodNavigation.Jogkod)
-                .ToList();
+                .ToListAsync();
         }
 
-        public static List<int> SelectCsoportFelhasznalo(ossContext context, int csoportKod)
+        public static async Task<List<int>> SelectCsoportFelhasznaloAsync(ossContext context, int csoportKod)
         {
-            return context.Csoportfelhasznalo
+            return await context.Csoportfelhasznalo
               .Where(s => s.Csoportkod == csoportKod)
               .Select(s => s.Felhasznalokod)
-              .ToList();
+              .ToListAsync();
         }
 
-        public static List<int> SelectCsoportJog(ossContext context, int csoportKod)
+        public static async Task<List<int>> SelectCsoportJogAsync(ossContext context, int csoportKod)
         {
-            return context.Csoportjog
+            return await context.Csoportjog
               .Where(s => s.Csoportkod == csoportKod)
               .Select(s => s.Lehetsegesjogkod)
-              .ToList();
+              .ToListAsync();
         }
 
-        public static void CsoportFelhasznaloBe(ossContext context, int particioKod, int csoportKod, int felhasznaloKod)
+        public static async Task CsoportFelhasznaloBeAsync(ossContext context, int particioKod, int csoportKod, int felhasznaloKod)
         {
             var entity = new Csoportfelhasznalo
             {
@@ -172,11 +172,11 @@ namespace ossServer.Controllers.Csoport
 
             Register.Creation(context, entity);
 
-            context.Csoportfelhasznalo.Add(entity);
-            context.SaveChanges();
+            await context.Csoportfelhasznalo.AddAsync(entity);
+            await context.SaveChangesAsync();
         }
 
-        public static void CsoportFelhasznaloBe(ossContext context, int csoportKod, int felhasznaloKod)
+        public static async Task CsoportFelhasznaloBeAsync(ossContext context, int csoportKod, int felhasznaloKod)
         {
             var entity = new Csoportfelhasznalo
             {
@@ -186,24 +186,25 @@ namespace ossServer.Controllers.Csoport
 
             Register.Creation(context, entity);
 
-            context.Csoportfelhasznalo.Add(entity);
-            context.SaveChanges();
+            await context.Csoportfelhasznalo.AddAsync(entity);
+            await context.SaveChangesAsync();
         }
 
-        public static void CsoportFelhasznaloKi(ossContext context, int csoportKod, int felhasznaloKod)
+        public static async Task CsoportFelhasznaloKiAsync(ossContext context, int csoportKod, int felhasznaloKod)
         {
-            var lst = context.Csoportfelhasznalo
+            var lst = await context.Csoportfelhasznalo
               .Where(s => s.Csoportkod == csoportKod && s.Felhasznalokod == felhasznaloKod)
-              .ToList();
+              .ToListAsync();
+
             if (lst.Count != 1)
                 throw new Exception(string.Format(Messages.AdatNemTalalhato,
                   $"{nameof(Csoportfelhasznalo.Csoportkod)}={csoportKod}, {nameof(Csoportfelhasznalo.Felhasznalokod)}={felhasznaloKod}"));
 
             context.Csoportfelhasznalo.Remove(lst[0]);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public static void CsoportJogBe(ossContext context, int csoportKod, int lehetsegesJogKod)
+        public static async Task CsoportJogBeAsync(ossContext context, int csoportKod, int lehetsegesJogKod)
         {
             var entity = new Csoportjog
             {
@@ -213,21 +214,22 @@ namespace ossServer.Controllers.Csoport
 
             Register.Creation(context, entity);
 
-            context.Csoportjog.Add(entity);
-            context.SaveChanges();
+            await context.Csoportjog.AddAsync(entity);
+            await context.SaveChangesAsync();
         }
 
-        public static void CsoportJogKi(ossContext context, int csoportKod, int lehetsegesJogKod)
+        public static async Task CsoportJogKiAsync(ossContext context, int csoportKod, int lehetsegesJogKod)
         {
-            var lst = context.Csoportjog
+            var lst = await context.Csoportjog
               .Where(s => s.Csoportkod == csoportKod && s.Lehetsegesjogkod == lehetsegesJogKod)
-              .ToList();
+              .ToListAsync();
+
             if (lst.Count != 1)
                 throw new Exception(string.Format(Messages.AdatNemTalalhato,
                   $"{nameof(Csoportjog.Csoportkod)}={csoportKod}, {nameof(Csoportjog.Lehetsegesjogkod)}={lehetsegesJogKod}"));
 
             context.Csoportjog.Remove(lst[0]);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
     }
 }

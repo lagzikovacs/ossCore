@@ -13,24 +13,24 @@ namespace ossServer.Controllers.Primitiv.Penznem
         public static async Task<int> AddAsync(ossContext context, string sid, PenznemDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PRIMITIVEKMOD);
+            await CsoportDal.JogeAsync(context, JogKod.PRIMITIVEKMOD);
 
             var entity = ObjectUtils.Convert<PenznemDto, Models.Penznem>(dto);
             await PenznemDal.ExistsAsync(context, entity);
             return await PenznemDal.AddAsync(context, entity);
         }
 
-        public static PenznemDto CreateNew(ossContext context, string sid)
+        public static async Task<PenznemDto> CreateNewAsync(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PRIMITIVEKMOD);
+            await CsoportDal.JogeAsync(context, JogKod.PRIMITIVEKMOD);
             return new PenznemDto();
         }
 
         public static async Task DeleteAsync(ossContext context, string sid, PenznemDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PRIMITIVEK);
+            await CsoportDal.JogeAsync(context, JogKod.PRIMITIVEK);
 
             await PenznemDal.Lock(context, dto.Penznemkod, dto.Modositva);
             await PenznemDal.CheckReferencesAsync(context, dto.Penznemkod);
@@ -41,7 +41,7 @@ namespace ossServer.Controllers.Primitiv.Penznem
         public static async Task<PenznemDto> GetAsync(ossContext context, string sid, int key)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PRIMITIVEK);
+            await CsoportDal.JogeAsync(context, JogKod.PRIMITIVEK);
 
             var entity = await PenznemDal.GetAsync(context, key);
             return ObjectUtils.Convert<Models.Penznem, PenznemDto>(entity);
@@ -50,7 +50,7 @@ namespace ossServer.Controllers.Primitiv.Penznem
         public static async Task<List<PenznemDto>> ReadAsync(ossContext context, string sid, string maszk)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PRIMITIVEK);
+            await CsoportDal.JogeAsync(context, JogKod.PRIMITIVEK);
 
             var entities = await PenznemDal.ReadAsync(context, maszk);
             return ObjectUtils.Convert<Models.Penznem, PenznemDto>(entities);
@@ -59,7 +59,7 @@ namespace ossServer.Controllers.Primitiv.Penznem
         public static async Task<int> UpdateAsync(ossContext context, string sid, PenznemDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PRIMITIVEK);
+            await CsoportDal.JogeAsync(context, JogKod.PRIMITIVEK);
 
             await PenznemDal.Lock(context, dto.Penznemkod, dto.Modositva);
             var entity = await PenznemDal.GetAsync(context, dto.Penznemkod);
@@ -71,7 +71,7 @@ namespace ossServer.Controllers.Primitiv.Penznem
         public static async Task ZoomCheckAsync(ossContext context, string sid, int penznemkod, string penznem)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PRIMITIVEK);
+            await CsoportDal.JogeAsync(context, JogKod.PRIMITIVEK);
 
             await PenznemDal.ZoomCheckAsync(context, penznemkod, penznem);
         }

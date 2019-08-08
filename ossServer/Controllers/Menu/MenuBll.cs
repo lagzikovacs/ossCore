@@ -8,11 +8,11 @@ namespace ossServer.Controllers.Menu
 {
     public class MenuBll
     {
-        public static List<AngularMenuDto> AngularMenu(ossContext context, string sid)
+        public static async System.Threading.Tasks.Task<List<AngularMenuDto>> AngularMenuAsync(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
 
-            var jogok = CsoportBll.Jogaim(context, sid);
+            var jogok = await CsoportBll.JogaimAsync(context, sid);
 
             var result = new List<AngularMenuDto>
             {

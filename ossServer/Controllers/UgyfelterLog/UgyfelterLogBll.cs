@@ -4,8 +4,10 @@ using ossServer.Controllers.Ugyfel;
 using ossServer.Enums;
 using ossServer.Models;
 using ossServer.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.UgyfelterLog
 {
@@ -19,21 +21,21 @@ namespace ossServer.Controllers.UgyfelterLog
 
             return result;
         }
-        public static List<UgyfelterLogDto> Select(ossContext context, string sid, int rekordTol, int lapMeret, 
-            List<SzMT> szmt, out int osszesRekord)
+        public static async Task<Tuple<List<UgyfelterLogDto>, int>> SelectAsync(ossContext context, string sid, int rekordTol, int lapMeret, 
+            List<SzMT> szmt)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.UGYFELTERLOG);
+            await CsoportDal.JogeAsync(context, JogKod.UGYFELTERLOG);
 
             var qry = UgyfelterLogDal.GetQuery(context, szmt);
-            osszesRekord = qry.Count();
+            var osszesRekord = qry.Count();
             var entities = qry.Skip(rekordTol).Take(lapMeret).ToList();
             var result = new List<UgyfelterLogDto>();
 
             foreach (var entity in entities)
                 result.Add(Calc(entity));
 
-            return result;
+            return new Tuple<List<UgyfelterLogDto>, int>(result, osszesRekord);
         }
 
         public static List<ColumnSettings> GridColumns()

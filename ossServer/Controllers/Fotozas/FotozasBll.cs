@@ -34,7 +34,7 @@ namespace ossServer.Controllers.Fotozas
         public static async Task<string> CreateNewLinkAsync(ossContext context, string sid, IratDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.IRATMOD);
+            await CsoportDal.JogeAsync(context, JogKod.IRATMOD);
 
             await IratDal.Lock(context, dto.Iratkod, dto.Modositva);
             var entity = IratDal.Get(context, dto.Iratkod);
@@ -57,7 +57,7 @@ namespace ossServer.Controllers.Fotozas
         public static async Task ClearLinkAsync(ossContext context, string sid, IratDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.UGYFELEKMOD);
+            await CsoportDal.JogeAsync(context, JogKod.UGYFELEKMOD);
 
             await IratDal.Lock(context, dto.Iratkod, dto.Modositva);
             var entity = IratDal.Get(context, dto.Iratkod);
@@ -70,7 +70,7 @@ namespace ossServer.Controllers.Fotozas
         public static async Task<string> GetLinkAsync(ossContext context, string sid, IratDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.IRATMOD);
+            await CsoportDal.JogeAsync(context, JogKod.IRATMOD);
 
             await IratDal.Lock(context, dto.Iratkod, dto.Modositva);
             var entity = IratDal.Get(context, dto.Iratkod);
@@ -127,13 +127,14 @@ namespace ossServer.Controllers.Fotozas
             await LogonBll.SzerepkorValasztasAsync(context, result.sid, 
                 csoport[0].Particiokod, csoport[0].Csoportkod);
 
-            result.iratDto = IratBll.Select(context, result.sid, 0, 1,
-                new List<SzMT> { new SzMT { Szempont = Szempont.Kod, Minta = Fp.Iratkod.ToString() } }, out _);
-            result.dokumentumDto = DokumentumBll.Select(context, result.sid, Fp.Iratkod);
+            result.iratDto = (await IratBll.SelectAsync(context, result.sid, 0, 1,
+                new List<SzMT> { new SzMT { Szempont = Szempont.Kod, Minta = Fp.Iratkod.ToString() } })).Item1;
+            result.dokumentumDto = await DokumentumBll.SelectAsync(context, result.sid, Fp.Iratkod);
+
             var projektKapcsolatDto = ProjektKapcsolatBll.SelectByIrat(context, result.sid, Fp.Iratkod);
             if (projektKapcsolatDto.Count != 0)
-                result.projektDto = ProjektBll.Select(context, result.sid, 0, 1, 0,
-                    new List<SzMT> { new SzMT {Szempont = Szempont.Kod, Minta = projektKapcsolatDto[0].Projektkod.ToString() } }, out _);
+                result.projektDto = (await ProjektBll.SelectAsync(context, result.sid, 0, 1, 0,
+                    new List<SzMT> { new SzMT {Szempont = Szempont.Kod, Minta = projektKapcsolatDto[0].Projektkod.ToString() } })).Item1;
 
             return result;
         }

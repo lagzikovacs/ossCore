@@ -13,24 +13,24 @@ namespace ossServer.Controllers.Primitiv.Teendo
         public static async Task<int> AddAsync(ossContext context, string sid, TeendoDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PRIMITIVEKMOD);
+            await CsoportDal.JogeAsync(context, JogKod.PRIMITIVEKMOD);
 
             var entity = ObjectUtils.Convert<TeendoDto, Models.Teendo>(dto);
             await TeendoDal.ExistsAsync(context, entity);
             return await TeendoDal.AddAsync(context, entity);
         }
 
-        public static TeendoDto CreateNew(ossContext context, string sid)
+        public static async Task<TeendoDto> CreateNewAsync(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PRIMITIVEKMOD);
+            await CsoportDal.JogeAsync(context, JogKod.PRIMITIVEKMOD);
             return new TeendoDto();
         }
 
         public static async Task DeleteAsync(ossContext context, string sid, TeendoDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PRIMITIVEKMOD);
+            await CsoportDal.JogeAsync(context, JogKod.PRIMITIVEKMOD);
 
             await TeendoDal.Lock(context, dto.Teendokod, dto.Modositva);
             await TeendoDal.CheckReferencesAsync(context, dto.Teendokod);
@@ -41,7 +41,7 @@ namespace ossServer.Controllers.Primitiv.Teendo
         public static async Task<TeendoDto> GetAsync(ossContext context, string sid, int key)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PRIMITIVEK);
+            await CsoportDal.JogeAsync(context, JogKod.PRIMITIVEK);
 
             var entity = await TeendoDal.GetAsync(context, key);
             return ObjectUtils.Convert<Models.Teendo, TeendoDto>(entity);
@@ -50,7 +50,7 @@ namespace ossServer.Controllers.Primitiv.Teendo
         public static async Task<List<TeendoDto>> ReadAsync(ossContext context, string sid, string maszk)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PRIMITIVEK);
+            await CsoportDal.JogeAsync(context, JogKod.PRIMITIVEK);
 
             var entities = await TeendoDal.ReadAsync(context, maszk);
             return ObjectUtils.Convert<Models.Teendo, TeendoDto>(entities);
@@ -59,7 +59,7 @@ namespace ossServer.Controllers.Primitiv.Teendo
         public static async Task<int> UpdateAsync(ossContext context, string sid, TeendoDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PRIMITIVEKMOD);
+            await CsoportDal.JogeAsync(context, JogKod.PRIMITIVEKMOD);
 
             await TeendoDal.Lock(context, dto.Teendokod, dto.Modositva);
             var entity = await TeendoDal.GetAsync(context, dto.Teendokod);
@@ -71,7 +71,7 @@ namespace ossServer.Controllers.Primitiv.Teendo
         public static async Task ZoomCheckAsync(ossContext context, string sid, int teendokod, string teendo)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PRIMITIVEK);
+            await CsoportDal.JogeAsync(context, JogKod.PRIMITIVEK);
 
             await TeendoDal.ZoomCheckAsync(context, teendokod, teendo);
         }

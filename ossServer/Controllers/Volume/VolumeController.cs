@@ -25,7 +25,7 @@ namespace ossServer.Controllers.Volume
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = VolumeBll.Read(_context, sid);
+                    result.Result = await VolumeBll.ReadAsync(_context, sid);
 
                     tr.Commit();
                 }
@@ -47,7 +47,7 @@ namespace ossServer.Controllers.Volume
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = VolumeBll.DokumentumkodByVolume(_context, sid, volumeKod);
+                    result.Result = await VolumeBll.DokumentumkodByVolumeAsync(_context, sid, volumeKod);
 
                     tr.Commit();
                 }

@@ -83,7 +83,7 @@ namespace ossServer.Controllers.Ajanlat
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = AjanlatBll.AjanlatCalc(_context, sid, ap);
+                    result.Result = await AjanlatBll.AjanlatCalcAsync(_context, sid, ap);
 
                     tr.Commit();
                 }

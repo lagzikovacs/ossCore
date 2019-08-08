@@ -14,10 +14,10 @@ namespace ossServer.Controllers.Projekt
 {
     public class ProjektBll
     {
-        public static int Add(ossContext context, string sid, ProjektDto dto)
+        public static async Task<int> AddAsync(ossContext context, string sid, ProjektDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PROJEKTMOD);
+            await CsoportDal.JogeAsync(context, JogKod.PROJEKTMOD);
 
             var entity = ObjectUtils.Convert<ProjektDto, Models.Projekt>(dto);
             return ProjektDal.Add(context, entity);
@@ -28,7 +28,7 @@ namespace ossServer.Controllers.Projekt
             const string minta = "HUF";
 
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PROJEKTMOD);
+            await CsoportDal.JogeAsync(context, JogKod.PROJEKTMOD);
 
             var result = new ProjektDto
             {
@@ -51,7 +51,7 @@ namespace ossServer.Controllers.Projekt
         public static async Task DeleteAsync(ossContext context, string sid, ProjektDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PROJEKTMOD);
+            await CsoportDal.JogeAsync(context, JogKod.PROJEKTMOD);
 
             await ProjektDal.Lock(context, dto.Projektkod, dto.Modositva);
             ProjektDal.CheckReferences(context, dto.Projektkod);
@@ -72,36 +72,36 @@ namespace ossServer.Controllers.Projekt
             return result;
         }
 
-        public static ProjektDto Get(ossContext context, string sid, int key)
+        public static async Task<ProjektDto> GetAsync(ossContext context, string sid, int key)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PROJEKT);
+            await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
             var entity = ProjektDal.Get(context, key);
             return Calc(entity);
         }
 
-        public static List<ProjektDto> Select(ossContext context, string sid, int rekordTol, int lapMeret, 
-            int statusz, List<SzMT> szmt, out int osszesRekord)
+        public static async Task<Tuple<List<ProjektDto>, int>> SelectAsync(ossContext context, string sid, int rekordTol, int lapMeret, 
+            int statusz, List<SzMT> szmt)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PROJEKT);
+            await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
             var qry = ProjektDal.GetQuery(context, statusz, szmt);
-            osszesRekord = qry.Count();
+            var osszesRekord = qry.Count();
             var entities = qry.Skip(rekordTol).Take(lapMeret).ToList();
 
             var result = new List<ProjektDto>();
             foreach (var entity in entities)
                 result.Add(Calc(entity));
 
-            return result;
+            return new Tuple<List<ProjektDto>, int>(result, osszesRekord);
         }
 
         public static async Task<int> UpdateAsync(ossContext context, string sid, ProjektDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PROJEKTMOD);
+            await CsoportDal.JogeAsync(context, JogKod.PROJEKTMOD);
 
             await ProjektDal.Lock(context, dto.Projektkod, dto.Modositva);
             var entity = ProjektDal.Get(context, dto.Projektkod);

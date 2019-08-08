@@ -33,7 +33,7 @@ namespace ossServer.Controllers.Ugyfelter
         public static async Task<string> CreateNewLinkAsync(ossContext context, string sid, UgyfelDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.UGYFELEKMOD);
+            await CsoportDal.JogeAsync(context, JogKod.UGYFELEKMOD);
 
             await UgyfelDal.Lock(context, dto.Ugyfelkod, dto.Modositva);
             var entity = await UgyfelDal.GetAsync(context, dto.Ugyfelkod);
@@ -56,7 +56,7 @@ namespace ossServer.Controllers.Ugyfelter
         public static async Task<string> GetLinkAsync(ossContext context, string sid, UgyfelDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.UGYFELEKMOD);
+            await CsoportDal.JogeAsync(context, JogKod.UGYFELEKMOD);
 
             await UgyfelDal.Lock(context, dto.Ugyfelkod, dto.Modositva);
             var entity = await UgyfelDal.GetAsync(context, dto.Ugyfelkod);
@@ -76,7 +76,7 @@ namespace ossServer.Controllers.Ugyfelter
         public static async Task ClearLinkAsync(ossContext context, string sid, UgyfelDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.UGYFELEKMOD);
+            await CsoportDal.JogeAsync(context, JogKod.UGYFELEKMOD);
 
             await UgyfelDal.Lock(context, dto.Ugyfelkod, dto.Modositva);
             var entity = await UgyfelDal.GetAsync(context, dto.Ugyfelkod);
@@ -129,8 +129,8 @@ namespace ossServer.Controllers.Ugyfelter
 
             result.ugyfelDto = await UgyfelBll.GetAsync(context, result.sid, up.Ugyfelkod);
 
-            result.lstProjektDto = ProjektBll.Select(context, result.sid, 0, int.MaxValue, 0,
-                new List<SzMT> { new SzMT { Szempont = Szempont.UgyfelKod, Minta = up.Ugyfelkod.ToString() } }, out _);
+            result.lstProjektDto = (await ProjektBll.SelectAsync(context, result.sid, 0, int.MaxValue, 0,
+                new List<SzMT> { new SzMT { Szempont = Szempont.UgyfelKod, Minta = up.Ugyfelkod.ToString() } })).Item1;
 
             return result;
         }

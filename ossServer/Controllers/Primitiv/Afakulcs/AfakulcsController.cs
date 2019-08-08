@@ -48,7 +48,7 @@ namespace ossServer.Controllers.Primitiv.Afakulcs
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<AfakulcsDto> { AfakulcsBll.CreateNew(_context, sid) };
+                    result.Result = new List<AfakulcsDto> { await AfakulcsBll.CreateNewAsync(_context, sid) };
 
                     tr.Commit();
                 }

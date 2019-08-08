@@ -153,9 +153,10 @@ namespace ossServer.Controllers.Cikk
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = CikkBll.Select(_context, sid, par.RekordTol, par.LapMeret, 
-                        par.Fi, out var osszesRekord);
-                    result.OsszesRekord = osszesRekord;
+                    var t = await CikkBll.SelectAsync(_context, sid, par.RekordTol, par.LapMeret, 
+                        par.Fi);
+                    result.Result = t.Item1;
+                    result.OsszesRekord = t.Item2;
 
                     tr.Commit();
                 }

@@ -27,7 +27,7 @@ namespace ossServer.Controllers.PenztarTetel
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = PenztarTetelBll.Add(_context, sid, dto);
+                    result.Result = await PenztarTetelBll.AddAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -48,7 +48,7 @@ namespace ossServer.Controllers.PenztarTetel
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<PenztarTetelDto> { PenztarTetelBll.CreateNew(_context, sid) };
+                    result.Result = new List<PenztarTetelDto> { await PenztarTetelBll.CreateNewAsync(_context, sid) };
 
                     tr.Commit();
                 }
@@ -69,7 +69,7 @@ namespace ossServer.Controllers.PenztarTetel
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<PenztarTetelDto> { PenztarTetelBll.Get(_context, sid, key) };
+                    result.Result = new List<PenztarTetelDto> { await PenztarTetelBll.GetAsync(_context, sid, key) };
 
                     tr.Commit();
                 }
@@ -90,9 +90,10 @@ namespace ossServer.Controllers.PenztarTetel
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = PenztarTetelBll.Select(_context, sid, par.RekordTol, par.LapMeret, 
-                        par.Fi, out var osszesRekord);
-                    result.OsszesRekord = osszesRekord;
+                    var t = await PenztarTetelBll.SelectAsync(_context, sid, par.RekordTol, par.LapMeret, 
+                        par.Fi);
+                    result.Result = t.Item1;
+                    result.OsszesRekord = t.Item2;
 
                     tr.Commit();
                 }

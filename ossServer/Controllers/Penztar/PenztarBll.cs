@@ -10,20 +10,20 @@ namespace ossServer.Controllers.Penztar
 {
     public class PenztarBll
     {
-        public static int Add(ossContext context, string sid, PenztarDto dto)
+        public static async Task<int> AddAsync(ossContext context, string sid, PenztarDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PENZTARMOD);
+            await CsoportDal.JogeAsync(context, JogKod.PENZTARMOD);
 
             var entity = ObjectUtils.Convert<PenztarDto, Models.Penztar>(dto);
             PenztarDal.Exists(context, entity);
             return PenztarDal.Add(context, entity);
         }
 
-        public static PenztarDto CreateNew(ossContext context, string sid)
+        public static async Task<PenztarDto> CreateNewAsync(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PENZTARMOD);
+            await CsoportDal.JogeAsync(context, JogKod.PENZTARMOD);
 
             return new PenztarDto { Nyitva = true };
         }
@@ -31,7 +31,7 @@ namespace ossServer.Controllers.Penztar
         public static async Task DeleteAsync(ossContext context, string sid, PenztarDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PENZTARMOD);
+            await CsoportDal.JogeAsync(context, JogKod.PENZTARMOD);
 
             await PenztarDal.Lock(context, dto.Penztarkod, dto.Modositva);
             PenztarDal.CheckReferences(context, dto.Penztarkod);
@@ -39,33 +39,33 @@ namespace ossServer.Controllers.Penztar
             PenztarDal.Delete(context, entity);
         }
 
-        public static PenztarDto Get(ossContext context, string sid, int key)
+        public static async Task<PenztarDto> GetAsync(ossContext context, string sid, int key)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PENZTAR);
+            await CsoportDal.JogeAsync(context, JogKod.PENZTAR);
 
             var entity = PenztarDal.Get(context, key);
             return ObjectUtils.Convert<Models.Penztar, PenztarDto>(entity);
         }
 
-        public static List<PenztarDto> Read(ossContext context, string sid, string maszk)
+        public static async Task<List<PenztarDto>> ReadAsync(ossContext context, string sid, string maszk)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PENZTAR);
+            await CsoportDal.JogeAsync(context, JogKod.PENZTAR);
 
             return PenztarDal.Read(context, maszk);
         }
-        public static List<PenztarDto> Read(ossContext context, string sid, int penztarkod)
+        public static async Task<List<PenztarDto>> ReadAsync(ossContext context, string sid, int penztarkod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PENZTAR);
+            await CsoportDal.JogeAsync(context, JogKod.PENZTAR);
 
             return PenztarDal.Read(context, penztarkod);
         }
-        public static List<PenztarDto> ReadByCurrencyOpened(ossContext context, string sid, int penznemkod)
+        public static async Task<List<PenztarDto>> ReadByCurrencyOpenedAsync(ossContext context, string sid, int penznemkod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PENZTAR);
+            await CsoportDal.JogeAsync(context, JogKod.PENZTAR);
 
             return PenztarDal.ReadByCurrencyOpened(context, penznemkod);
         }
@@ -73,7 +73,7 @@ namespace ossServer.Controllers.Penztar
         public static async Task<int> UpdateAsync(ossContext context, string sid, PenztarDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.PENZTARMOD);
+            await CsoportDal.JogeAsync(context, JogKod.PENZTARMOD);
 
             await PenztarDal.Lock(context, dto.Penztarkod, dto.Modositva);
             var entity = PenztarDal.Get(context, dto.Penztarkod);

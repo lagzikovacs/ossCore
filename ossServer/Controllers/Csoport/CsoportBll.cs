@@ -15,17 +15,17 @@ namespace ossServer.Controllers.Csoport
         public static async Task<int> AddAsync(ossContext context, string sid, CsoportDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.CSOPORT);
+            await CsoportDal.JogeAsync(context, JogKod.CSOPORT);
 
             var entity = ObjectUtils.Convert<CsoportDto, Models.Csoport>(dto);
             await CsoportDal.ExistsAsync(context, entity);
             return await CsoportDal.AddAsync(context, entity);
         }
 
-        public static CsoportDto CreateNew(ossContext context, string sid)
+        public static async Task<CsoportDto> CreateNewAsync(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.CSOPORT);
+            await CsoportDal.JogeAsync(context, JogKod.CSOPORT);
 
             return new CsoportDto();
         }
@@ -33,7 +33,7 @@ namespace ossServer.Controllers.Csoport
         public static async Task DeleteAsync(ossContext context, string sid, CsoportDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.CSOPORT);
+            await CsoportDal.JogeAsync(context, JogKod.CSOPORT);
 
             await CsoportDal.Lock(context, dto.Csoportkod, dto.Modositva);
             await CsoportDal.CheckReferencesAsync(context, dto.Csoportkod);
@@ -44,7 +44,7 @@ namespace ossServer.Controllers.Csoport
         public static async Task<CsoportDto> GetAsync(ossContext context, string sid, int key)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.CSOPORT);
+            await CsoportDal.JogeAsync(context, JogKod.CSOPORT);
 
             var entity = await CsoportDal.GetAsync(context, key);
             return ObjectUtils.Convert<Models.Csoport, CsoportDto>(entity);
@@ -53,7 +53,7 @@ namespace ossServer.Controllers.Csoport
         public static async Task<List<CsoportDto>> ReadAsync(ossContext context, string sid, string maszk)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.CSOPORT);
+            await CsoportDal.JogeAsync(context, JogKod.CSOPORT);
 
             var entities = await CsoportDal.ReadAsync(context, maszk);
             var result = new List<CsoportDto>();
@@ -72,7 +72,7 @@ namespace ossServer.Controllers.Csoport
         public static async Task<int> UpdateAsync(ossContext context, string sid, CsoportDto dto)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.CSOPORT);
+            await CsoportDal.JogeAsync(context, JogKod.CSOPORT);
 
             await CsoportDal.Lock(context, dto.Csoportkod, dto.Modositva);
             var entity = await CsoportDal.GetAsync(context, dto.Csoportkod);
@@ -85,9 +85,9 @@ namespace ossServer.Controllers.Csoport
         public static async Task<List<FelhasznaloDto>> SelectCsoportFelhasznaloAsync(ossContext context, string sid, int csoportKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.CSOPORT);
+            await CsoportDal.JogeAsync(context, JogKod.CSOPORT);
 
-            var csF = CsoportDal.SelectCsoportFelhasznalo(context, csoportKod);
+            var csF = await CsoportDal.SelectCsoportFelhasznaloAsync(context, csoportKod);
             var entities = await FelhasznaloDal.ReadAsync(context, "");
 
             var result = new List<FelhasznaloDto>();
@@ -103,12 +103,12 @@ namespace ossServer.Controllers.Csoport
             return result;
         }
 
-        public static List<LehetsegesJogDto> SelectCsoportJog(ossContext context, string sid, int csoportKod)
+        public static async Task<List<LehetsegesJogDto>> SelectCsoportJogAsync(ossContext context, string sid, int csoportKod)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.CSOPORT);
+            await CsoportDal.JogeAsync(context, JogKod.CSOPORT);
 
-            var csJ = CsoportDal.SelectCsoportJog(context, csoportKod);
+            var csJ = await CsoportDal.SelectCsoportJogAsync(context, csoportKod);
             var entities = JogDal.Read(context, "");
 
             var result = new List<LehetsegesJogDto>();
@@ -124,33 +124,33 @@ namespace ossServer.Controllers.Csoport
             return result.OrderBy(s => s.Jog).ToList();
         }
 
-        public static void CsoportFelhasznaloBeKi(ossContext context, string sid, int csoportKod, int felhasznaloKod, bool Be)
+        public static async Task CsoportFelhasznaloBeKiAsync(ossContext context, string sid, int csoportKod, int felhasznaloKod, bool Be)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.CSOPORT);
+            await CsoportDal.JogeAsync(context, JogKod.CSOPORT);
 
             if (Be)
-                CsoportDal.CsoportFelhasznaloBe(context, csoportKod, felhasznaloKod);
+                await CsoportDal.CsoportFelhasznaloBeAsync(context, csoportKod, felhasznaloKod);
             else
-                CsoportDal.CsoportFelhasznaloKi(context, csoportKod, felhasznaloKod);
+                await CsoportDal.CsoportFelhasznaloKiAsync(context, csoportKod, felhasznaloKod);
         }
 
-        public static void CsoportJogBeKi(ossContext context, string sid, int csoportKod, int lehetsegesJogKod, bool Be)
+        public static async Task CsoportJogBeKiAsync(ossContext context, string sid, int csoportKod, int lehetsegesJogKod, bool Be)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.CSOPORT);
+            await CsoportDal.JogeAsync(context, JogKod.CSOPORT);
 
             if (Be)
-                CsoportDal.CsoportJogBe(context, csoportKod, lehetsegesJogKod);
+                await CsoportDal.CsoportJogBeAsync(context, csoportKod, lehetsegesJogKod);
             else
-                CsoportDal.CsoportJogKi(context, csoportKod, lehetsegesJogKod);
+                await CsoportDal.CsoportJogKiAsync(context, csoportKod, lehetsegesJogKod);
         }
 
-        public static List<JogKod> Jogaim(ossContext context, string sid)
+        public static async Task<List<JogKod>> JogaimAsync(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
 
-            var lst = CsoportDal.Jogaim(context);
+            var lst = await CsoportDal.JogaimAsync(context);
 
             var result = new List<JogKod>();
             foreach (var l in lst)

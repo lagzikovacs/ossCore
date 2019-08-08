@@ -42,7 +42,7 @@ namespace ossServer.Controllers.Riport
             DateTime teljesitesKeltetol, DateTime teljesitesKelteig)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.LEKERDEZES);
+            await CsoportDal.JogeAsync(context, JogKod.LEKERDEZES);
 
             SpreadsheetInfo.SetLicense(licKey);
 
@@ -114,7 +114,7 @@ namespace ossServer.Controllers.Riport
             DateTime teljesitesKeltetol, DateTime teljesitesKelteig)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.LEKERDEZES);
+            await CsoportDal.JogeAsync(context, JogKod.LEKERDEZES);
 
             SpreadsheetInfo.SetLicense(licKey);
 
@@ -185,7 +185,7 @@ namespace ossServer.Controllers.Riport
             DateTime ezenANapon, bool lejart)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.LEKERDEZES);
+            await CsoportDal.JogeAsync(context, JogKod.LEKERDEZES);
 
             SpreadsheetInfo.SetLicense(licKey);
 
@@ -256,7 +256,7 @@ namespace ossServer.Controllers.Riport
             DateTime ezenANapon, bool lejart)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.LEKERDEZES);
+            await CsoportDal.JogeAsync(context, JogKod.LEKERDEZES);
 
             SpreadsheetInfo.SetLicense(licKey);
 
@@ -327,7 +327,7 @@ namespace ossServer.Controllers.Riport
             DateTime teljesitesKeltetol, DateTime teljesitesKelteig, bool reszletekIs)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.LEKERDEZES);
+            await CsoportDal.JogeAsync(context, JogKod.LEKERDEZES);
 
             SpreadsheetInfo.SetLicense(licKey);
 
@@ -403,7 +403,7 @@ namespace ossServer.Controllers.Riport
             DateTime ezenIdopontig)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.LEKERDEZES);
+            await CsoportDal.JogeAsync(context, JogKod.LEKERDEZES);
 
             SpreadsheetInfo.SetLicense(licKey);
 
@@ -471,7 +471,7 @@ namespace ossServer.Controllers.Riport
             int penztarKod, DateTime datumTol, DateTime datumIg)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.LEKERDEZES);
+            await CsoportDal.JogeAsync(context, JogKod.LEKERDEZES);
 
             SpreadsheetInfo.SetLicense(licKey);
 
@@ -521,7 +521,7 @@ namespace ossServer.Controllers.Riport
             int statusz, string nev)
         {
             SessionBll.Check(context, sid);
-            CsoportDal.JogeAsync(context, JogKod.LEKERDEZES);
+            await CsoportDal.JogeAsync(context, JogKod.LEKERDEZES);
 
             SpreadsheetInfo.SetLicense(licKey);
 

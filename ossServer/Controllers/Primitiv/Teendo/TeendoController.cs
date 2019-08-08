@@ -48,7 +48,7 @@ namespace ossServer.Controllers.Primitiv.Teendo
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<TeendoDto> { TeendoBll.CreateNew(_context, sid) };
+                    result.Result = new List<TeendoDto> { await TeendoBll.CreateNewAsync(_context, sid) };
 
                     tr.Commit();
                 }
