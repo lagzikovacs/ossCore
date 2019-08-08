@@ -3,12 +3,13 @@ using ossServer.Controllers.Session;
 using ossServer.Enums;
 using ossServer.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Menu
 {
     public class MenuBll
     {
-        public static async System.Threading.Tasks.Task<List<AngularMenuDto>> AngularMenuAsync(ossContext context, string sid)
+        public static async Task<List<AngularMenuDto>> AngularMenuAsync(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
 

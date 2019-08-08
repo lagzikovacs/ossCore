@@ -10,7 +10,7 @@ namespace ossServer.Controllers.Onlineszamla
 {
     public class OnlineszamlaDal
     {
-        public static int Add(ossContext context, int bizonylatkod)
+        public static async System.Threading.Tasks.Task<int> AddAsync(ossContext context, int bizonylatkod)
         {
             var most = DateTime.Now;
             var entity = new Models.Navfeltoltes
@@ -25,8 +25,8 @@ namespace ossServer.Controllers.Onlineszamla
                 Emailszamlalo = 0
             };
             Register.Creation(context, entity);
-            context.Navfeltoltes.Add(entity);
-            context.SaveChanges();
+            await context.Navfeltoltes.AddAsync(entity);
+            await context.SaveChangesAsync();
 
             return entity.Navfeltolteskod;
         }

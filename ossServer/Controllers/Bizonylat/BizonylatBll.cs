@@ -436,7 +436,7 @@ namespace ossServer.Controllers.Bizonylat
             //    throw new Exception(string.Join(Environment.NewLine, hibak));
 
             //hozzáadni a feltöltendők listájához
-            OnlineszamlaDal.Add(context, stornozo.Bizonylatkod);
+            await OnlineszamlaDal.AddAsync(context, stornozo.Bizonylatkod);
 
 
             //az eredetiben ennyi módosítás
@@ -488,7 +488,7 @@ namespace ossServer.Controllers.Bizonylat
                 //    throw new Exception(string.Join(Environment.NewLine, hibak));
 
                 //hozzáadni a feltöltendők listájához
-                OnlineszamlaDal.Add(context, entity.Bizonylatkod);
+                await OnlineszamlaDal.AddAsync(context, entity.Bizonylatkod);
             }
 
             return result;
