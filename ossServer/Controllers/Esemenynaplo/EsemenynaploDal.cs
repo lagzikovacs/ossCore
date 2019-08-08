@@ -1,15 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ossServer.Models;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Esemenynaplo
 {
     public class EsemenynaploDal
     {
-        public static int Add(ossContext context, Models.Esemenynaplo entity)
+        public static async Task<int> AddAsync(ossContext context, Models.Esemenynaplo entity)
         {
-            context.Esemenynaplo.Add(entity);
-            context.SaveChanges();
+            await context.Esemenynaplo.AddRangeAsync(entity);
+            await context.SaveChangesAsync();
 
             return entity.Esemenynaplokod;
         }

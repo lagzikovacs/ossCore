@@ -3,12 +3,13 @@ using ossServer.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Esemenynaplo
 {
     public class EsemenynaploBll
     {
-        public static void Bejegyzes(ossContext model, EsemenynaploBejegyzesek esemeny)
+        public static async Task BejegyzesAsync(ossContext model, EsemenynaploBejegyzesek esemeny)
         {
             var entity = new Models.Esemenynaplo
             {
@@ -26,7 +27,7 @@ namespace ossServer.Controllers.Esemenynaplo
                 Osuser = model.CurrentSession.Osuser
             };
 
-            EsemenynaploDal.Add(model, entity);
+            await EsemenynaploDal.AddAsync(model, entity);
         }
 
         public static List<EseBeJel> EseBeJel()

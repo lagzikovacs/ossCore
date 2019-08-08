@@ -22,7 +22,7 @@ namespace ossServer.Controllers.Logon
 
             if (context.CurrentSession.Logol)
             {
-                EsemenynaploBll.Bejegyzes(context, EsemenynaploBejegyzesek.Bejelentkezes);
+                await EsemenynaploBll.BejegyzesAsync(context, EsemenynaploBejegyzesek.Bejelentkezes);
                 HubUtils.Uzenet(hubcontext, context.CurrentSession.Felhasznalo, EsemenynaploBejegyzesek.Bejelentkezes);
             }
 
@@ -52,17 +52,17 @@ namespace ossServer.Controllers.Logon
             await SessionBll.UpdateRoleAsync(context, sid, particioKod, csoportKod);
 
             if (context.CurrentSession.Logol)
-                EsemenynaploBll.Bejegyzes(context, EsemenynaploBejegyzesek.SzerepkorValasztas);
+                await EsemenynaploBll.BejegyzesAsync(context, EsemenynaploBejegyzesek.SzerepkorValasztas);
         }
 
-        public static void Kijelentkezes(ossContext context, string sid)
+        public static async Task KijelentkezesAsync(ossContext context, string sid)
         {
             SessionBll.Check(context, sid, false);
             SessionBll.Delete(context, sid);
 
             if (context.CurrentSession.Logol)
             {
-                EsemenynaploBll.Bejegyzes(context, EsemenynaploBejegyzesek.Kijelentkezes);
+                await EsemenynaploBll.BejegyzesAsync(context, EsemenynaploBejegyzesek.Kijelentkezes);
                 //OssHub.Uzenet(model.Session.FELHASZNALO, EsemenynaploBejegyzesek.Kijelentkezes);
             }
         }

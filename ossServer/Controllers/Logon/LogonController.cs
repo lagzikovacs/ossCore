@@ -94,7 +94,7 @@ namespace ossServer.Controllers.Logon
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    LogonBll.Kijelentkezes(_context, sid);
+                    await LogonBll.KijelentkezesAsync(_context, sid);
 
                     tr.Commit();
                 }
