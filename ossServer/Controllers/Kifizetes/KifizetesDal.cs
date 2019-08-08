@@ -10,26 +10,28 @@ namespace ossServer.Controllers.Kifizetes
 {
     public class KifizetesDal
     {
-        public static List<Models.Kifizetes> Read(ossContext context, int bizonylatKod)
+        public static async Task<List<Models.Kifizetes>> ReadAsync(ossContext context, int bizonylatKod)
         {
-            return context.Kifizetes.AsNoTracking()
+            return await context.Kifizetes.AsNoTracking()
               .Include(r => r.PenznemkodNavigation)
               .Include(r => r.FizetesimodkodNavigation)
               .Where(s => s.Bizonylatkod == bizonylatKod)
               .OrderByDescending(s => s.Datum)
-              .ToList();
+              .ToListAsync();
         }
 
-        public static Models.Kifizetes Get(ossContext context, int pKey)
+        public static async Task<Models.Kifizetes> GetAsync(ossContext context, int pKey)
         {
-            var result = context.Kifizetes
+            var result = await context.Kifizetes
               .Include(r => r.PenznemkodNavigation)
               .Include(r => r.FizetesimodkodNavigation)
               .Where(s => s.Kifizeteskod == pKey)
-              .ToList();
+              .ToListAsync();
+
             if (result.Count != 1)
                 throw new Exception(string.Format(Messages.AdatNemTalalhato,
                   $"{nameof(Models.Kifizetes.Kifizeteskod)}={pKey}"));
+
             return result.First();
         }
 
@@ -38,25 +40,25 @@ namespace ossServer.Controllers.Kifizetes
             await context.ExecuteLockFunction("lockkifizetes", "kifizeteskod", pKey, utoljaraModositva);
         }
 
-        public static void Delete(ossContext context, Models.Kifizetes entity)
+        public static async Task DeleteAsync(ossContext context, Models.Kifizetes entity)
         {
             context.Kifizetes.Remove(entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public static int Add(ossContext context, Models.Kifizetes entity)
+        public static async Task<int> AddAsync(ossContext context, Models.Kifizetes entity)
         {
             Register.Creation(context, entity);
-            context.Kifizetes.Add(entity);
-            context.SaveChanges();
+            await context.Kifizetes.AddAsync(entity);
+            await context.SaveChangesAsync();
 
             return entity.Kifizeteskod;
         }
 
-        public static int Update(ossContext context, Models.Kifizetes entity)
+        public static async Task<int> UpdateAsync(ossContext context, Models.Kifizetes entity)
         {
             Register.Modification(context, entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             return entity.Kifizeteskod;
         }

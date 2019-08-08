@@ -26,7 +26,7 @@ namespace ossServer.Controllers.Kifizetes
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.BIZONYLAT);
 
-            var entity = KifizetesDal.Get(context, kifizetesKod);
+            var entity = await KifizetesDal.GetAsync(context, kifizetesKod);
             return Calc(entity);
         }
 
@@ -35,7 +35,7 @@ namespace ossServer.Controllers.Kifizetes
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.BIZONYLAT);
 
-            var entities = KifizetesDal.Read(context, bizonylatKod);
+            var entities = await KifizetesDal.ReadAsync(context, bizonylatKod);
 
             var result = new List<KifizetesDto>();
             foreach (var entity in entities)
@@ -50,8 +50,8 @@ namespace ossServer.Controllers.Kifizetes
             await CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
 
             await KifizetesDal.Lock(context, dto.Kifizeteskod, dto.Modositva);
-            var entity = KifizetesDal.Get(context, dto.Kifizeteskod);
-            KifizetesDal.Delete(context, entity);
+            var entity = await KifizetesDal.GetAsync(context, dto.Kifizeteskod);
+            await KifizetesDal.DeleteAsync(context, entity);
         }
 
         public static async Task<int> AddAsync(ossContext context, string sid, KifizetesDto dto)
@@ -60,7 +60,7 @@ namespace ossServer.Controllers.Kifizetes
             await CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
 
             var entity = ObjectUtils.Convert<KifizetesDto, Models.Kifizetes>(dto);
-            return KifizetesDal.Add(context, entity);
+            return await KifizetesDal.AddAsync(context, entity);
         }
 
         public static async Task<KifizetesDto> CreateNewAsync(ossContext context, string sid)
@@ -77,9 +77,9 @@ namespace ossServer.Controllers.Kifizetes
             await CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
 
             await KifizetesDal.Lock(context, dto.Kifizeteskod, dto.Modositva);
-            var entity = KifizetesDal.Get(context, dto.Kifizeteskod);
+            var entity = await KifizetesDal.GetAsync(context, dto.Kifizeteskod);
             ObjectUtils.Update(dto, entity);
-            return KifizetesDal.Update(context, entity);
+            return await KifizetesDal.UpdateAsync(context, entity);
         }
 
         public static List<ColumnSettings> GridColumns()
