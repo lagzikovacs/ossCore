@@ -1,4 +1,5 @@
-﻿using ossServer.Controllers.Csoport;
+﻿using Microsoft.EntityFrameworkCore;
+using ossServer.Controllers.Csoport;
 using ossServer.Controllers.Session;
 using ossServer.Enums;
 using ossServer.Models;
@@ -93,8 +94,8 @@ namespace ossServer.Controllers.Ugyfel
             await CsoportDal.JogeAsync(context, JogKod.UGYFELEK);
 
             var qry = UgyfelDal.GetQuery(context, csoport, szmt);
-            var osszesRekord = qry.Count();
-            var entities = qry.Skip(rekordTol).Take(lapMeret).ToList();
+            var osszesRekord = await qry.CountAsync();
+            var entities = await qry.Skip(rekordTol).Take(lapMeret).ToListAsync();
             var result = new List<UgyfelDto>();
 
             foreach (var entity in entities)

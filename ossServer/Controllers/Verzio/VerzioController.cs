@@ -26,7 +26,7 @@ namespace ossServer.Controllers.Verzio
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = VerzioBll.VerzioEsBuild(_context, sid);
+                    result.Result = await VerzioBll.VerzioEsBuildAsync(_context, sid);
 
                     tr.Commit();
                 }

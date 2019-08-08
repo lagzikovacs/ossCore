@@ -61,7 +61,7 @@ namespace ossServer.Controllers.BizonylatNyomtatas
                 (int)entityParticio.BizonylatBizonylatkepIratkod : throw new Exception(string.Format(Messages.ParticioHiba, "BizonylatBizonylatkepIratkod"));
 
             var szamlakep = await IratBll.LetoltesAsync(context, sid, iratKod);
-            var v = VerzioDal.Get(context);
+            var v = await VerzioDal.GetAsync(context);
 
             var fejlec = BizonylatBll.Bl[entityBizonylat.Bizonylattipuskod].BizonylatFejlec;
             if (nyomtatasTipus == BizonylatNyomtatasTipus.Minta)

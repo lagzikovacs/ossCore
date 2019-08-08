@@ -1,4 +1,5 @@
-﻿using ossServer.Controllers.Csoport;
+﻿using Microsoft.EntityFrameworkCore;
+using ossServer.Controllers.Csoport;
 using ossServer.Controllers.Session;
 using ossServer.Controllers.Ugyfel;
 using ossServer.Enums;
@@ -28,8 +29,8 @@ namespace ossServer.Controllers.UgyfelterLog
             await CsoportDal.JogeAsync(context, JogKod.UGYFELTERLOG);
 
             var qry = UgyfelterLogDal.GetQuery(context, szmt);
-            var osszesRekord = qry.Count();
-            var entities = qry.Skip(rekordTol).Take(lapMeret).ToList();
+            var osszesRekord = await qry.CountAsync();
+            var entities = await qry.Skip(rekordTol).Take(lapMeret).ToListAsync();
             var result = new List<UgyfelterLogDto>();
 
             foreach (var entity in entities)

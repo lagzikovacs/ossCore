@@ -16,7 +16,7 @@ namespace ossServer.Controllers.Volume
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.VOLUME);
 
-            var entities = VolumeDal.Read(context);
+            var entities = await VolumeDal.ReadAsync(context);
             return ObjectUtils.Convert<Models.Volume, VolumeDto>(entities);
         }
 
