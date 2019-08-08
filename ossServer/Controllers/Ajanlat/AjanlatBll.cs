@@ -77,7 +77,7 @@ namespace ossServer.Controllers.Ajanlat
             var szuksegesAramerosseg = SzMTUtils.GetString(fi, Szempont.SzuksegesAramerosseg);
 
             var entityProjekt = ProjektDal.Get(context, projektKod);
-            var entityParticio = ParticioDal.Get(context);
+            var entityParticio = await ParticioDal.GetAsync(context);
             var iratKod = entityParticio.ProjektAjanlatIratkod != null ?
                 (int)entityParticio.ProjektAjanlatIratkod : throw new Exception(string.Format(Messages.ParticioHiba, "PROJEKT_AJANLAT_IRATKOD"));
             var fb = await IratBll.LetoltesAsync(context, sid, iratKod);

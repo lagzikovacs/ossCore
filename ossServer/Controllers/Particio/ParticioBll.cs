@@ -76,7 +76,7 @@ namespace ossServer.Controllers.Particio
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.PARTICIO);
 
-            var entity = ParticioDal.Get(context);
+            var entity = await ParticioDal.GetAsync(context);
             var dto = ObjectUtils.Convert<Models.Particio, ParticioDto>(entity);
 
             DecryptDto(dto);
@@ -94,7 +94,7 @@ namespace ossServer.Controllers.Particio
             EncryptDto(dto);
 
             await ParticioDal.Lock(context, dto.Particiokod, dto.Modositva);
-            var entity = ParticioDal.Get(context);
+            var entity = await ParticioDal.GetAsync(context);
             ObjectUtils.Update(dto, entity);
             return ParticioDal.Update(context, entity);
         }

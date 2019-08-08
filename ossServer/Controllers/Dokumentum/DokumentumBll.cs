@@ -58,9 +58,9 @@ namespace ossServer.Controllers.Dokumentum
             return result;
         }
 
-        private static string Eleresiut(ossContext context)
+        private static async Task<string> EleresiutAsync(ossContext context)
         {
-            var entityParticio = ParticioDal.Get(context);
+            var entityParticio = await ParticioDal.GetAsync(context);
             var result = entityParticio.VolumeUjvolumeEleresiut ?? throw new Exception(string.Format(Messages.ParticioHiba, "VolumeUjvolumeEleresiut"));
 
             if (!Directory.Exists(result))
@@ -69,11 +69,11 @@ namespace ossServer.Controllers.Dokumentum
             return result;
         }
 
-        private static int Meret(ossContext context)
+        private static async Task<int> MeretAsync(ossContext context)
         {
             const int minSize = 100 * 1024 * 1024;
 
-            var entityParticio = ParticioDal.Get(context);
+            var entityParticio = await ParticioDal.GetAsync(context);
             var result = entityParticio.VolumeUjvolumeMaxmeret != null ?
               (int)entityParticio.VolumeUjvolumeMaxmeret : throw new Exception(string.Format(Messages.ParticioHiba, "VolumeUjvolumeMaxmeret"));
 
@@ -90,6 +90,10 @@ namespace ossServer.Controllers.Dokumentum
 
             Models.Volume entityVolume;
             int ujFajlMerete = fajlBuf.Meret;
+
+            // lock-ban nem lehet async
+            var Eleresiut = await EleresiutAsync(context);
+            var Maxmeret = await MeretAsync(context);
 
             lock (LockMe)
             {
@@ -118,8 +122,8 @@ namespace ossServer.Controllers.Dokumentum
                     {
                         Particiokod = (int)context.CurrentSession.Particiokod,
                         Volumeno = context.KodGen(KodNev.Volume),
-                        Eleresiut = Eleresiut(context),
-                        Maxmeret = Meret(context),
+                        Eleresiut = Eleresiut,
+                        Maxmeret = Maxmeret,
                         Jelenlegimeret = ujFajlMerete,
                         Utolsokonyvtar = 1,
                         Fajlokszamautolsokonyvtarban = 1,

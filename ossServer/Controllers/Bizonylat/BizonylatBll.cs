@@ -108,7 +108,7 @@ namespace ossServer.Controllers.Bizonylat
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
 
-            var particio = ParticioDal.Get(context);
+            var particio = await ParticioDal.GetAsync(context);
 
             var result = new BizonylatComplexDto
             {

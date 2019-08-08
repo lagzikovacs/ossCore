@@ -1,6 +1,8 @@
-﻿using ossServer.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using ossServer.Models;
 using ossServer.Utils;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,11 +10,15 @@ namespace ossServer.Controllers.Particio
 {
     public class ParticioDal
     {
-        public static Models.Particio Get(ossContext contex)
+        public static async Task<Models.Particio> GetAsync(ossContext contex)
         {
-            var result = contex.Particio.Where(s => s.Particiokod == contex.CurrentSession.Particiokod).ToList();
+            var result = await contex.Particio
+                .Where(s => s.Particiokod == contex.CurrentSession.Particiokod)
+                .ToListAsync();
+
             if (result.Count != 1)
                 throw new Exception(string.Format(Messages.AdatNemTalalhato, $"{nameof(Models.Particio.Particiokod)}={contex.CurrentSession.Particiokod}"));
+
             return result.First();
         }
 

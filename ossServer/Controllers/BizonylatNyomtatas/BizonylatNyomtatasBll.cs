@@ -15,9 +15,9 @@ namespace ossServer.Controllers.BizonylatNyomtatas
 {
     public class BizonylatNyomtatasBll
     {
-        public static int GetBizonylatEredetiPeldany(ossContext context)
+        public static async Task<int> GetBizonylatEredetiPeldanyAsync(ossContext context)
         {
-            var entityParticio = ParticioDal.Get(context);
+            var entityParticio = await ParticioDal.GetAsync(context);
             var result = entityParticio.BizonylatEredetipeldanyokSzama ?? throw new Exception(string.Format(Messages.ParticioHiba, "BizonylatEredetipeldanyokSzama"));
 
             if (result <= 0 || result > 3)
@@ -26,9 +26,9 @@ namespace ossServer.Controllers.BizonylatNyomtatas
             return result;
         }
 
-        public static int GetBizonylatMasolat(ossContext context)
+        public static async Task<int> GetBizonylatMasolatAsync(ossContext context)
         {
-            var entityParticio = ParticioDal.Get(context);
+            var entityParticio = await ParticioDal.GetAsync(context);
             var result = entityParticio.BizonylatMasolatokSzama ?? throw new Exception(string.Format(Messages.ParticioHiba, "BizonylatMasolatokSzama"));
 
             if (result <= 0 || result > 3)
@@ -56,7 +56,7 @@ namespace ossServer.Controllers.BizonylatNyomtatas
             var entityBizonylat = await BizonylatDal.GetComplexAsync(context, bizonylatKod);
             await BizonylatDal.Lock(context, bizonylatKod, entityBizonylat.Modositva);
 
-            var entityParticio = ParticioDal.Get(context);
+            var entityParticio = await ParticioDal.GetAsync(context);
             var iratKod = entityParticio.BizonylatBizonylatkepIratkod != null ?
                 (int)entityParticio.BizonylatBizonylatkepIratkod : throw new Exception(string.Format(Messages.ParticioHiba, "BizonylatBizonylatkepIratkod"));
 
@@ -78,7 +78,7 @@ namespace ossServer.Controllers.BizonylatNyomtatas
                     printer.UjPeldany("1", minta);
                     break;
                 case BizonylatNyomtatasTipus.Eredeti:
-                    peldanyszam = GetBizonylatEredetiPeldany(context);
+                    peldanyszam = await GetBizonylatEredetiPeldanyAsync(context);
                     for (var i = 1; i <= peldanyszam; i++)
                         printer.UjPeldany(i.ToString(), "Eredeti");
 
@@ -89,7 +89,7 @@ namespace ossServer.Controllers.BizonylatNyomtatas
                     if (entityBizonylat.Nyomtatottpeldanyokszama == 0)
                         throw new Exception("Még nem készült eredeti példány!");
 
-                    peldanyszam = GetBizonylatMasolat(context);
+                    peldanyszam = await GetBizonylatMasolatAsync(context);
                     var sorszamTol = entityBizonylat.Nyomtatottpeldanyokszama + 1;
                     var sorszamIg = sorszamTol + peldanyszam - 1;
                     for (var i = sorszamTol; i <= sorszamIg; i++)
