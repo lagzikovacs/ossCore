@@ -5,28 +5,31 @@ using ossServer.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ossServer.Controllers.PenztarTetel
 {
     public class PenztarTetelDal
     {
-        public static int Add(ossContext context, Models.Penztartetel entity)
+        public static async Task<int> AddAsync(ossContext context, Models.Penztartetel entity)
         {
             Register.Creation(context, entity);
-            context.Penztartetel.Add(entity);
-            context.SaveChanges();
+            await context.Penztartetel.AddAsync(entity);
+            await context.SaveChangesAsync();
 
             return entity.Penztartetelkod;
         }
 
-        public static Models.Penztartetel Get(ossContext context, int pKey)
+        public static async Task<Penztartetel> GetAsync(ossContext context, int pKey)
         {
-            var result = context.Penztartetel
+            var result = await context.Penztartetel
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.Penztartetelkod == pKey)
-              .ToList();
+              .ToListAsync();
+
             if (result.Count != 1)
                 throw new Exception(string.Format(Messages.AdatNemTalalhato, $"{nameof(Models.Penztartetel.Penztartetelkod)}={pKey}"));
+
             return result.First();
         }
 

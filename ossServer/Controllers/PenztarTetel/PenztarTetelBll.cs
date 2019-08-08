@@ -1,4 +1,5 @@
-﻿using ossServer.Controllers.Csoport;
+﻿using Microsoft.EntityFrameworkCore;
+using ossServer.Controllers.Csoport;
 using ossServer.Controllers.Session;
 using ossServer.Enums;
 using ossServer.Models;
@@ -12,7 +13,7 @@ namespace ossServer.Controllers.PenztarTetel
 {
     public class PenztarTetelBll
     {
-        public static async System.Threading.Tasks.Task<PenztarTetelDto> CreateNewAsync(ossContext context, string sid)
+        public static async Task<PenztarTetelDto> CreateNewAsync(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.PENZTAR);
@@ -20,7 +21,7 @@ namespace ossServer.Controllers.PenztarTetel
             return new PenztarTetelDto { Jogcim = "Pénzfelvét bankból" };
         }
 
-        public static async System.Threading.Tasks.Task<int> AddAsync(ossContext context, string sid, PenztarTetelDto dto)
+        public static async Task<int> AddAsync(ossContext context, string sid, PenztarTetelDto dto)
         {
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.PENZTAR);
@@ -30,15 +31,15 @@ namespace ossServer.Controllers.PenztarTetel
                 dto.Penztarkod;
 
             var entity = ObjectUtils.Convert<PenztarTetelDto, Models.Penztartetel>(dto);
-            return PenztarTetelDal.Add(context, entity);
+            return await PenztarTetelDal.AddAsync(context, entity);
         }
 
-        public static async System.Threading.Tasks.Task<PenztarTetelDto> GetAsync(ossContext context, string sid, int key)
+        public static async Task<PenztarTetelDto> GetAsync(ossContext context, string sid, int key)
         {
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.PENZTAR);
 
-            var entity = PenztarTetelDal.Get(context, key);
+            var entity = await PenztarTetelDal.GetAsync(context, key);
             return ObjectUtils.Convert<Models.Penztartetel, PenztarTetelDto>(entity);
         }
 
@@ -49,8 +50,8 @@ namespace ossServer.Controllers.PenztarTetel
             await CsoportDal.JogeAsync(context, JogKod.PENZTAR);
 
             var qry = PenztarTetelDal.GetQuery(context, szmt);
-            var osszesRekord = qry.Count();
-            var entities = qry.Skip(rekordTol).Take(lapMeret).ToList();
+            var osszesRekord = await qry.CountAsync();
+            var entities = await qry.Skip(rekordTol).Take(lapMeret).ToListAsync();
             return new Tuple<List<PenztarTetelDto>, int>(ObjectUtils.Convert<Models.Penztartetel, PenztarTetelDto>(entities), osszesRekord);
         }
 
