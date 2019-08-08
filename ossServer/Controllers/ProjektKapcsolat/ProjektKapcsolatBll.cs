@@ -40,7 +40,7 @@ namespace ossServer.Controllers.ProjektKapcsolat
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
-            var entity = ProjektKapcsolatDal.Get(context, projektkapcsolatKod);
+            var entity = await ProjektKapcsolatDal.GetAsync(context, projektkapcsolatKod);
             return new List<ProjektKapcsolatDto> { KapcsolatCalc(entity) };
         }
 
@@ -50,7 +50,7 @@ namespace ossServer.Controllers.ProjektKapcsolat
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
-            var entites = ProjektKapcsolatDal.ReadByProjektKod(context, projektKod);
+            var entites = await ProjektKapcsolatDal.ReadByProjektKodAsync(context, projektKod);
             var result = new List<ProjektKapcsolatDto>();
 
             foreach (var entity in entites)
@@ -75,20 +75,20 @@ namespace ossServer.Controllers.ProjektKapcsolat
             return result;
         }
 
-        public static List<ProjektKapcsolatDto> SelectByBizonylat(ossContext context, string sid,
+        public static async Task<List<ProjektKapcsolatDto>> SelectByBizonylatAsync(ossContext context, string sid,
             int bizonylatKod)
         {
             SessionBll.Check(context, sid);
 
-            var entites = ProjektKapcsolatDal.ReadByBizonylatKod(context, bizonylatKod);
+            var entites = await ProjektKapcsolatDal.ReadByBizonylatKodAsync(context, bizonylatKod);
             return ObjectUtils.Convert<Projektkapcsolat, ProjektKapcsolatDto>(entites);
         }
 
-        public static List<ProjektKapcsolatDto> SelectByIrat(ossContext context, string sid, int iratKod)
+        public static async Task<List<ProjektKapcsolatDto>> SelectByIratAsync(ossContext context, string sid, int iratKod)
         {
             SessionBll.Check(context, sid);
 
-            var entites = ProjektKapcsolatDal.ReadByIratKod(context, iratKod);
+            var entites = await ProjektKapcsolatDal.ReadByIratKodAsync(context, iratKod);
             return ObjectUtils.Convert<Projektkapcsolat, ProjektKapcsolatDto>(entites);
         }
 
@@ -100,7 +100,7 @@ namespace ossServer.Controllers.ProjektKapcsolat
             await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
             var entity = new Projektkapcsolat { Projektkod = projektKod, Bizonylatkod = bizonylatKod };
-            var result = ProjektKapcsolatDal.Add(context, entity);
+            var result = await ProjektKapcsolatDal.AddAsync(context, entity);
 
             return result;
         }
@@ -111,7 +111,7 @@ namespace ossServer.Controllers.ProjektKapcsolat
             await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
             var entity = new Projektkapcsolat { Projektkod = projektKod, Iratkod = iratKod };
-            var result = ProjektKapcsolatDal.Add(context, entity);
+            var result = await ProjektKapcsolatDal.AddAsync(context, entity);
 
             return result;
         }
@@ -121,8 +121,8 @@ namespace ossServer.Controllers.ProjektKapcsolat
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
-            var entity = ProjektKapcsolatDal.Get(context, projektKapcsolatKod);
-            ProjektKapcsolatDal.Delete(context, entity);
+            var entity = await ProjektKapcsolatDal.GetAsync(context, projektKapcsolatKod);
+            await ProjektKapcsolatDal.DeleteAsync(context, entity);
         }
 
         public static async Task<int> UjBizonylatToProjektAsync(ossContext context, string sid, int projektKod,

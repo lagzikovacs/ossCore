@@ -115,7 +115,7 @@ namespace ossServer.Controllers.ProjektKapcsolat
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = ProjektKapcsolatBll.SelectByBizonylat(_context, sid, bizonylatKod);
+                    result.Result = await ProjektKapcsolatBll.SelectByBizonylatAsync(_context, sid, bizonylatKod);
 
                     tr.Commit();
                 }
@@ -137,7 +137,7 @@ namespace ossServer.Controllers.ProjektKapcsolat
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = ProjektKapcsolatBll.SelectByIrat(_context, sid, iratKod);
+                    result.Result = await ProjektKapcsolatBll.SelectByIratAsync(_context, sid, iratKod);
 
                     tr.Commit();
                 }
