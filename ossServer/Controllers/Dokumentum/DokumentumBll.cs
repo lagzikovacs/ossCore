@@ -22,7 +22,7 @@ namespace ossServer.Controllers.Dokumentum
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.IRAT);
 
-            var entity = DokumentumDal.Get(context, dokumentumKod);
+            var entity = await DokumentumDal.GetAsync(context, dokumentumKod);
             return ObjectUtils.Convert<Models.Dokumentum, DokumentumDto>(entity);
         }
 
@@ -31,7 +31,7 @@ namespace ossServer.Controllers.Dokumentum
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.IRAT);
 
-            var entities = DokumentumDal.Select(context, iratKod);
+            var entities = await DokumentumDal.SelectAsync(context, iratKod);
             return ObjectUtils.Convert<Models.Dokumentum, DokumentumDto>(entities);
         }
 
@@ -41,8 +41,8 @@ namespace ossServer.Controllers.Dokumentum
             await CsoportDal.JogeAsync(context, JogKod.IRAT);
 
             await DokumentumDal.Lock(context, dto.Dokumentumkod, dto.Modositva);
-            var entity = DokumentumDal.Get(context, dto.Dokumentumkod);
-            DokumentumDal.Delete(context, entity);
+            var entity = await DokumentumDal.GetAsync(context, dto.Dokumentumkod);
+            await DokumentumDal.DeleteAsync(context, entity);
         }
 
         private static string GetFajlnev(Models.Dokumentum dokumentum)
@@ -142,9 +142,9 @@ namespace ossServer.Controllers.Dokumentum
                 Megjegyzes = fajlBuf.Megjegyzes
             };
 
-            var dokumentumKod = DokumentumDal.Add(context, entityDokumentum);
+            var dokumentumKod = await DokumentumDal.AddAsync(context, entityDokumentum);
 
-            return DokumentumDal.GetWithVolume(context, dokumentumKod);
+            return await DokumentumDal.GetWithVolumeAsync(context, dokumentumKod);
         }
 
         public static int BejegyzesFajl(Models.Dokumentum entityDokumentum)
@@ -172,7 +172,7 @@ namespace ossServer.Controllers.Dokumentum
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.IRAT);
 
-            return DokumentumDal.GetWithVolume(context, dokumentumKod);
+            return await DokumentumDal.GetWithVolumeAsync(context, dokumentumKod);
         }
 
         public static void EllenorzesFajl(Models.Dokumentum entityDokumentum)
@@ -191,7 +191,7 @@ namespace ossServer.Controllers.Dokumentum
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.IRAT);
 
-            return DokumentumDal.GetWithVolume(context, dokumentumKod);
+            return await DokumentumDal.GetWithVolumeAsync(context, dokumentumKod);
         }
 
         public static void FeltoltesFajl(Models.Dokumentum entityDokumentum, FajlBuf fajlBuf)
@@ -222,7 +222,7 @@ namespace ossServer.Controllers.Dokumentum
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.IRAT);
 
-            return DokumentumDal.GetWithVolume(context, dokumentumKod);
+            return await DokumentumDal.GetWithVolumeAsync(context, dokumentumKod);
         }
 
         public static FajlBuf LetoltesFajl(Models.Dokumentum entityDokumentum, int kezdoPozicio, int olvasando)

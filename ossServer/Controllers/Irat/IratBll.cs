@@ -98,7 +98,7 @@ namespace ossServer.Controllers.Irat
         public static async Task<FajlBuf> LetoltesAsync(ossContext context, string sid, int iratKod)
         {
             IratDal.Get(context, iratKod);
-            var lstDokumentum = DokumentumDal.Select(context, iratKod);
+            var lstDokumentum = await DokumentumDal.SelectAsync(context, iratKod);
             if (lstDokumentum.Count != 1)
                 throw new Exception("Nincs pontosan egy dokumentum!");
 

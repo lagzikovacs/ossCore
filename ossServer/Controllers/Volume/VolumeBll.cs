@@ -25,7 +25,7 @@ namespace ossServer.Controllers.Volume
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.VOLUME);
 
-            return DokumentumDal.DokumentumkodByVolume(context, volumeKod);
+            return await DokumentumDal.DokumentumkodByVolumeAsync(context, volumeKod);
         }
 
         public static List<ColumnSettings> GridColumns()

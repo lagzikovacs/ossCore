@@ -10,55 +10,59 @@ namespace ossServer.Controllers.Dokumentum
 {
     public class DokumentumDal
     {
-        public static int Add(ossContext context, Models.Dokumentum entity)
+        public static async Task<int> AddAsync(ossContext context, Models.Dokumentum entity)
         {
             Register.Creation(context, entity);
-            context.Dokumentum.Add(entity);
-            context.SaveChanges();
+            await context.Dokumentum.AddAsync(entity);
+            await context.SaveChangesAsync();
 
             return entity.Dokumentumkod;
         }
 
-        public static Models.Dokumentum Get(ossContext context, int key)
+        public static async Task<Models.Dokumentum> GetAsync(ossContext context, int key)
         {
-            var result = context.Dokumentum
+            var result = await context.Dokumentum
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.Dokumentumkod == key)
-              .ToList();
+              .ToListAsync();
+
             if (result.Count != 1)
                 throw new Exception(string.Format(Messages.AdatNemTalalhato, 
                     $"{nameof(Models.Dokumentum.Dokumentumkod)}={key}"));
+
             return result.First();
         }
 
-        public static Models.Dokumentum GetWithVolume(ossContext context, int key)
+        public static async Task<Models.Dokumentum> GetWithVolumeAsync(ossContext context, int key)
         {
-            var result = context.Dokumentum.Include(r => r.VolumekodNavigation)
+            var result = await context.Dokumentum.Include(r => r.VolumekodNavigation)
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.Dokumentumkod == key)
-              .ToList();
+              .ToListAsync();
+
             if (result.Count != 1)
                 throw new Exception(string.Format(Messages.AdatNemTalalhato, 
                     $"{nameof(Models.Dokumentum.Dokumentumkod)}={key}"));
+
             return result.First();
         }
 
-        public static List<int> DokumentumkodByVolume(ossContext context, int volumeKod)
+        public static async Task<List<int>> DokumentumkodByVolumeAsync(ossContext context, int volumeKod)
         {
-            return context.Dokumentum.AsNoTracking()
+            return await context.Dokumentum.AsNoTracking()
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod && s.Volumekod == volumeKod)
               .OrderBy(s => s.Dokumentumkod)
               .Select(s => s.Dokumentumkod)
-              .ToList();
+              .ToListAsync();
         }
 
-        public static List<Models.Dokumentum> Select(ossContext context, int iratKod)
+        public static async Task<List<Models.Dokumentum>> SelectAsync(ossContext context, int iratKod)
         {
-            return context.Dokumentum
+            return await context.Dokumentum
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.Iratkod == iratKod)
               .OrderByDescending(s => s.Dokumentumkod)
-              .ToList();
+              .ToListAsync();
         }
 
         public async static Task Lock(ossContext context, int pKey, DateTime utoljaraModositva)
@@ -66,10 +70,10 @@ namespace ossServer.Controllers.Dokumentum
             await context.ExecuteLockFunction("lockdokumentum", "dokumentumkod", pKey, utoljaraModositva);
         }
 
-        public static void Delete(ossContext context, Models.Dokumentum entity)
+        public static async Task DeleteAsync(ossContext context, Models.Dokumentum entity)
         {
             context.Dokumentum.Remove(entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
     }
 }
