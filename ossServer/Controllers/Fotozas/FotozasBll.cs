@@ -37,7 +37,7 @@ namespace ossServer.Controllers.Fotozas
             await CsoportDal.JogeAsync(context, JogKod.IRATMOD);
 
             await IratDal.Lock(context, dto.Iratkod, dto.Modositva);
-            var entity = IratDal.Get(context, dto.Iratkod);
+            var entity = await IratDal.GetAsync(context, dto.Iratkod);
 
             var kikuldesikod = Guid.NewGuid().ToString();
             var up = new FotozasParam
@@ -49,7 +49,7 @@ namespace ossServer.Controllers.Fotozas
 
             entity.Kikuldesikod = kikuldesikod;
             entity.Kikuldesikodidopontja = DateTime.Now;
-            IratDal.Update(context, entity);
+            await IratDal.UpdateAsync(context, entity);
 
             return Link(up);
         }
@@ -60,11 +60,11 @@ namespace ossServer.Controllers.Fotozas
             await CsoportDal.JogeAsync(context, JogKod.UGYFELEKMOD);
 
             await IratDal.Lock(context, dto.Iratkod, dto.Modositva);
-            var entity = IratDal.Get(context, dto.Iratkod);
+            var entity = await IratDal.GetAsync(context, dto.Iratkod);
 
             entity.Kikuldesikod = null;
             entity.Kikuldesikodidopontja = null;
-            IratDal.Update(context, entity);
+            await IratDal.UpdateAsync(context, entity);
         }
 
         public static async Task<string> GetLinkAsync(ossContext context, string sid, IratDto dto)
@@ -73,7 +73,7 @@ namespace ossServer.Controllers.Fotozas
             await CsoportDal.JogeAsync(context, JogKod.IRATMOD);
 
             await IratDal.Lock(context, dto.Iratkod, dto.Modositva);
-            var entity = IratDal.Get(context, dto.Iratkod);
+            var entity = await IratDal.GetAsync(context, dto.Iratkod);
             if (entity.Kikuldesikod == null)
                 throw new Exception("Ez az irat még nem kapott fotózás linket!");
 

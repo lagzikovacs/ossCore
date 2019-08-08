@@ -93,11 +93,11 @@ namespace ossServer.Controllers.Irat
             return (IOrderedQueryable<Models.Irat>)qry;
         }
 
-        public static int Add(ossContext context, Models.Irat entity)
+        public static async Task<int> AddAsync(ossContext context, Models.Irat entity)
         {
             Register.Creation(context, entity);
-            context.Irat.Add(entity);
-            context.SaveChanges();
+            await context.Irat.AddAsync(entity);
+            await context.SaveChangesAsync();
 
             return entity.Iratkod;
         }
@@ -107,32 +107,34 @@ namespace ossServer.Controllers.Irat
             await context.ExecuteLockFunction("lockirat", "iratkod", pKey, utoljaraModositva);
         }
 
-        public static Models.Irat Get(ossContext context, int pKey)
+        public static async Task<Models.Irat> GetAsync(ossContext context, int pKey)
         {
-            var result = context.Irat
+            var result = await context.Irat
               .Include(r => r.IrattipuskodNavigation)
               .Include(r1 => r1.UgyfelkodNavigation).ThenInclude(r => r.HelysegkodNavigation)
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.Iratkod == pKey)
-              .ToList();
+              .ToListAsync();
+
             if (result.Count != 1)
                 throw new Exception(string.Format(Messages.AdatNemTalalhato, $"{nameof(Models.Irat.Iratkod)}={pKey}"));
+
             return result.First();
         }
 
-        public static void CheckReferences(ossContext context, int pKey)
+        public static async Task CheckReferencesAsync(ossContext context, int pKey)
         {
             var result = new Dictionary<string, int>();
 
-            var n = context.Bizonylatkapcsolat.Count(s => s.Iratkod == pKey);
+            var n = await context.Bizonylatkapcsolat.CountAsync(s => s.Iratkod == pKey);
             if (n > 0)
                 result.Add("BIZONYLATKAPCSOLAT.IRATKOD", n);
 
-            n = context.Projektkapcsolat.Count(s => s.Iratkod == pKey);
+            n = await context.Projektkapcsolat.CountAsync(s => s.Iratkod == pKey);
             if (n > 0)
                 result.Add("PROJEKTKAPCSOLAT.IRATKOD", n);
 
-            n = context.Dokumentum.Count(s => s.Iratkod == pKey);
+            n = await context.Dokumentum.CountAsync(s => s.Iratkod == pKey);
             if (n > 0)
                 result.Add("DOKUMENTUM.IRATKOD", n);
 
@@ -146,16 +148,16 @@ namespace ossServer.Controllers.Irat
             }
         }
 
-        public static void Delete(ossContext context, Models.Irat entity)
+        public static async Task DeleteAsync(ossContext context, Models.Irat entity)
         {
             context.Irat.Remove(entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public static int Update(ossContext context, Models.Irat entity)
+        public static async Task<int> UpdateAsync(ossContext context, Models.Irat entity)
         {
             Register.Modification(context, entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             return entity.Iratkod;
         }

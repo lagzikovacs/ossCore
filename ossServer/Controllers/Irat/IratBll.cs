@@ -20,7 +20,7 @@ namespace ossServer.Controllers.Irat
             await CsoportDal.JogeAsync(context, JogKod.IRAT);
 
             var entity = ObjectUtils.Convert<IratDto, Models.Irat>(dto);
-            return IratDal.Add(context, entity);
+            return await IratDal.AddAsync(context, entity);
         }
 
         public static async Task<IratDto> CreateNewAsync(ossContext context, string sid)
@@ -37,9 +37,9 @@ namespace ossServer.Controllers.Irat
             await CsoportDal.JogeAsync(context, JogKod.IRATMOD);
 
             await IratDal.Lock(context, dto.Iratkod, dto.Modositva);
-            IratDal.CheckReferences(context, dto.Iratkod);
-            var entity = IratDal.Get(context, dto.Iratkod);
-            IratDal.Delete(context, entity);
+            await IratDal.CheckReferencesAsync(context, dto.Iratkod);
+            var entity = await IratDal.GetAsync(context, dto.Iratkod);
+            await IratDal.DeleteAsync(context, entity);
         }
 
         private static IratDto Calc(Models.Irat entity)
@@ -61,7 +61,7 @@ namespace ossServer.Controllers.Irat
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.IRAT);
 
-            var entity = IratDal.Get(context, key);
+            var entity = await IratDal.GetAsync(context, key);
             return Calc(entity);
         }
 
@@ -88,16 +88,16 @@ namespace ossServer.Controllers.Irat
             await CsoportDal.JogeAsync(context, JogKod.IRATMOD);
 
             await IratDal.Lock(context, dto.Iratkod, dto.Modositva);
-            var entity = IratDal.Get(context, dto.Iratkod);
+            var entity = await IratDal.GetAsync(context, dto.Iratkod);
             ObjectUtils.Update(dto, entity);
-            return IratDal.Update(context, entity);
+            return await IratDal.UpdateAsync(context, entity);
         }
 
 
         //sql tranzakcióban működik, kis fájlok legyenek
         public static async Task<FajlBuf> LetoltesAsync(ossContext context, string sid, int iratKod)
         {
-            IratDal.Get(context, iratKod);
+            await IratDal.GetAsync(context, iratKod);
             var lstDokumentum = await DokumentumDal.SelectAsync(context, iratKod);
             if (lstDokumentum.Count != 1)
                 throw new Exception("Nincs pontosan egy dokumentum!");

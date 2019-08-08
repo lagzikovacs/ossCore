@@ -166,7 +166,7 @@ namespace ossServer.Controllers.Ajanlat
                 Targy = megjegyzes
             };
 
-            var ujIratKod = IratDal.Add(context, ujIrat);
+            var ujIratKod = await IratDal.AddAsync(context, ujIrat);
 
             using (var stream = new MemoryStream())
             {
