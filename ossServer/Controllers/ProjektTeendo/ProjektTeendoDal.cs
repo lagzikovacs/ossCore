@@ -10,11 +10,11 @@ namespace ossServer.Controllers.ProjektTeendo
 {
     public class ProjektTeendoDal
     {
-        public static int Add(ossContext context, Models.Projektteendo entity)
+        public static async Task<int> AddAsync(ossContext context, Models.Projektteendo entity)
         {
             Register.Creation(context, entity);
-            context.Projektteendo.Add(entity);
-            context.SaveChanges();
+            await context.Projektteendo.AddAsync(entity);
+            await context.SaveChangesAsync();
 
             return entity.Projektteendokod;
         }
@@ -24,40 +24,42 @@ namespace ossServer.Controllers.ProjektTeendo
             await context.ExecuteLockFunction("lockprojektteendo", "projektteendokod", pKey, utoljaraModositva);
         }
 
-        public static Models.Projektteendo Get(ossContext context, int pKey)
+        public static async Task<Projektteendo> GetAsync(ossContext context, int pKey)
         {
-            var result = context.Projektteendo
+            var result = await context.Projektteendo
               .Include(r => r.TeendokodNavigation)
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
-              .Where(s => s.Projektteendokod == pKey).ToList();
+              .Where(s => s.Projektteendokod == pKey).ToListAsync();
+
             if (result.Count != 1)
                 throw new Exception(string.Format(Messages.AdatNemTalalhato,
                   $"{nameof(Projektteendo.Projektteendokod)}={pKey}"));
+
             return result.First();
         }
 
-        public static void Delete(ossContext context, Models.Projektteendo entity)
+        public static async Task DeleteAsync(ossContext context, Models.Projektteendo entity)
         {
             context.Projektteendo.Remove(entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public static int Update(ossContext context, Models.Projektteendo entity)
+        public static async Task<int> UpdateAsync(ossContext context, Models.Projektteendo entity)
         {
             Register.Modification(context, entity);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             return entity.Projektteendokod;
         }
 
-        public static List<Models.Projektteendo> Select(ossContext context, int projektKod)
+        public static async Task<List<Projektteendo>> SelectAsync(ossContext context, int projektKod)
         {
-            return context.Projektteendo.AsNoTracking()
+            return await context.Projektteendo.AsNoTracking()
               .Include(r => r.TeendokodNavigation)
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.Projektkod == projektKod)
               .OrderBy(s => s.Projektteendokod)
-              .ToList();
+              .ToListAsync();
         }
     }
 }

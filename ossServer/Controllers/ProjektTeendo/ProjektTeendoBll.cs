@@ -16,7 +16,7 @@ namespace ossServer.Controllers.ProjektTeendo
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
-            var entity = ProjektTeendoDal.Get(context, key);
+            var entity = await ProjektTeendoDal.GetAsync(context, key);
             var result = ObjectUtils.Convert<Projektteendo, ProjektTeendoDto>(entity);
 
             result.Teendo = entity.TeendokodNavigation.Teendo1;
@@ -41,7 +41,7 @@ namespace ossServer.Controllers.ProjektTeendo
             await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
             var entity = ObjectUtils.Convert<ProjektTeendoDto, Projektteendo>(dto);
-            return ProjektTeendoDal.Add(context, entity);
+            return await ProjektTeendoDal.AddAsync(context, entity);
         }
 
         public static async Task<List<ProjektTeendoDto>> SelectAsync(ossContext context, string sid, int projektKod)
@@ -49,7 +49,7 @@ namespace ossServer.Controllers.ProjektTeendo
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
-            var entities = ProjektTeendoDal.Select(context, projektKod);
+            var entities = await ProjektTeendoDal.SelectAsync(context, projektKod);
             var result = new List<ProjektTeendoDto>();
 
             foreach (var entity in entities)
@@ -69,8 +69,8 @@ namespace ossServer.Controllers.ProjektTeendo
             await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
             await ProjektTeendoDal.Lock(context, dto.Projektteendokod, dto.Modositva);
-            var entity = ProjektTeendoDal.Get(context, dto.Projektteendokod);
-            ProjektTeendoDal.Delete(context, entity);
+            var entity = await ProjektTeendoDal.GetAsync(context, dto.Projektteendokod);
+            await ProjektTeendoDal.DeleteAsync(context, entity);
         }
 
         public static async Task<int> UpdateAsync(ossContext context, string sid, ProjektTeendoDto dto)
@@ -79,9 +79,9 @@ namespace ossServer.Controllers.ProjektTeendo
             await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
             await ProjektTeendoDal.Lock(context, dto.Projektteendokod, dto.Modositva);
-            var entity = ProjektTeendoDal.Get(context, dto.Projektteendokod);
+            var entity = await ProjektTeendoDal.GetAsync(context, dto.Projektteendokod);
             ObjectUtils.Update(dto, entity);
-            return ProjektTeendoDal.Update(context, entity);
+            return await ProjektTeendoDal.UpdateAsync(context, entity);
         }
 
         public static List<ColumnSettings> GridColumns()
