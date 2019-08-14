@@ -47,6 +47,7 @@
         public int? VolumeUjvolumeMaxmeret { get; set; }
         public string VolumeUjvolumeEleresiut { get; set; }
 
+        public string Emails { get; set; }
 
         public System.DateTime Letrehozva { get; set; }
         public string Letrehozta { get; set; }

@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace ossServer.Models
 {
@@ -1768,6 +1770,10 @@ namespace ossServer.Models
                 entity.Property(e => e.BizonylatEredetipeldanyokSzama).HasColumnName("BIZONYLAT_EREDETIPELDANYOK_SZAMA");
 
                 entity.Property(e => e.BizonylatMasolatokSzama).HasColumnName("BIZONYLAT_MASOLATOK_SZAMA");
+
+                entity.Property(e => e.Emails)
+                    .HasColumnName("EMAILS")
+                    .HasColumnType("text");
 
                 entity.Property(e => e.Hibaertesitesemailcimek)
                     .HasColumnName("HIBAERTESITESEMAILCIMEK")

@@ -81,6 +81,7 @@ namespace ossServer.Models
         public int? ProjektFeltetelesszerzodesIratkod { get; set; }
         public int? VolumeUjvolumeMaxmeret { get; set; }
         public string VolumeUjvolumeEleresiut { get; set; }
+        public string Emails { get; set; }
         public DateTime Letrehozva { get; set; }
         public string Letrehozta { get; set; }
         public DateTime Modositva { get; set; }
