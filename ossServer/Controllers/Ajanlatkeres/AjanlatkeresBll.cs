@@ -1,6 +1,12 @@
-﻿using ossServer.Controllers.Csoport;
+﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using ossServer.Controllers.Csoport;
+using ossServer.Controllers.Logon;
+using ossServer.Controllers.Particio;
 using ossServer.Controllers.Session;
 using ossServer.Enums;
+using ossServer.Hubs;
 using ossServer.Models;
 using ossServer.Utils;
 using System;
@@ -14,8 +20,27 @@ namespace ossServer.Controllers.Ajanlatkeres
 {
     public class AjanlatkeresBll
     {
-        public static async Task WebesAjanlatkeresAsync(ossContext context, WebesAjanlatkeresParam par)
+        public static async Task WebesAjanlatkeresAsync(ossContext context, IHubContext<OssHub> hubcontext,
+            IConfiguration config, WebesAjanlatkeresParam par)
         {
+            var sid = "";
+
+            sid = await LogonBll.BejelentkezesAsync(context, hubcontext,
+                config.GetValue<string>("Webesajanlatkeres:user"),
+                Crypt.MD5Hash(config.GetValue<string>("Webesajanlatkeres:password")), "", "", "");
+
+            var csoport = (await LogonBll.SzerepkorokAsync(context, sid))
+                .Where(s => s.Particiokod == par.Particiokod).ToList();
+            if (csoport.Count != 1)
+                throw new Exception("Konfigurációs hiba 1!");
+
+            await LogonBll.SzerepkorValasztasAsync(context, sid,
+                csoport[0].Particiokod, csoport[0].Csoportkod);
+
+            var particioDto = await ParticioBll.GetAsync(context, sid);
+            var ec = JsonConvert.DeserializeObject<List<EmailConf>>(particioDto.Emails).
+                Where(s => s.ConfName == config.GetValue<string>("Webesajanlatkeres:emailconf")).First();
+
             var dto = new AjanlatkeresDto
             {
                 Particiokod = par.Particiokod,
@@ -35,25 +60,38 @@ namespace ossServer.Controllers.Ajanlatkeres
             };
 
             var entity = ObjectUtils.Convert<AjanlatkeresDto, Models.Ajanlatkeres>(dto);
-            var id = await AjanlatkeresDal.AddWebAsync(context, entity);
+            var id = await AddAsync(context, sid, dto);
 
             //ügyfél
             var uzenet = $"Tisztelt {par.Nev}!<br><br>A következő adatokkal kért tőlünk ajánlatot: <br><br>Cím: {par.Cim}<br>Email: {par.Email}<br>Telefonszám: {par.Telefon}<br><br>Hamarosan keresni fogjuk a részletek egyeztetése céljából!<br><br>www.gridsolar.hu";
-            EmailKuldes(par.Email, "Re: ajánlatkérés", uzenet);
+            EmailKuldes(ec, par.Email, "Re: ajánlatkérés", uzenet);
             //sales
             uzenet = $"Hello Timi,<br><br>webes ajánlatkérés érkezett, Id: {id}.<br><br>OSS";
-            EmailKuldes("sales@gridsolar.hu", "Webes ajánlatkérés", uzenet);
+            EmailKuldes(ec, "sales@gridsolar.hu", "Webes ajánlatkérés", uzenet);
         }
 
-        // TODO konfigból?
-        private static void EmailKuldes(string cimzett, string tema, string uzenet)
+        private static void EmailKuldes(EmailConf ec, string cimzett, string tema, string uzenet)
         {
+            //using (var smtpClient = SmtpClientFactory.GetClient(SmtpClientFactory.ClientType.Gmail,
+            //  new NetworkCredential("gridsolarsales", "$tornado1"), true, "", 0))
+            //{
+            //    var mailMessage = new MailMessage
+            //    {
+            //        From = new MailAddress("gridsolarsales@gmail.com", "GridSolar Group Kft."),
+            //        IsBodyHtml = true,
+            //        Body = uzenet,
+            //        Subject = tema
+            //    };
+            //    mailMessage.To.Add(cimzett);
+            //    smtpClient.Send(mailMessage);
+            //}
+
             using (var smtpClient = SmtpClientFactory.GetClient(SmtpClientFactory.ClientType.Gmail,
-              new NetworkCredential("gridsolarsales", "$tornado1"), true, "", 0))
+                new NetworkCredential(ec.Azonosito, ec.Jelszo), ec.Ssl, "", 0))
             {
                 var mailMessage = new MailMessage
                 {
-                    From = new MailAddress("gridsolarsales@gmail.com", "GridSolar Group Kft."),
+                    From = new MailAddress(ec.KuldoEmailcime, ec.KuldoNeve),
                     IsBodyHtml = true,
                     Body = uzenet,
                     Subject = tema

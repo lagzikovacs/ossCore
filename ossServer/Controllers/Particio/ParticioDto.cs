@@ -32,9 +32,10 @@
         public bool SmtpTls { get; set; }
         public string Hibaertesitesemailcimek { get; set; }
 
-        public int? BizonylatBizonylatkepIratkod { get; set; }
-        public int? BizonylatEredetipeldanyokSzama { get; set; }
-        public int? BizonylatMasolatokSzama { get; set; }
+        //public int? BizonylatBizonylatkepIratkod { get; set; }
+        //public int? BizonylatEredetipeldanyokSzama { get; set; }
+        //public int? BizonylatMasolatokSzama { get; set; }
+
         public int? ProjektAjanlatIratkod { get; set; }
         public int? ProjektElegedettsegifelmeresIratkod { get; set; }
         public int? ProjektKeszrejelentesDemaszIratkod { get; set; }
@@ -47,6 +48,11 @@
         public int? VolumeUjvolumeMaxmeret { get; set; }
         public string VolumeUjvolumeEleresiut { get; set; }
 
+        public string Szallito { get; set; }
+        public string Navonlineszamla { get; set; }
+        public string Bizonylat { get; set; }
+        public string Projekt { get; set; }
+        public string Volume { get; set; }
         public string Emails { get; set; }
 
         public System.DateTime Letrehozva { get; set; }

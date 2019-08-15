@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Configuration;
 using ossServer.BaseResults;
+using ossServer.Hubs;
 using ossServer.Models;
 using ossServer.Utils;
 using System;
@@ -13,10 +16,14 @@ namespace ossServer.Controllers.Ajanlatkeres
     public class AjanlatkeresController : ControllerBase
     {
         private readonly ossContext _context;
+        private readonly IHubContext<OssHub> _hubcontext;
+        private readonly IConfiguration _config;
 
-        public AjanlatkeresController(ossContext context)
+        public AjanlatkeresController(ossContext context, IHubContext<OssHub> hubcontext, IConfiguration config)
         {
             _context = context;
+            _hubcontext = hubcontext;
+            _config = config;
         }
 
         [HttpPost]
@@ -27,7 +34,7 @@ namespace ossServer.Controllers.Ajanlatkeres
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    await AjanlatkeresBll.WebesAjanlatkeresAsync(_context, par);
+                    await AjanlatkeresBll.WebesAjanlatkeresAsync(_context, _hubcontext, _config, par);
 
                     tr.Commit();
                 }

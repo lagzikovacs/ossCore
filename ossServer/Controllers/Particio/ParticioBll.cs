@@ -84,6 +84,7 @@ namespace ossServer.Controllers.Particio
             return dto;
         }
 
+        // TODO legyen PARTICIOMOD jog
         public static async Task<int> UpdateAsync(ossContext context, string sid, ParticioDto dto)
         {
             SessionBll.Check(context, sid);

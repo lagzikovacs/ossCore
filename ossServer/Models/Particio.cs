@@ -9,7 +9,7 @@ namespace ossServer.Models
         {
             Afakulcs = new HashSet<Afakulcs>();
             Ajanlatkeres = new HashSet<Ajanlatkeres>();
-            Bizonylat = new HashSet<Bizonylat>();
+            BizonylatNavigation = new HashSet<Bizonylat>();
             Bizonylatafa = new HashSet<Bizonylatafa>();
             Bizonylatkapcsolat = new HashSet<Bizonylatkapcsolat>();
             Bizonylattermekdij = new HashSet<Bizonylattermekdij>();
@@ -30,7 +30,7 @@ namespace ossServer.Models
             Penznem = new HashSet<Penznem>();
             Penztar = new HashSet<Penztar>();
             Penztartetel = new HashSet<Penztartetel>();
-            Projekt = new HashSet<Projekt>();
+            ProjektNavigation = new HashSet<Projekt>();
             Projektkapcsolat = new HashSet<Projektkapcsolat>();
             Projektteendo = new HashSet<Projektteendo>();
             Session = new HashSet<Session>();
@@ -39,7 +39,7 @@ namespace ossServer.Models
             Termekdij = new HashSet<Termekdij>();
             Ugyfel = new HashSet<Ugyfel>();
             Ugyfelterlog = new HashSet<Ugyfelterlog>();
-            Volume = new HashSet<Volume>();
+            VolumeNavigation = new HashSet<Volume>();
         }
 
         public int Particiokod { get; set; }
@@ -81,6 +81,11 @@ namespace ossServer.Models
         public int? ProjektFeltetelesszerzodesIratkod { get; set; }
         public int? VolumeUjvolumeMaxmeret { get; set; }
         public string VolumeUjvolumeEleresiut { get; set; }
+        public string Szallito { get; set; }
+        public string Navonlineszamla { get; set; }
+        public string Bizonylat { get; set; }
+        public string Projekt { get; set; }
+        public string Volume { get; set; }
         public string Emails { get; set; }
         public DateTime Letrehozva { get; set; }
         public string Letrehozta { get; set; }
@@ -89,7 +94,7 @@ namespace ossServer.Models
 
         public virtual ICollection<Afakulcs> Afakulcs { get; set; }
         public virtual ICollection<Ajanlatkeres> Ajanlatkeres { get; set; }
-        public virtual ICollection<Bizonylat> Bizonylat { get; set; }
+        public virtual ICollection<Bizonylat> BizonylatNavigation { get; set; }
         public virtual ICollection<Bizonylatafa> Bizonylatafa { get; set; }
         public virtual ICollection<Bizonylatkapcsolat> Bizonylatkapcsolat { get; set; }
         public virtual ICollection<Bizonylattermekdij> Bizonylattermekdij { get; set; }
@@ -110,7 +115,7 @@ namespace ossServer.Models
         public virtual ICollection<Penznem> Penznem { get; set; }
         public virtual ICollection<Penztar> Penztar { get; set; }
         public virtual ICollection<Penztartetel> Penztartetel { get; set; }
-        public virtual ICollection<Projekt> Projekt { get; set; }
+        public virtual ICollection<Projekt> ProjektNavigation { get; set; }
         public virtual ICollection<Projektkapcsolat> Projektkapcsolat { get; set; }
         public virtual ICollection<Projektteendo> Projektteendo { get; set; }
         public virtual ICollection<Session> Session { get; set; }
@@ -119,6 +124,6 @@ namespace ossServer.Models
         public virtual ICollection<Termekdij> Termekdij { get; set; }
         public virtual ICollection<Ugyfel> Ugyfel { get; set; }
         public virtual ICollection<Ugyfelterlog> Ugyfelterlog { get; set; }
-        public virtual ICollection<Volume> Volume { get; set; }
+        public virtual ICollection<Volume> VolumeNavigation { get; set; }
     }
 }

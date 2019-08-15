@@ -437,7 +437,7 @@ namespace ossServer.Models
                     .HasConstraintName("FK_BIZONYLAT_FIZETESIMOD");
 
                 entity.HasOne(d => d.ParticiokodNavigation)
-                    .WithMany(p => p.Bizonylat)
+                    .WithMany(p => p.BizonylatNavigation)
                     .HasForeignKey(d => d.Particiokod)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_BIZONYLAT_PARTICIO");
@@ -1765,6 +1765,10 @@ namespace ossServer.Models
 
                 entity.Property(e => e.Particiokod).HasColumnName("PARTICIOKOD");
 
+                entity.Property(e => e.Bizonylat)
+                    .HasColumnName("BIZONYLAT")
+                    .HasColumnType("text");
+
                 entity.Property(e => e.BizonylatBizonylatkepIratkod).HasColumnName("BIZONYLAT_BIZONYLATKEP_IRATKOD");
 
                 entity.Property(e => e.BizonylatEredetipeldanyokSzama).HasColumnName("BIZONYLAT_EREDETIPELDANYOK_SZAMA");
@@ -1825,6 +1829,14 @@ namespace ossServer.Models
                     .HasColumnName("NAV_URL")
                     .HasColumnType("text");
 
+                entity.Property(e => e.Navonlineszamla)
+                    .HasColumnName("NAVONLINESZAMLA")
+                    .HasColumnType("text");
+
+                entity.Property(e => e.Projekt)
+                    .HasColumnName("PROJEKT")
+                    .HasColumnType("text");
+
                 entity.Property(e => e.ProjektAjanlatIratkod).HasColumnName("PROJEKT_AJANLAT_IRATKOD");
 
                 entity.Property(e => e.ProjektElegedettsegifelmeresIratkod).HasColumnName("PROJEKT_ELEGEDETTSEGIFELMERES_IRATKOD");
@@ -1875,6 +1887,10 @@ namespace ossServer.Models
 
                 entity.Property(e => e.SmtpTls).HasColumnName("SMTP_TLS");
 
+                entity.Property(e => e.Szallito)
+                    .HasColumnName("SZALLITO")
+                    .HasColumnType("text");
+
                 entity.Property(e => e.SzallitoAdoafakod)
                     .HasColumnName("SZALLITO_ADOAFAKOD")
                     .HasMaxLength(1)
@@ -1919,6 +1935,10 @@ namespace ossServer.Models
                     .HasColumnName("SZALLITO_UTCAHAZSZAM")
                     .HasMaxLength(50)
                     .IsUnicode(false);
+
+                entity.Property(e => e.Volume)
+                    .HasColumnName("VOLUME")
+                    .HasColumnType("text");
 
                 entity.Property(e => e.VolumeUjvolumeEleresiut)
                     .HasColumnName("VOLUME_UJVOLUME_ELERESIUT")
@@ -2261,7 +2281,7 @@ namespace ossServer.Models
                     .HasColumnType("decimal(16, 2)");
 
                 entity.HasOne(d => d.ParticiokodNavigation)
-                    .WithMany(p => p.Projekt)
+                    .WithMany(p => p.ProjektNavigation)
                     .HasForeignKey(d => d.Particiokod)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PROJEKT_PARTICIO");
@@ -2921,7 +2941,7 @@ namespace ossServer.Models
                 entity.Property(e => e.Volumeno).HasColumnName("VOLUMENO");
 
                 entity.HasOne(d => d.ParticiokodNavigation)
-                    .WithMany(p => p.Volume)
+                    .WithMany(p => p.VolumeNavigation)
                     .HasForeignKey(d => d.Particiokod)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_VOLUME_PARTICIO");
