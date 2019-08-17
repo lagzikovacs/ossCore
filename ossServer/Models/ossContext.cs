@@ -1769,18 +1769,8 @@ namespace ossServer.Models
                     .HasColumnName("BIZONYLAT")
                     .HasColumnType("text");
 
-                entity.Property(e => e.BizonylatBizonylatkepIratkod).HasColumnName("BIZONYLAT_BIZONYLATKEP_IRATKOD");
-
-                entity.Property(e => e.BizonylatEredetipeldanyokSzama).HasColumnName("BIZONYLAT_EREDETIPELDANYOK_SZAMA");
-
-                entity.Property(e => e.BizonylatMasolatokSzama).HasColumnName("BIZONYLAT_MASOLATOK_SZAMA");
-
                 entity.Property(e => e.Emails)
                     .HasColumnName("EMAILS")
-                    .HasColumnType("text");
-
-                entity.Property(e => e.Hibaertesitesemailcimek)
-                    .HasColumnName("HIBAERTESITESEMAILCIMEK")
                     .HasColumnType("text");
 
                 entity.Property(e => e.Letrehozta)
@@ -1809,26 +1799,6 @@ namespace ossServer.Models
                     .HasColumnName("MODOSITVA")
                     .HasColumnType("datetime");
 
-                entity.Property(e => e.NavAlairokulcs)
-                    .HasColumnName("NAV_ALAIROKULCS")
-                    .HasColumnType("text");
-
-                entity.Property(e => e.NavCserekulcs)
-                    .HasColumnName("NAV_CSEREKULCS")
-                    .HasColumnType("text");
-
-                entity.Property(e => e.NavFelhasznaloazonosito)
-                    .HasColumnName("NAV_FELHASZNALOAZONOSITO")
-                    .HasColumnType("text");
-
-                entity.Property(e => e.NavFelhasznalojelszo)
-                    .HasColumnName("NAV_FELHASZNALOJELSZO")
-                    .HasColumnType("text");
-
-                entity.Property(e => e.NavUrl)
-                    .HasColumnName("NAV_URL")
-                    .HasColumnType("text");
-
                 entity.Property(e => e.Navonlineszamla)
                     .HasColumnName("NAVONLINESZAMLA")
                     .HasColumnType("text");
@@ -1837,114 +1807,13 @@ namespace ossServer.Models
                     .HasColumnName("PROJEKT")
                     .HasColumnType("text");
 
-                entity.Property(e => e.ProjektAjanlatIratkod).HasColumnName("PROJEKT_AJANLAT_IRATKOD");
-
-                entity.Property(e => e.ProjektElegedettsegifelmeresIratkod).HasColumnName("PROJEKT_ELEGEDETTSEGIFELMERES_IRATKOD");
-
-                entity.Property(e => e.ProjektFeltetelesszerzodesIratkod).HasColumnName("PROJEKT_FELTETELESSZERZODES_IRATKOD");
-
-                entity.Property(e => e.ProjektKeszrejelentesDemaszIratkod).HasColumnName("PROJEKT_KESZREJELENTES_DEMASZ_IRATKOD");
-
-                entity.Property(e => e.ProjektKeszrejelentesElmuemaszIratkod).HasColumnName("PROJEKT_KESZREJELENTES_ELMUEMASZ_IRATKOD");
-
-                entity.Property(e => e.ProjektKeszrejelentesEonIratkod).HasColumnName("PROJEKT_KESZREJELENTES_EON_IRATKOD");
-
-                entity.Property(e => e.ProjektMunkalapIratkod).HasColumnName("PROJEKT_MUNKALAP_IRATKOD");
-
-                entity.Property(e => e.ProjektSzallitasiszerzodesIratkod).HasColumnName("PROJEKT_SZALLITASISZERZODES_IRATKOD");
-
-                entity.Property(e => e.ProjektSzerzodesIratkod).HasColumnName("PROJEKT_SZERZODES_IRATKOD");
-
-                entity.Property(e => e.SmtpCustomhost)
-                    .HasColumnName("SMTP_CUSTOMHOST")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.SmtpCustomport).HasColumnName("SMTP_CUSTOMPORT");
-
-                entity.Property(e => e.SmtpFelhasznaloazonosito)
-                    .HasColumnName("SMTP_FELHASZNALOAZONOSITO")
-                    .HasColumnType("text");
-
-                entity.Property(e => e.SmtpFelhasznalojelszo)
-                    .HasColumnName("SMTP_FELHASZNALOJELSZO")
-                    .HasColumnType("text");
-
-                entity.Property(e => e.SmtpKlienstipus)
-                    .HasColumnName("SMTP_KLIENSTIPUS")
-                    .HasMaxLength(20)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.SmtpKuldoemailcime)
-                    .HasColumnName("SMTP_KULDOEMAILCIME")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.SmtpKuldoneve)
-                    .HasColumnName("SMTP_KULDONEVE")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.SmtpTls).HasColumnName("SMTP_TLS");
-
                 entity.Property(e => e.Szallito)
                     .HasColumnName("SZALLITO")
                     .HasColumnType("text");
 
-                entity.Property(e => e.SzallitoAdoafakod)
-                    .HasColumnName("SZALLITO_ADOAFAKOD")
-                    .HasMaxLength(1)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.SzallitoAdomegyekod)
-                    .HasColumnName("SZALLITO_ADOMEGYEKOD")
-                    .HasMaxLength(2)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.SzallitoAdotorzsszam)
-                    .HasColumnName("SZALLITO_ADOTORZSSZAM")
-                    .HasMaxLength(8)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.SzallitoBankszamla1)
-                    .HasColumnName("SZALLITO_BANKSZAMLA1")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.SzallitoBankszamla2)
-                    .HasColumnName("SZALLITO_BANKSZAMLA2")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.SzallitoHelysegnev)
-                    .HasColumnName("SZALLITO_HELYSEGNEV")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.SzallitoIranyitoszam)
-                    .HasColumnName("SZALLITO_IRANYITOSZAM")
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.SzallitoNev)
-                    .HasColumnName("SZALLITO_NEV")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.SzallitoUtcahazszam)
-                    .HasColumnName("SZALLITO_UTCAHAZSZAM")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.Volume)
                     .HasColumnName("VOLUME")
                     .HasColumnType("text");
-
-                entity.Property(e => e.VolumeUjvolumeEleresiut)
-                    .HasColumnName("VOLUME_UJVOLUME_ELERESIUT")
-                    .HasColumnType("text");
-
-                entity.Property(e => e.VolumeUjvolumeMaxmeret).HasColumnName("VOLUME_UJVOLUME_MAXMERET");
             });
 
             modelBuilder.Entity<Penznem>(entity =>

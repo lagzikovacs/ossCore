@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using ossServer.Controllers.Bizonylat;
 using ossServer.Controllers.Csoport;
 using ossServer.Controllers.Irat;
@@ -15,28 +16,6 @@ namespace ossServer.Controllers.BizonylatNyomtatas
 {
     public class BizonylatNyomtatasBll
     {
-        public static async Task<int> GetBizonylatEredetiPeldanyAsync(ossContext context)
-        {
-            var entityParticio = await ParticioDal.GetAsync(context);
-            var result = entityParticio.BizonylatEredetipeldanyokSzama ?? throw new Exception(string.Format(Messages.ParticioHiba, "BizonylatEredetipeldanyokSzama"));
-
-            if (result <= 0 || result > 3)
-                throw new Exception($"BizonylatEredetipeldanyokSzama: Hibás érték, legyen 1, 2 vagy 3, most {result} !");
-
-            return result;
-        }
-
-        public static async Task<int> GetBizonylatMasolatAsync(ossContext context)
-        {
-            var entityParticio = await ParticioDal.GetAsync(context);
-            var result = entityParticio.BizonylatMasolatokSzama ?? throw new Exception(string.Format(Messages.ParticioHiba, "BizonylatMasolatokSzama"));
-
-            if (result <= 0 || result > 3)
-                throw new Exception($"BizonylatMasolatokSzama: Hibás érték, legyen 1, 2 vagy 3, most {result} !");
-
-            return result;
-        }
-
         private static async Task UpdateNyomtatottPeldanyAsync(ossContext context, int bizonylatKod, int peldanyszam)
         {
             // már lockolva van
@@ -57,8 +36,14 @@ namespace ossServer.Controllers.BizonylatNyomtatas
             await BizonylatDal.Lock(context, bizonylatKod, entityBizonylat.Modositva);
 
             var entityParticio = await ParticioDal.GetAsync(context);
-            var iratKod = entityParticio.BizonylatBizonylatkepIratkod != null ?
-                (int)entityParticio.BizonylatBizonylatkepIratkod : throw new Exception(string.Format(Messages.ParticioHiba, "BizonylatBizonylatkepIratkod"));
+            var bc = JsonConvert.DeserializeObject<BizonylatConf>(entityParticio.Bizonylat);
+            var iratKod = bc.BizonylatkepIratkod ?? throw new Exception(string.Format(Messages.ParticioHiba, "BizonylatkepIratkod"));
+            var peldanyszam = bc.EredetipeldanyokSzama ?? throw new Exception(string.Format(Messages.ParticioHiba, "EredetipeldanyokSzama"));
+            if (peldanyszam <= 0 || peldanyszam > 3)
+                throw new Exception($"EredetipeldanyokSzama: Hibás érték, legyen 1, 2 vagy 3, most {peldanyszam} !");
+            var masolat = bc.MasolatokSzama ?? throw new Exception(string.Format(Messages.ParticioHiba, "MasolatokSzama"));
+            if (masolat <= 0 || masolat > 3)
+                throw new Exception($"MasolatokSzama: Hibás érték, legyen 1, 2 vagy 3, most {masolat} !");
 
             var szamlakep = await IratBll.LetoltesAsync(context, sid, iratKod);
             var v = await VerzioDal.GetAsync(context);
@@ -70,15 +55,12 @@ namespace ossServer.Controllers.BizonylatNyomtatas
             var printer = new BizonylatPrinter();
             printer.Setup(entityBizonylat, szamlakep.b, fejlec, v);
 
-            int peldanyszam;
-
             switch (nyomtatasTipus)
             {
                 case BizonylatNyomtatasTipus.Minta:
                     printer.UjPeldany("1", minta);
                     break;
                 case BizonylatNyomtatasTipus.Eredeti:
-                    peldanyszam = await GetBizonylatEredetiPeldanyAsync(context);
                     for (var i = 1; i <= peldanyszam; i++)
                         printer.UjPeldany(i.ToString(), "Eredeti");
 
@@ -89,9 +71,8 @@ namespace ossServer.Controllers.BizonylatNyomtatas
                     if (entityBizonylat.Nyomtatottpeldanyokszama == 0)
                         throw new Exception("Még nem készült eredeti példány!");
 
-                    peldanyszam = await GetBizonylatMasolatAsync(context);
                     var sorszamTol = entityBizonylat.Nyomtatottpeldanyokszama + 1;
-                    var sorszamIg = sorszamTol + peldanyszam - 1;
+                    var sorszamIg = sorszamTol + masolat - 1;
                     for (var i = sorszamTol; i <= sorszamIg; i++)
                         printer.UjPeldany(i.ToString(), "Másolat");
 

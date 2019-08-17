@@ -37,7 +37,7 @@ namespace ossServer.Controllers.Ajanlatkeres
             await LogonBll.SzerepkorValasztasAsync(context, sid,
                 csoport[0].Particiokod, csoport[0].Csoportkod);
 
-            var particioDto = await ParticioBll.GetAsync(context, sid);
+            var particioDto = await ParticioDal.GetAsync(context);
             var ec = JsonConvert.DeserializeObject<List<EmailConf>>(particioDto.Emails).
                 Where(s => s.ConfName == config.GetValue<string>("Webesajanlatkeres:emailconf")).First();
 

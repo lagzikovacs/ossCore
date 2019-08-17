@@ -1,4 +1,5 @@
 ﻿using GemBox.Document;
+using Newtonsoft.Json;
 using ossServer.Controllers.Csoport;
 using ossServer.Controllers.Irat;
 using ossServer.Controllers.Particio;
@@ -26,9 +27,11 @@ namespace ossServer.Controllers.Iratminta
             await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
             var entityProjekt = await ProjektDal.GetAsync(context, projektKod);
+
             var entityParticio = await ParticioDal.GetAsync(context);
-            var iratKod = entityParticio.ProjektElegedettsegifelmeresIratkod != null ?
-              (int)entityParticio.ProjektElegedettsegifelmeresIratkod : throw new Exception(string.Format(Messages.ParticioHiba, "ProjektElegedettsegifelmeresIratkod"));
+            var pc = JsonConvert.DeserializeObject<ProjektConf>(entityParticio.Projekt);
+            var iratKod = pc.ElegedettsegiFelmeresIratkod != null ? (int)pc.ElegedettsegiFelmeresIratkod : 
+              throw new Exception(string.Format(Messages.ParticioHiba, "ElegedettsegiFelmeresIratkod"));
 
             var original = await IratBll.LetoltesAsync(context, sid, iratKod);
 
@@ -67,9 +70,11 @@ namespace ossServer.Controllers.Iratminta
             await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
             var entityProjekt = await ProjektDal.GetAsync(context, projektKod);
+
             var entityParticio = await ParticioDal.GetAsync(context);
-            var iratKod = entityParticio.ProjektKeszrejelentesDemaszIratkod != null ?
-              (int)entityParticio.ProjektKeszrejelentesDemaszIratkod : throw new Exception(string.Format(Messages.ParticioHiba, "ProjektKeszrejelentesDemaszIratkod"));
+            var pc = JsonConvert.DeserializeObject<ProjektConf>(entityParticio.Projekt);
+            var iratKod = pc.KeszrejelentesNkmIratkod != null ? (int)pc.KeszrejelentesNkmIratkod : 
+              throw new Exception(string.Format(Messages.ParticioHiba, "KeszrejelentesNkmIratkod"));
 
             var original = await IratBll.LetoltesAsync(context, sid, iratKod);
 
@@ -111,9 +116,11 @@ namespace ossServer.Controllers.Iratminta
             await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
             var entityProjekt = await ProjektDal.GetAsync(context, projektKod);
+
             var entityParticio = await ParticioDal.GetAsync(context);
-            var iratKod = entityParticio.ProjektKeszrejelentesElmuemaszIratkod != null ?
-              (int)entityParticio.ProjektKeszrejelentesElmuemaszIratkod : throw new Exception(string.Format(Messages.ParticioHiba, "ProjektKeszrejelentesElmuemaszIratkod"));
+            var pc = JsonConvert.DeserializeObject<ProjektConf>(entityParticio.Projekt);
+            var iratKod = pc.KeszrejelentesElmuemaszIratkod != null ? (int)pc.KeszrejelentesElmuemaszIratkod : 
+              throw new Exception(string.Format(Messages.ParticioHiba, "KeszrejelentesElmuemaszIratkod"));
 
             var original = await IratBll.LetoltesAsync(context, sid, iratKod);
 
@@ -155,9 +162,11 @@ namespace ossServer.Controllers.Iratminta
             await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
             var entityProjekt = await ProjektDal.GetAsync(context, projektKod);
+
             var entityParticio = await ParticioDal.GetAsync(context);
-            var iratKod = entityParticio.ProjektKeszrejelentesEonIratkod != null ?
-              (int)entityParticio.ProjektKeszrejelentesEonIratkod : throw new Exception(string.Format(Messages.ParticioHiba, "ProjektKeszrejelentesEonIratkod"));
+            var pc = JsonConvert.DeserializeObject<ProjektConf>(entityParticio.Projekt);
+            var iratKod = pc.KeszrejelentesEonIratkod != null ? (int)pc.KeszrejelentesEonIratkod : 
+                throw new Exception(string.Format(Messages.ParticioHiba, "KeszrejelentesEonIratkod"));
 
             var original = await IratBll.LetoltesAsync(context, sid, iratKod);
 
@@ -199,9 +208,11 @@ namespace ossServer.Controllers.Iratminta
             await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
             var entityProjekt = await ProjektDal.GetAsync(context, projektKod);
+
             var entityParticio = await ParticioDal.GetAsync(context);
-            var iratKod = entityParticio.ProjektMunkalapIratkod != null ?
-              (int)entityParticio.ProjektMunkalapIratkod : throw new Exception(string.Format(Messages.ParticioHiba, "ProjektMunkalapIratkod"));
+            var pc = JsonConvert.DeserializeObject<ProjektConf>(entityParticio.Projekt);
+            var iratKod = pc.MunkalapIratkod != null ? (int)pc.MunkalapIratkod : 
+                throw new Exception(string.Format(Messages.ParticioHiba, "MunkalapIratkod"));
 
             if (entityProjekt.Munkalapszam == null)
             {
@@ -253,9 +264,12 @@ namespace ossServer.Controllers.Iratminta
             await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
             var entityProjekt = await ProjektDal.GetAsync(context, projektKod);
+
             var entityParticio = await ParticioDal.GetAsync(context);
-            var iratKod = entityParticio.ProjektSzallitasiszerzodesIratkod != null ?
-              (int)entityParticio.ProjektSzallitasiszerzodesIratkod : throw new Exception(string.Format(Messages.ParticioHiba, "ProjektSzallitasiszerzodesIratkod"));
+            var pc = JsonConvert.DeserializeObject<ProjektConf>(entityParticio.Projekt);
+            var iratKod = pc.SzallitasiSzerzodesIratkod != null ?
+              (int)pc.SzallitasiSzerzodesIratkod : throw new Exception(string.Format(Messages.ParticioHiba, "SzallitasiSzerzodesIratkod"));
+
             var original = await IratBll.LetoltesAsync(context, sid, iratKod);
 
             NumberFormatInfo nfi = new CultureInfo("hu-HU", false).NumberFormat;
@@ -309,9 +323,12 @@ namespace ossServer.Controllers.Iratminta
             await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
             var entityProjekt = await ProjektDal.GetAsync(context, projektKod);
+
             var entityParticio = await ParticioDal.GetAsync(context);
-            var iratKod = entityParticio.ProjektFeltetelesszerzodesIratkod != null ?
-              (int)entityParticio.ProjektFeltetelesszerzodesIratkod : throw new Exception(string.Format(Messages.ParticioHiba, "ProjektFeltetelesszerzodesIratkod"));
+            var pc = JsonConvert.DeserializeObject<ProjektConf>(entityParticio.Projekt);
+            var iratKod = pc.FeltetelesSzerzodesIratkod != null ? (int)pc.FeltetelesSzerzodesIratkod : 
+                throw new Exception(string.Format(Messages.ParticioHiba, "FeltetelesSzerzodesIratkod"));
+
             var original = await IratBll.LetoltesAsync(context, sid, iratKod);
 
             NumberFormatInfo nfi = new CultureInfo("hu-HU", false).NumberFormat;
@@ -363,9 +380,12 @@ namespace ossServer.Controllers.Iratminta
             await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
             var entityProjekt = await ProjektDal.GetAsync(context, projektKod);
+
             var entityParticio = await ParticioDal.GetAsync(context);
-            var iratKod = entityParticio.ProjektSzerzodesIratkod != null ?
-              (int)entityParticio.ProjektSzerzodesIratkod : throw new Exception(string.Format(Messages.ParticioHiba, "ProjektSzerzodesIratkod"));
+            var pc = JsonConvert.DeserializeObject<ProjektConf>(entityParticio.Projekt);
+            var iratKod = pc.SzerzodesIratkod != null ? (int)pc.SzerzodesIratkod : 
+                throw new Exception(string.Format(Messages.ParticioHiba, "ProjektSzerzodesIratkod"));
+
             var original = await IratBll.LetoltesAsync(context, sid, iratKod);
 
             NumberFormatInfo nfi = new CultureInfo("hu-HU", false).NumberFormat;

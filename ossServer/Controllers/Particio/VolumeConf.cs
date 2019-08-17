@@ -7,7 +7,7 @@ namespace ossServer.Controllers.Particio
 {
     public class VolumeConf
     {
-        public int UjvolumeMaxmeret { get; set; }
+        public int? UjvolumeMaxmeret { get; set; }
         public string UjvolumeEleresiut { get; set; }
     }
 }

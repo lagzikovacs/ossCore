@@ -1,4 +1,5 @@
 ﻿using GemBox.Spreadsheet;
+using Newtonsoft.Json;
 using ossServer.Controllers.Csoport;
 using ossServer.Controllers.Dokumentum;
 using ossServer.Controllers.Irat;
@@ -77,9 +78,12 @@ namespace ossServer.Controllers.Ajanlat
             var szuksegesAramerosseg = SzMTUtils.GetString(fi, Szempont.SzuksegesAramerosseg);
 
             var entityProjekt = await ProjektDal.GetAsync(context, projektKod);
+
             var entityParticio = await ParticioDal.GetAsync(context);
-            var iratKod = entityParticio.ProjektAjanlatIratkod != null ?
-                (int)entityParticio.ProjektAjanlatIratkod : throw new Exception(string.Format(Messages.ParticioHiba, "PROJEKT_AJANLAT_IRATKOD"));
+            var pc = JsonConvert.DeserializeObject<ProjektConf>(entityParticio.Projekt);
+            var iratKod = pc.AjanlatIratkod != null ? (int)pc.AjanlatIratkod : 
+                throw new Exception(string.Format(Messages.ParticioHiba, "AjanlatIratkod"));
+
             var fb = await IratBll.LetoltesAsync(context, sid, iratKod);
 
             using (var msExcel = new MemoryStream())

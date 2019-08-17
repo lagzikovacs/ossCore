@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using ossServer.Controllers.Csoport;
 using ossServer.Controllers.Particio;
 using ossServer.Controllers.Session;
@@ -58,33 +59,10 @@ namespace ossServer.Controllers.Dokumentum
             return result;
         }
 
-        private static async Task<string> EleresiutAsync(ossContext context)
-        {
-            var entityParticio = await ParticioDal.GetAsync(context);
-            var result = entityParticio.VolumeUjvolumeEleresiut ?? throw new Exception(string.Format(Messages.ParticioHiba, "VolumeUjvolumeEleresiut"));
-
-            if (!Directory.Exists(result))
-                throw new Exception($"VolumeUjvolumeEleresiut: nem létező könyvtár: {result}!");
-
-            return result;
-        }
-
-        private static async Task<int> MeretAsync(ossContext context)
+        public static async Task<Models.Dokumentum> BejegyzesAsync(ossContext context, string sid, FajlBuf fajlBuf)
         {
             const int minSize = 100 * 1024 * 1024;
 
-            var entityParticio = await ParticioDal.GetAsync(context);
-            var result = entityParticio.VolumeUjvolumeMaxmeret != null ?
-              (int)entityParticio.VolumeUjvolumeMaxmeret : throw new Exception(string.Format(Messages.ParticioHiba, "VolumeUjvolumeMaxmeret"));
-
-            if (result < minSize)
-                throw new Exception($"VolumeUjvolumeMaxmeret: az érték legyen nagyobb, mint {minSize} - jelenleg {result}!");
-
-            return result;
-        }
-
-        public static async Task<Models.Dokumentum> BejegyzesAsync(ossContext context, string sid, FajlBuf fajlBuf)
-        {
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.IRAT);
 
@@ -92,8 +70,17 @@ namespace ossServer.Controllers.Dokumentum
             int ujFajlMerete = fajlBuf.Meret;
 
             // lock-ban nem lehet async
-            var Eleresiut = await EleresiutAsync(context);
-            var Maxmeret = await MeretAsync(context);
+            var entityParticio = await ParticioDal.GetAsync(context);
+            var vc = JsonConvert.DeserializeObject<VolumeConf>(entityParticio.Volume);
+
+            var Eleresiut = vc.UjvolumeEleresiut ?? throw new Exception(string.Format(Messages.ParticioHiba, "UjvolumeEleresiut"));
+            if (!Directory.Exists(Eleresiut))
+                throw new Exception($"UjvolumeEleresiut: nem létező könyvtár: {Eleresiut}!");
+
+            var Maxmeret = vc.UjvolumeMaxmeret != null ? (int)vc.UjvolumeMaxmeret : 
+                throw new Exception(string.Format(Messages.ParticioHiba, "UjvolumeMaxmeret"));
+            if (Maxmeret < minSize)
+                throw new Exception($"UjvolumeMaxmeret: az érték legyen nagyobb, mint {minSize} - jelenleg {Maxmeret}!");
 
             lock (LockMe)
             {

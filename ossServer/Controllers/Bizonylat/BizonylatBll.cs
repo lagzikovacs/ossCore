@@ -1,4 +1,5 @@
-﻿using ossServer.Controllers.Csoport;
+﻿using Newtonsoft.Json;
+using ossServer.Controllers.Csoport;
 using ossServer.Controllers.Onlineszamla;
 using ossServer.Controllers.Particio;
 using ossServer.Controllers.Primitiv.Penznem;
@@ -108,21 +109,22 @@ namespace ossServer.Controllers.Bizonylat
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
 
-            var particio = await ParticioDal.GetAsync(context);
+            var entityParticio = await ParticioDal.GetAsync(context);
+            var szc = JsonConvert.DeserializeObject<SzallitoConf>(entityParticio.Szallito);
 
             var result = new BizonylatComplexDto
             {
                 Dto = new BizonylatDto
                 {
-                    Szallitonev = particio.SzallitoNev,
-                    Szallitoiranyitoszam = particio.SzallitoIranyitoszam,
-                    Szallitohelysegnev = particio.SzallitoHelysegnev,
-                    Szallitoutcahazszam = particio.SzallitoUtcahazszam,
-                    Szallitobankszamla1 = particio.SzallitoBankszamla1,
-                    Szallitobankszamla2 = particio.SzallitoBankszamla2,
-                    Szallitoadotorzsszam = particio.SzallitoAdotorzsszam,
-                    Szallitoadoafakod = particio.SzallitoAdoafakod,
-                    Szallitoadomegyekod = particio.SzallitoAdomegyekod,
+                    Szallitonev = szc.Nev,
+                    Szallitoiranyitoszam = szc.Iranyitoszam,
+                    Szallitohelysegnev = szc.Helysegnev,
+                    Szallitoutcahazszam = szc.Utcahazszam,
+                    Szallitobankszamla1 = szc.Bankszamla1,
+                    Szallitobankszamla2 = szc.Bankszamla2,
+                    Szallitoadotorzsszam = szc.Adotorzsszam,
+                    Szallitoadoafakod = szc.Adoafakod,
+                    Szallitoadomegyekod = szc.Adomegyekod,
 
                     Bizonylatkelte = DateTime.Today,
                     Teljesiteskelte = DateTime.Today,

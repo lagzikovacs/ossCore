@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace ossServer.Controllers.Particio
+﻿namespace ossServer.Controllers.Particio
 {
     public class ProjektConf
     {
-        public int AjanlatIratkod { get; set; }
-        public int ElegedettsegiFelmeresIratkod { get; set; }
-        public int KeszrejelentesNkmIratkod { get; set; }
-        public int KeszrejelentesElmuemaszIratkod { get; set; }
-        public int KeszrejelentesEonIratkod { get; set; }
-        public int MunkalapIratkod { get; set; }
-        public int SzallitasiSzerzodesIratkod { get; set; }
-        public int SzerzodesIratkod { get; set; }
-        public int FeltetelesSzerzodesIratkod { get; set; }
+        public int? AjanlatIratkod { get; set; }
+        public int? ElegedettsegiFelmeresIratkod { get; set; }
+        public int? KeszrejelentesNkmIratkod { get; set; }
+        public int? KeszrejelentesElmuemaszIratkod { get; set; }
+        public int? KeszrejelentesEonIratkod { get; set; }
+        public int? MunkalapIratkod { get; set; }
+        public int? SzallitasiSzerzodesIratkod { get; set; }
+        public int? SzerzodesIratkod { get; set; }
+        public int? FeltetelesSzerzodesIratkod { get; set; }
     }
 }
