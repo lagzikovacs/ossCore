@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace ossServer.Controllers.Particio
+﻿namespace ossServer.Controllers.Particio
 {
     public class EmailConf
     {
@@ -16,6 +11,6 @@ namespace ossServer.Controllers.Particio
         public string KuldoEmailcime { get; set; }
         public bool Ssl { get; set; }
         public string CustomHost { get; set; }
-        public int CustomPort { get; set; }
+        public int? CustomPort { get; set; }
     }
 }

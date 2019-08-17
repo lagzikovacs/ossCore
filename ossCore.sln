@@ -7,6 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ossServer", "ossServer\ossS
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{21EF2403-EF21-4357-8FB6-3ABD61D0ADD6}"
 	ProjectSection(SolutionItems) = preProject
+		hash.txt = hash.txt
 		note.txt = note.txt
 	EndProjectSection
 EndProject

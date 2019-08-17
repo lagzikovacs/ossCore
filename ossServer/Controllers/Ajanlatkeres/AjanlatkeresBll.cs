@@ -38,8 +38,8 @@ namespace ossServer.Controllers.Ajanlatkeres
                 csoport[0].Particiokod, csoport[0].Csoportkod);
 
             var particioDto = await ParticioDal.GetAsync(context);
-            var ec = JsonConvert.DeserializeObject<List<EmailConf>>(particioDto.Emails).
-                Where(s => s.ConfName == config.GetValue<string>("Webesajanlatkeres:emailconf")).First();
+            var ec = JsonConvert.DeserializeObject<List<EmailConf>>(particioDto.Emails)
+                .Where(s => s.ConfName == config.GetValue<string>("Webesajanlatkeres:emailconf")).First();
 
             var dto = new AjanlatkeresDto
             {
@@ -68,24 +68,12 @@ namespace ossServer.Controllers.Ajanlatkeres
             //sales
             uzenet = $"Hello Timi,<br><br>webes ajánlatkérés érkezett, Id: {id}.<br><br>OSS";
             EmailKuldes(ec, "sales@gridsolar.hu", "Webes ajánlatkérés", uzenet);
+
+            await LogonBll.KijelentkezesAsync(context, sid);
         }
 
         private static void EmailKuldes(EmailConf ec, string cimzett, string tema, string uzenet)
         {
-            //using (var smtpClient = SmtpClientFactory.GetClient(SmtpClientFactory.ClientType.Gmail,
-            //  new NetworkCredential("gridsolarsales", "$tornado1"), true, "", 0))
-            //{
-            //    var mailMessage = new MailMessage
-            //    {
-            //        From = new MailAddress("gridsolarsales@gmail.com", "GridSolar Group Kft."),
-            //        IsBodyHtml = true,
-            //        Body = uzenet,
-            //        Subject = tema
-            //    };
-            //    mailMessage.To.Add(cimzett);
-            //    smtpClient.Send(mailMessage);
-            //}
-
             using (var smtpClient = SmtpClientFactory.GetClient(SmtpClientFactory.ClientType.Gmail,
                 new NetworkCredential(ec.Azonosito, ec.Jelszo), ec.Ssl, "", 0))
             {

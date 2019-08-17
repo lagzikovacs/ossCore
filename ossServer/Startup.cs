@@ -28,6 +28,7 @@ namespace ossServer
                 options.UseSqlServer(Configuration.GetConnectionString("docport.hu"));
             });
 
+            // RiportController DI
             services.AddTransient<KimenoSzamlaTask>();
             services.AddTransient<BejovoSzamlaTask>();
             services.AddTransient<KovetelesekTask>();
