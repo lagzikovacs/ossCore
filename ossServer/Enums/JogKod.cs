@@ -34,5 +34,6 @@
         UGYFELTERLOG,
         VOLUME,
         KAPCSOLATIHALO,
+        KAPCSOLATIHALOMOD,
     };
 }
