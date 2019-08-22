@@ -6,7 +6,6 @@
         AJANLATKERESMOD,
         AJANLATKESZITES,
         BEJOVOSZAMLA,
-        BIZONYLAT,
         BIZONYLATMOD,
         CIKK,
         CIKKMOD,
@@ -34,5 +33,6 @@
         UGYFELEKMOD,
         UGYFELTERLOG,
         VOLUME,
+        KAPCSOLATIHALO,
     };
 }

@@ -24,7 +24,7 @@ namespace ossServer.Controllers.Kifizetes
         public static async Task<KifizetesDto> GetAsync(ossContext context, string sid, int kifizetesKod)
         {
             SessionBll.Check(context, sid);
-            await CsoportDal.JogeAsync(context, JogKod.BIZONYLAT);
+            await CsoportDal.JogeBizonylatAsync(context);
 
             var entity = await KifizetesDal.GetAsync(context, kifizetesKod);
             return Calc(entity);
@@ -33,7 +33,7 @@ namespace ossServer.Controllers.Kifizetes
         public static async Task<List<KifizetesDto>> SelectAsync(ossContext context, string sid, int bizonylatKod)
         {
             SessionBll.Check(context, sid);
-            await CsoportDal.JogeAsync(context, JogKod.BIZONYLAT);
+            await CsoportDal.JogeBizonylatAsync(context);
 
             var entities = await KifizetesDal.ReadAsync(context, bizonylatKod);
 

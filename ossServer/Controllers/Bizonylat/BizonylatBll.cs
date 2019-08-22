@@ -95,11 +95,16 @@ namespace ossServer.Controllers.Bizonylat
           }
         };
 
+        public static async Task B(ossContext context)
+        {
+            await CsoportDal.JogeAsync(context, JogKod.DIJBEKERO);
+        }
+
         public static async Task<BizonylatTipusLeiro> BizonylatLeiroAsync(ossContext context, string sid, 
             BizonylatTipus bizonylatTipus)
         {
             SessionBll.Check(context, sid);
-            await CsoportDal.JogeAsync(context, JogKod.BIZONYLAT);
+            await CsoportDal.JogeBizonylatAsync(context);
 
             return Bl[bizonylatTipus.GetHashCode()];
         }
@@ -171,7 +176,7 @@ namespace ossServer.Controllers.Bizonylat
         public static async Task<BizonylatDto> GetAsync(ossContext context, string sid, int bizonylatKod)
         {
             SessionBll.Check(context, sid);
-            await CsoportDal.JogeAsync(context, JogKod.BIZONYLAT);
+            await CsoportDal.JogeBizonylatAsync(context);
 
             var entity = await BizonylatDal.GetAsync(context, bizonylatKod);
             var dto = ObjectUtils.Convert<Models.Bizonylat, BizonylatDto>(entity);
@@ -182,7 +187,7 @@ namespace ossServer.Controllers.Bizonylat
         public static async Task<BizonylatComplexDto> GetComplexAsync(ossContext context, string sid, int bizonylatKod)
         {
             SessionBll.Check(context, sid);
-            await CsoportDal.JogeAsync(context, JogKod.BIZONYLAT);
+            await CsoportDal.JogeBizonylatAsync(context);
 
             var entitycomplex = await BizonylatDal.GetComplexAsync(context, bizonylatKod);
             var dto = ObjectUtils.Convert<Models.Bizonylat, BizonylatDto>(entitycomplex);
@@ -219,7 +224,7 @@ namespace ossServer.Controllers.Bizonylat
             BizonylatTipus bizonylatTipus, List<SzMT> szmt)
         {
             SessionBll.Check(context, sid);
-            await CsoportDal.JogeAsync(context, JogKod.BIZONYLAT);
+            await CsoportDal.JogeBizonylatAsync(context);
 
             var qry = BizonylatDal.GetQuery(context, bizonylatTipus, szmt);
             var osszesRekord = qry.Count();
@@ -527,7 +532,7 @@ namespace ossServer.Controllers.Bizonylat
         public static async Task<string> SzamlaFormaiEllenorzeseAsync(ossContext context, string sid, int bizonylatKod)
         {
             SessionBll.Check(context, sid);
-            await CsoportDal.JogeAsync(context, JogKod.BIZONYLAT);
+            await CsoportDal.JogeBizonylatAsync(context);
 
             var dto = await GetComplexAsync(context, sid, bizonylatKod);
             return OnlineszamlaBll.SzamlaFormaiEllenorzese(dto);
@@ -537,7 +542,7 @@ namespace ossServer.Controllers.Bizonylat
             int bizonylatKod)
         {
             SessionBll.Check(context, sid);
-            await CsoportDal.JogeAsync(context, JogKod.BIZONYLAT);
+            await CsoportDal.JogeBizonylatAsync(context);
 
             var dto = await GetComplexAsync(context, sid, bizonylatKod);
             return OnlineszamlaBll.LetoltesOnlineszamlaFormatumban(dto);

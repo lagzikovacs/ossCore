@@ -30,7 +30,7 @@ namespace ossServer.Controllers.BizonylatNyomtatas
             const string minta = "!!! MINTA !!!";
 
             SessionBll.Check(context, sid);
-            await CsoportDal.JogeAsync(context, JogKod.BIZONYLAT);
+            await CsoportDal.JogeBizonylatAsync(context);
 
             var entityBizonylat = await BizonylatDal.GetComplexAsync(context, bizonylatKod);
             await BizonylatDal.Lock(context, bizonylatKod, entityBizonylat.Modositva);

@@ -49,6 +49,8 @@ namespace ossServer.Controllers.Menu
               new AngularMenuDto { Title = "divider"},
               new AngularMenuDto { Title = "Ajánlatkérés", RouterLink = "/ajanlatkeres", Enabled = jogok.Contains(JogKod.AJANLATKERES)},
               new AngularMenuDto { Title = "Ügyféltér log", RouterLink = "/ugyfelterlog", Enabled = jogok.Contains(JogKod.UGYFELTERLOG)},
+              new AngularMenuDto { Title = "divider"},
+              new AngularMenuDto { Title = "Kapcsolati háló", RouterLink = "/kapcsolatihalo", Enabled = jogok.Contains(JogKod.KAPCSOLATIHALO)},
             }
             },
             new AngularMenuDto

@@ -128,12 +128,22 @@ namespace ossServer.Controllers.Csoport
 
         public static async Task JogeAsync(ossContext context, JogKod jogKod)
         {
-            // TODO upgrade után kivenni
-            if (jogKod == JogKod.BIZONYLAT)
-                return;
-
             if (await JogeAsync(context, jogKod.ToString()) == 0)
-                throw new Exception("Hm... acces denied!");
+                throw new Exception($"Hm... acces denied ({jogKod})!");
+        }
+
+        public static async Task JogeBizonylatAsync(ossContext context)
+        {
+            if (await context.Csoportjog
+              .Include(r => r.LehetsegesjogkodNavigation)
+              .Where(s => s.Csoportkod == context.CurrentSession.Csoportkod)
+              .CountAsync(s => s.LehetsegesjogkodNavigation.Jogkod == JogKod.DIJBEKERO.ToString() ||
+                               s.LehetsegesjogkodNavigation.Jogkod == JogKod.ELOLEGSZAMLA.ToString() ||
+                               s.LehetsegesjogkodNavigation.Jogkod == JogKod.SZALLITO.ToString() ||
+                               s.LehetsegesjogkodNavigation.Jogkod == JogKod.SZAMLA.ToString() ||
+                               s.LehetsegesjogkodNavigation.Jogkod == JogKod.MEGRENDELES.ToString() ||
+                               s.LehetsegesjogkodNavigation.Jogkod == JogKod.BEJOVOSZAMLA.ToString()) == 0)
+                throw new Exception("Nincs joga a bizonylatok olvasásához!");
         }
 
         public static async Task<List<string>> JogaimAsync(ossContext context)
