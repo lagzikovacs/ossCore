@@ -49,7 +49,9 @@ namespace ossServer.Models
         public virtual DbSet<Szamlazasirend> Szamlazasirend { get; set; }
         public virtual DbSet<Teendo> Teendo { get; set; }
         public virtual DbSet<Termekdij> Termekdij { get; set; }
+        public virtual DbSet<Tevekenyseg> Tevekenyseg { get; set; }
         public virtual DbSet<Ugyfel> Ugyfel { get; set; }
+        public virtual DbSet<Ugyfelkapcsolat> Ugyfelkapcsolat { get; set; }
         public virtual DbSet<Ugyfelterlog> Ugyfelterlog { get; set; }
         public virtual DbSet<Verzio> Verzio { get; set; }
         public virtual DbSet<Volume> Volume { get; set; }
@@ -65,7 +67,7 @@ namespace ossServer.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("ProductVersion", "2.2.4-servicing-10062");
+            modelBuilder.HasAnnotation("ProductVersion", "2.2.6-servicing-10079");
 
             modelBuilder.Entity<Afakulcs>(entity =>
             {
@@ -2565,6 +2567,54 @@ namespace ossServer.Models
                     .HasConstraintName("FK_TERMEKDIJ_PARTICIO");
             });
 
+            modelBuilder.Entity<Tevekenyseg>(entity =>
+            {
+                entity.HasKey(e => e.Tevekenysegkod);
+
+                entity.ToTable("TEVEKENYSEG");
+
+                entity.HasIndex(e => e.Particiokod);
+
+                entity.HasIndex(e => e.Tevekenyseg1)
+                    .IsUnique();
+
+                entity.Property(e => e.Tevekenysegkod).HasColumnName("TEVEKENYSEGKOD");
+
+                entity.Property(e => e.Letrehozta)
+                    .IsRequired()
+                    .HasColumnName("LETREHOZTA")
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Letrehozva)
+                    .HasColumnName("LETREHOZVA")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.Modositotta)
+                    .IsRequired()
+                    .HasColumnName("MODOSITOTTA")
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Modositva)
+                    .HasColumnName("MODOSITVA")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.Particiokod).HasColumnName("PARTICIOKOD");
+
+                entity.Property(e => e.Tevekenyseg1)
+                    .IsRequired()
+                    .HasColumnName("TEVEKENYSEG")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.ParticiokodNavigation)
+                    .WithMany(p => p.Tevekenyseg)
+                    .HasForeignKey(d => d.Particiokod)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_TEVEKENYSEG_PARTICIO");
+            });
+
             modelBuilder.Entity<Ugyfel>(entity =>
             {
                 entity.HasKey(e => e.Ugyfelkod);
@@ -2574,6 +2624,8 @@ namespace ossServer.Models
                 entity.HasIndex(e => e.Helysegkod);
 
                 entity.HasIndex(e => e.Particiokod);
+
+                entity.HasIndex(e => e.Tevekenysegkod);
 
                 entity.HasIndex(e => new { e.Csoport, e.Ceg })
                     .HasName("IX_UGYFEL_CEG");
@@ -2696,6 +2748,8 @@ namespace ossServer.Models
                     .HasMaxLength(20)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Tevekenysegkod).HasColumnName("TEVEKENYSEGKOD");
+
                 entity.Property(e => e.Utcahazszam)
                     .HasColumnName("UTCAHAZSZAM")
                     .HasMaxLength(100)
@@ -2713,6 +2767,81 @@ namespace ossServer.Models
                     .HasForeignKey(d => d.Particiokod)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_UGYFEL_PARTICIO");
+
+                entity.HasOne(d => d.TevekenysegkodNavigation)
+                    .WithMany(p => p.Ugyfel)
+                    .HasForeignKey(d => d.Tevekenysegkod)
+                    .HasConstraintName("FK_UGYFEL_TEVEKENYSEG");
+            });
+
+            modelBuilder.Entity<Ugyfelkapcsolat>(entity =>
+            {
+                entity.HasKey(e => e.Ugyfelkapcsolatkod);
+
+                entity.ToTable("UGYFELKAPCSOLAT");
+
+                entity.HasIndex(e => e.Fromugyfelkod);
+
+                entity.HasIndex(e => e.Particikod)
+                    .HasName("IX_UGYFELKAPCSOLAT_PARTICIOKOD");
+
+                entity.HasIndex(e => e.Tougyfelkod);
+
+                entity.Property(e => e.Ugyfelkapcsolatkod).HasColumnName("UGYFELKAPCSOLATKOD");
+
+                entity.Property(e => e.Fromugyfelkod).HasColumnName("FROMUGYFELKOD");
+
+                entity.Property(e => e.Leiras)
+                    .HasColumnName("LEIRAS")
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Letrehozta)
+                    .IsRequired()
+                    .HasColumnName("LETREHOZTA")
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Letrehozva)
+                    .HasColumnName("LETREHOZVA")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.Minoseg)
+                    .HasColumnName("MINOSEG")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Modositotta)
+                    .IsRequired()
+                    .HasColumnName("MODOSITOTTA")
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Modositva)
+                    .HasColumnName("MODOSITVA")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.Particikod).HasColumnName("PARTICIKOD");
+
+                entity.Property(e => e.Tougyfelkod).HasColumnName("TOUGYFELKOD");
+
+                entity.HasOne(d => d.FromugyfelkodNavigation)
+                    .WithMany(p => p.UgyfelkapcsolatFromugyfelkodNavigation)
+                    .HasForeignKey(d => d.Fromugyfelkod)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_UGYFELKAPCSOLAT_UGYFEL");
+
+                entity.HasOne(d => d.ParticikodNavigation)
+                    .WithMany(p => p.Ugyfelkapcsolat)
+                    .HasForeignKey(d => d.Particikod)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_UGYFELKAPCSOLAT_PARTICIO");
+
+                entity.HasOne(d => d.TougyfelkodNavigation)
+                    .WithMany(p => p.UgyfelkapcsolatTougyfelkodNavigation)
+                    .HasForeignKey(d => d.Tougyfelkod)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_UGYFELKAPCSOLAT_UGYFEL1");
             });
 
             modelBuilder.Entity<Ugyfelterlog>(entity =>

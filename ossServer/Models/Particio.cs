@@ -37,7 +37,9 @@ namespace ossServer.Models
             Szamlazasirend = new HashSet<Szamlazasirend>();
             Teendo = new HashSet<Teendo>();
             Termekdij = new HashSet<Termekdij>();
+            Tevekenyseg = new HashSet<Tevekenyseg>();
             Ugyfel = new HashSet<Ugyfel>();
+            Ugyfelkapcsolat = new HashSet<Ugyfelkapcsolat>();
             Ugyfelterlog = new HashSet<Ugyfelterlog>();
             VolumeNavigation = new HashSet<Volume>();
         }
@@ -85,7 +87,9 @@ namespace ossServer.Models
         public virtual ICollection<Szamlazasirend> Szamlazasirend { get; set; }
         public virtual ICollection<Teendo> Teendo { get; set; }
         public virtual ICollection<Termekdij> Termekdij { get; set; }
+        public virtual ICollection<Tevekenyseg> Tevekenyseg { get; set; }
         public virtual ICollection<Ugyfel> Ugyfel { get; set; }
+        public virtual ICollection<Ugyfelkapcsolat> Ugyfelkapcsolat { get; set; }
         public virtual ICollection<Ugyfelterlog> Ugyfelterlog { get; set; }
         public virtual ICollection<Volume> VolumeNavigation { get; set; }
     }

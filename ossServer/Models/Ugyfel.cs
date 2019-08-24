@@ -11,6 +11,8 @@ namespace ossServer.Models
             Irat = new HashSet<Irat>();
             Penztartetel = new HashSet<Penztartetel>();
             Projekt = new HashSet<Projekt>();
+            UgyfelkapcsolatFromugyfelkodNavigation = new HashSet<Ugyfelkapcsolat>();
+            UgyfelkapcsolatTougyfelkodNavigation = new HashSet<Ugyfelkapcsolat>();
             Ugyfelterlog = new HashSet<Ugyfelterlog>();
         }
 
@@ -30,6 +32,7 @@ namespace ossServer.Models
         public string Euadoszam { get; set; }
         public string Telefon { get; set; }
         public string Email { get; set; }
+        public int? Tevekenysegkod { get; set; }
         public string Egyeblink { get; set; }
         public string Ajanlotta { get; set; }
         public string Megjegyzes { get; set; }
@@ -44,10 +47,13 @@ namespace ossServer.Models
 
         public virtual Helyseg HelysegkodNavigation { get; set; }
         public virtual Particio ParticiokodNavigation { get; set; }
+        public virtual Tevekenyseg TevekenysegkodNavigation { get; set; }
         public virtual ICollection<Bizonylat> Bizonylat { get; set; }
         public virtual ICollection<Irat> Irat { get; set; }
         public virtual ICollection<Penztartetel> Penztartetel { get; set; }
         public virtual ICollection<Projekt> Projekt { get; set; }
+        public virtual ICollection<Ugyfelkapcsolat> UgyfelkapcsolatFromugyfelkodNavigation { get; set; }
+        public virtual ICollection<Ugyfelkapcsolat> UgyfelkapcsolatTougyfelkodNavigation { get; set; }
         public virtual ICollection<Ugyfelterlog> Ugyfelterlog { get; set; }
     }
 }

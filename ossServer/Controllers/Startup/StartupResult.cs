@@ -24,6 +24,8 @@ namespace ossServer.Controllers.Startup
         public List<ColumnSettings> Teendo_Reszletek { get; set; }
         public List<ColumnSettings> Termekdij_Grid { get; set; }
         public List<ColumnSettings> Termekdij_Reszletek { get; set; }
+        public List<ColumnSettings> Tevekenyseg_Grid { get; set; }
+        public List<ColumnSettings> Tevekenyseg_Reszletek { get; set; }
 
         public List<ColumnSettings> Cikk_Grid { get; set; }
         public List<ColumnSettings> BeszerzesKivet_Grid { get; set; }
