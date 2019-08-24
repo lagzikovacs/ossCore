@@ -2782,8 +2782,7 @@ namespace ossServer.Models
 
                 entity.HasIndex(e => e.Fromugyfelkod);
 
-                entity.HasIndex(e => e.Particikod)
-                    .HasName("IX_UGYFELKAPCSOLAT_PARTICIOKOD");
+                entity.HasIndex(e => e.Particiokod);
 
                 entity.HasIndex(e => e.Tougyfelkod);
 
@@ -2821,7 +2820,7 @@ namespace ossServer.Models
                     .HasColumnName("MODOSITVA")
                     .HasColumnType("datetime");
 
-                entity.Property(e => e.Particikod).HasColumnName("PARTICIKOD");
+                entity.Property(e => e.Particiokod).HasColumnName("PARTICIOKOD");
 
                 entity.Property(e => e.Tougyfelkod).HasColumnName("TOUGYFELKOD");
 
@@ -2831,9 +2830,9 @@ namespace ossServer.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_UGYFELKAPCSOLAT_UGYFEL");
 
-                entity.HasOne(d => d.ParticikodNavigation)
+                entity.HasOne(d => d.ParticiokodNavigation)
                     .WithMany(p => p.Ugyfelkapcsolat)
-                    .HasForeignKey(d => d.Particikod)
+                    .HasForeignKey(d => d.Particiokod)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_UGYFELKAPCSOLAT_PARTICIO");
 
