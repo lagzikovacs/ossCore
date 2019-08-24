@@ -61,6 +61,8 @@ namespace ossServer.Controllers.Ugyfel
                 result.Helysegnev = entity.HelysegkodNavigation.Helysegnev;
                 result.Cim = Cim(entity);
             }
+            if (entity.TevekenysegkodNavigation != null)
+                result.Tevekenyseg = entity.TevekenysegkodNavigation.Tevekenyseg1;
 
             return result;
         }
@@ -160,6 +162,7 @@ namespace ossServer.Controllers.Ugyfel
                 new ColumnSettings {Name="Euadoszam", Title = "EU adószám", Type = ColumnType.STRING },
                 new ColumnSettings {Name="Telefon", Title = "Telefon", Type = ColumnType.STRING },
                 new ColumnSettings {Name="Email", Title = "Email", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Tevekenyseg", Title = "Tevékenység", Type = ColumnType.STRING },
                 new ColumnSettings {Name="Egyeblink", Title = "Egyéb link", Type = ColumnType.STRING },
                 new ColumnSettings {Name="Ajanlotta", Title = "Ajánlotta", Type = ColumnType.STRING },
                 new ColumnSettings {Name="Megjegyzes", Title = "Megjegyzés", Type = ColumnType.STRING },

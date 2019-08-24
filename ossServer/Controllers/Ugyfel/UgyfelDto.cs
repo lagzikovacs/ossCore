@@ -21,6 +21,8 @@ namespace ossServer.Controllers.Ugyfel
         public string Euadoszam { get; set; }
         public string Telefon { get; set; }
         public string Email { get; set; }
+        public int? Tevekenysegkod { get; set; }
+        public string Tevekenyseg { get; set; }
         public string Egyeblink { get; set; }
         public string Ajanlotta { get; set; }
         public string Megjegyzes { get; set; }

@@ -16,6 +16,7 @@ namespace ossServer.Controllers.Ugyfel
         {
             var qry = context.Ugyfel.AsNoTracking()
               .Include(r => r.HelysegkodNavigation)
+              .Include(r => r.TevekenysegkodNavigation)
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod);
 
             if (csoport != 0)
@@ -128,6 +129,7 @@ namespace ossServer.Controllers.Ugyfel
         {
             var result = await context.Ugyfel
               .Include(r => r.HelysegkodNavigation)
+              .Include(r => r.TevekenysegkodNavigation)
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.Ugyfelkod == pKey).ToListAsync();
 
@@ -195,6 +197,7 @@ namespace ossServer.Controllers.Ugyfel
         {
             return await context.Ugyfel.AsNoTracking()
               .Include(r => r.HelysegkodNavigation)
+              .Include(r => r.TevekenysegkodNavigation)
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod && s.Nev.Contains(maszk))
               .OrderBy(s => s.Nev)
               .ToListAsync();
