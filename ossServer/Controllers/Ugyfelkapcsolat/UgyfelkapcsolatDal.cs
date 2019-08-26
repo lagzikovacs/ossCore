@@ -35,51 +35,161 @@ namespace ossServer.Controllers.Ugyfelkapcsolat
             await context.SaveChangesAsync();
         }
 
-
-
-        public static IOrderedQueryable<Models.Ugyfel> GetQuery(ossContext context, 
-            int csoport, List<SzMT> szmt)
+        public async static Task Lock(ossContext context, int pKey, DateTime utoljaraModositva)
         {
-            var qry = context.Ugyfel.AsNoTracking()
-              .Include(r => r.HelysegkodNavigation)
-              .Include(r => r.TevekenysegkodNavigation)
-              .Where(s => s.Particiokod == context.CurrentSession.Particiokod);
+            await context.ExecuteLockFunction("lockugyfelkapcsolat", "ugyfelkapcsolatkod", pKey, utoljaraModositva);
+        }
 
-            if (csoport != 0)
-                qry = qry.Where(s => s.Csoport == csoport);
+        public static async Task<Models.Ugyfelkapcsolat> GetAsync(ossContext context, int pKey)
+        {
+            var result = await context.Ugyfelkapcsolat
+              .Include(r => r.FromugyfelkodNavigation).ThenInclude(r1 => r1.HelysegkodNavigation)
+              .Include(r => r.TougyfelkodNavigation).ThenInclude(r1 => r1.HelysegkodNavigation)
+              .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
+              .Where(s => s.Ugyfelkapcsolatkod == pKey).ToListAsync();
+
+            if (result.Count != 1)
+                throw new Exception(string.Format(Messages.AdatNemTalalhato,
+                    $"{nameof(Models.Ugyfelkapcsolat.Ugyfelkapcsolatkod)}={pKey}"));
+
+            return result.First();
+        }
+
+        public static async Task ExistsAnotherAsync(ossContext context, Models.Ugyfelkapcsolat entity)
+        {
+            if (await context.Ugyfelkapcsolat.AnyAsync(s => s.Particiokod == entity.Particiokod &&
+                ((s.Fromugyfelkod == entity.Fromugyfelkod && s.Tougyfelkod == entity.Tougyfelkod) ||
+                (s.Fromugyfelkod == entity.Tougyfelkod && s.Tougyfelkod == entity.Fromugyfelkod)) &&
+                s.Ugyfelkapcsolatkod != entity.Ugyfelkapcsolatkod))
+                throw new Exception(string.Format(Messages.NemMenthetoMarLetezik, "ügyfélkapcsolat"));
+        }
+
+        public static async Task<int> UpdateAsync(ossContext context, Models.Ugyfelkapcsolat entity)
+        {
+            Register.Modification(context, entity);
+            await context.SaveChangesAsync();
+
+            return entity.Ugyfelkapcsolatkod;
+        }
+
+
+
+
+
+        public static IOrderedQueryable<Models.Ugyfelkapcsolat> GetQuery(ossContext context, 
+            List<SzMT> szmt, FromTo FromTo)
+        {
+            var qry = context.Ugyfelkapcsolat.AsNoTracking()
+              .Include(r => r.FromugyfelkodNavigation).ThenInclude(r1 => r1.HelysegkodNavigation)
+              .Include(r => r.TougyfelkodNavigation).ThenInclude(r1 => r1.HelysegkodNavigation)
+              .Where(s => s.Particiokod == context.CurrentSession.Particiokod);
 
             foreach (var f in szmt)
             {
                 switch (f.Szempont)
                 {
                     case Szempont.Nev:
-                        qry = qry.Where(s => s.Nev.Contains((string)f.Minta));
+                        switch (FromTo)
+                        {
+                            case FromTo.ToleIndul:
+                                qry = qry.Where(s => s.TougyfelkodNavigation.Nev.Contains((string)f.Minta));
+                                break;
+                            case FromTo.HozzaEr:
+                                qry = qry.Where(s => s.FromugyfelkodNavigation.Nev.Contains((string)f.Minta));
+                                break;
+                        }
                         break;
                     case Szempont.Ceg:
-                        qry = qry.Where(s => s.Ceg.Contains((string)f.Minta));
+                        switch (FromTo)
+                        {
+                            case FromTo.ToleIndul:
+                                qry = qry.Where(s => s.TougyfelkodNavigation.Ceg.Contains((string)f.Minta));
+                                break;
+                            case FromTo.HozzaEr:
+                                qry = qry.Where(s => s.FromugyfelkodNavigation.Ceg.Contains((string)f.Minta));
+                                break;
+                        }
                         break;
                     case Szempont.Beosztas:
-                        qry = qry.Where(s => s.Beosztas.Contains((string)f.Minta));
+                        switch (FromTo)
+                        {
+                            case FromTo.ToleIndul:
+                                qry = qry.Where(s => s.TougyfelkodNavigation.Beosztas.Contains((string)f.Minta));
+                                break;
+                            case FromTo.HozzaEr:
+                                qry = qry.Where(s => s.FromugyfelkodNavigation.Beosztas.Contains((string)f.Minta));
+                                break;
+                        }
                         break;
                     case Szempont.Telepules:
-                        qry = qry.Where(s => s.HelysegkodNavigation.Helysegnev.Contains((string)f.Minta));
+                        switch (FromTo)
+                        {
+                            case FromTo.ToleIndul:
+                                qry = qry.Where(s => s.TougyfelkodNavigation.HelysegkodNavigation.Helysegnev.Contains((string)f.Minta));
+                                break;
+                            case FromTo.HozzaEr:
+                                qry = qry.Where(s => s.FromugyfelkodNavigation.HelysegkodNavigation.Helysegnev.Contains((string)f.Minta));
+                                break;
+                        }
                         break;
                     case Szempont.UgyfelTelefonszam:
-                        qry = qry.Where(s => s.Telefon.Contains((string)f.Minta));
+                        switch (FromTo)
+                        {
+                            case FromTo.ToleIndul:
+                                qry = qry.Where(s => s.TougyfelkodNavigation.Telefon.Contains((string)f.Minta));
+                                break;
+                            case FromTo.HozzaEr:
+                                qry = qry.Where(s => s.FromugyfelkodNavigation.Telefon.Contains((string)f.Minta));
+                                break;
+                        }
                         break;
                     case Szempont.UgyfelEmail:
-                        qry = qry.Where(s => s.Email.Contains((string)f.Minta));
+                        switch (FromTo)
+                        {
+                            case FromTo.ToleIndul:
+                                qry = qry.Where(s => s.TougyfelkodNavigation.Email.Contains((string)f.Minta));
+                                break;
+                            case FromTo.HozzaEr:
+                                qry = qry.Where(s => s.FromugyfelkodNavigation.Email.Contains((string)f.Minta));
+                                break;
+                        }
                         break;
                     case Szempont.Egyeblink:
-                        qry = qry.Where(s => s.Egyeblink.Contains((string)f.Minta));
+                        switch (FromTo)
+                        {
+                            case FromTo.ToleIndul:
+                                qry = qry.Where(s => s.TougyfelkodNavigation.Egyeblink.Contains((string)f.Minta));
+                                break;
+                            case FromTo.HozzaEr:
+                                qry = qry.Where(s => s.FromugyfelkodNavigation.Egyeblink.Contains((string)f.Minta));
+                                break;
+                        }
                         break;
                     case Szempont.Ajanlo:
-                        qry = qry.Where(s => s.Ajanlotta.Contains((string)f.Minta));
+                        switch (FromTo)
+                        {
+                            case FromTo.ToleIndul:
+                                qry = qry.Where(s => s.TougyfelkodNavigation.Ajanlotta.Contains((string)f.Minta));
+                                break;
+                            case FromTo.HozzaEr:
+                                qry = qry.Where(s => s.FromugyfelkodNavigation.Ajanlotta.Contains((string)f.Minta));
+                                break;
+                        }
                         break;
                     case Szempont.Kod:
-                        qry = int.TryParse((string)f.Minta, out var ugyfelKod)
-                          ? qry.Where(s => s.Ugyfelkod <= ugyfelKod)
-                          : qry.Where(s => s.Ugyfelkod >= 0);
+                        switch (FromTo)
+                        {
+                            case FromTo.ToleIndul:
+                                qry = int.TryParse((string)f.Minta, out var ugyfelKod)
+                                    ? qry.Where(s => s.Tougyfelkod <= ugyfelKod)
+                                    : qry.Where(s => s.Tougyfelkod >= 0);
+                                break;
+                            case FromTo.HozzaEr:
+                                qry = int.TryParse((string)f.Minta, out var ugyfelKod1)
+                                    ? qry.Where(s => s.Fromugyfelkod <= ugyfelKod1)
+                                    : qry.Where(s => s.Fromugyfelkod >= 0);
+                                break;
+                        }
                         break;
                     default:
                         throw new Exception($"Lekezeletlen {f.Szempont} Szempont!");
@@ -92,33 +202,139 @@ namespace ossServer.Controllers.Ugyfelkapcsolat
                 switch (f.Szempont)
                 {
                     case Szempont.Nev:
-                        qry = elsoSorrend ? qry.OrderBy(s => s.Nev) : ((IOrderedQueryable<Models.Ugyfel>)qry).ThenBy(s => s.Nev);
+                        switch (FromTo)
+                        {
+                            case FromTo.ToleIndul:
+                                qry = elsoSorrend 
+                                    ? qry.OrderBy(s => s.TougyfelkodNavigation.Nev) 
+                                    : ((IOrderedQueryable<Models.Ugyfelkapcsolat>)qry).ThenBy(s => s.TougyfelkodNavigation.Nev);
+                                break;
+                            case FromTo.HozzaEr:
+                                qry = elsoSorrend
+                                    ? qry.OrderBy(s => s.FromugyfelkodNavigation.Nev)
+                                    : ((IOrderedQueryable<Models.Ugyfelkapcsolat>)qry).ThenBy(s => s.FromugyfelkodNavigation.Nev);
+                                break;
+                        }
                         break;
                     case Szempont.Ceg:
-                        qry = elsoSorrend ? qry.OrderBy(s => s.Ceg) : ((IOrderedQueryable<Models.Ugyfel>)qry).ThenBy(s => s.Ceg);
+                        switch (FromTo)
+                        {
+                            case FromTo.ToleIndul:
+                                qry = elsoSorrend 
+                                    ? qry.OrderBy(s => s.TougyfelkodNavigation.Ceg) 
+                                    : ((IOrderedQueryable<Models.Ugyfelkapcsolat>)qry).ThenBy(s => s.TougyfelkodNavigation.Ceg);
+                                break;
+                            case FromTo.HozzaEr:
+                                qry = elsoSorrend
+                                    ? qry.OrderBy(s => s.FromugyfelkodNavigation.Ceg)
+                                    : ((IOrderedQueryable<Models.Ugyfelkapcsolat>)qry).ThenBy(s => s.FromugyfelkodNavigation.Ceg);
+                                break;
+                        }
                         break;
                     case Szempont.Beosztas:
-                        qry = elsoSorrend ? qry.OrderBy(s => s.Beosztas) : ((IOrderedQueryable<Models.Ugyfel>)qry).ThenBy(s => s.Beosztas);
+                        switch (FromTo)
+                        {
+                            case FromTo.ToleIndul:
+                                qry = elsoSorrend 
+                                    ? qry.OrderBy(s => s.TougyfelkodNavigation.Beosztas) 
+                                    : ((IOrderedQueryable<Models.Ugyfelkapcsolat>)qry).ThenBy(s => s.TougyfelkodNavigation.Beosztas);
+                                break;
+                            case FromTo.HozzaEr:
+                                qry = elsoSorrend
+                                    ? qry.OrderBy(s => s.FromugyfelkodNavigation.Beosztas)
+                                    : ((IOrderedQueryable<Models.Ugyfelkapcsolat>)qry).ThenBy(s => s.FromugyfelkodNavigation.Beosztas);
+                                break;
+                        }
                         break;
                     case Szempont.Telepules:
-                        qry = elsoSorrend ? qry.OrderBy(s => s.HelysegkodNavigation.Helysegnev) : ((IOrderedQueryable<Models.Ugyfel>)qry).ThenBy(s => s.HelysegkodNavigation.Helysegnev);
+                        switch (FromTo)
+                        {
+                            case FromTo.ToleIndul:
+                                qry = elsoSorrend 
+                                    ? qry.OrderBy(s => s.TougyfelkodNavigation.HelysegkodNavigation.Helysegnev) 
+                                    : ((IOrderedQueryable<Models.Ugyfelkapcsolat>)qry).ThenBy(s => s.TougyfelkodNavigation.HelysegkodNavigation.Helysegnev);
+                                break;
+                            case FromTo.HozzaEr:
+                                qry = elsoSorrend
+                                    ? qry.OrderBy(s => s.FromugyfelkodNavigation.HelysegkodNavigation.Helysegnev)
+                                    : ((IOrderedQueryable<Models.Ugyfelkapcsolat>)qry).ThenBy(s => s.FromugyfelkodNavigation.HelysegkodNavigation.Helysegnev);
+                                break;
+                        }                        
                         break;
                     case Szempont.UgyfelTelefonszam:
-                        qry = elsoSorrend ? qry.OrderBy(s => s.Telefon) : ((IOrderedQueryable<Models.Ugyfel>)qry).ThenBy(s => s.Telefon);
+                        switch (FromTo)
+                        {
+                            case FromTo.ToleIndul:
+                                qry = elsoSorrend 
+                                    ? qry.OrderBy(s => s.TougyfelkodNavigation.Telefon) 
+                                    : ((IOrderedQueryable<Models.Ugyfelkapcsolat>)qry).ThenBy(s => s.TougyfelkodNavigation.Telefon);
+                                break;
+                            case FromTo.HozzaEr:
+                                qry = elsoSorrend
+                                    ? qry.OrderBy(s => s.FromugyfelkodNavigation.Telefon)
+                                    : ((IOrderedQueryable<Models.Ugyfelkapcsolat>)qry).ThenBy(s => s.FromugyfelkodNavigation.Telefon);
+                                break;
+                        }
                         break;
                     case Szempont.UgyfelEmail:
-                        qry = elsoSorrend ? qry.OrderBy(s => s.Email) : ((IOrderedQueryable<Models.Ugyfel>)qry).ThenBy(s => s.Email);
+                        switch (FromTo)
+                        {
+                            case FromTo.ToleIndul:
+                                qry = elsoSorrend 
+                                    ? qry.OrderBy(s => s.TougyfelkodNavigation.Email) 
+                                    : ((IOrderedQueryable<Models.Ugyfelkapcsolat>)qry).ThenBy(s => s.TougyfelkodNavigation.Email);
+                                break;
+                            case FromTo.HozzaEr:
+                                qry = elsoSorrend
+                                    ? qry.OrderBy(s => s.FromugyfelkodNavigation.Email)
+                                    : ((IOrderedQueryable<Models.Ugyfelkapcsolat>)qry).ThenBy(s => s.FromugyfelkodNavigation.Email);
+                                break;
+                        }                        
                         break;
                     case Szempont.Egyeblink:
-                        qry = elsoSorrend ? qry.OrderBy(s => s.Egyeblink) : ((IOrderedQueryable<Models.Ugyfel>)qry).ThenBy(s => s.Egyeblink);
+                        switch (FromTo)
+                        {
+                            case FromTo.ToleIndul:
+                                qry = elsoSorrend 
+                                    ? qry.OrderBy(s => s.TougyfelkodNavigation.Egyeblink) 
+                                    : ((IOrderedQueryable<Models.Ugyfelkapcsolat>)qry).ThenBy(s => s.TougyfelkodNavigation.Egyeblink);
+                                break;
+                            case FromTo.HozzaEr:
+                                qry = elsoSorrend
+                                    ? qry.OrderBy(s => s.FromugyfelkodNavigation.Egyeblink)
+                                    : ((IOrderedQueryable<Models.Ugyfelkapcsolat>)qry).ThenBy(s => s.FromugyfelkodNavigation.Egyeblink);
+                                break;
+                        }
                         break;
                     case Szempont.Ajanlo:
-                        qry = elsoSorrend ? qry.OrderBy(s => s.Ajanlotta) : ((IOrderedQueryable<Models.Ugyfel>)qry).ThenBy(s => s.Ajanlotta);
+                        switch (FromTo)
+                        {
+                            case FromTo.ToleIndul:
+                                qry = elsoSorrend 
+                                    ? qry.OrderBy(s => s.TougyfelkodNavigation.Ajanlotta) 
+                                    : ((IOrderedQueryable<Models.Ugyfelkapcsolat>)qry).ThenBy(s => s.TougyfelkodNavigation.Ajanlotta);
+                                break;
+                            case FromTo.HozzaEr:
+                                qry = elsoSorrend
+                                    ? qry.OrderBy(s => s.FromugyfelkodNavigation.Ajanlotta)
+                                    : ((IOrderedQueryable<Models.Ugyfelkapcsolat>)qry).ThenBy(s => s.FromugyfelkodNavigation.Ajanlotta);
+                                break;
+                        }
                         break;
                     case Szempont.Kod:
-                        qry = elsoSorrend
-                          ? (qry).OrderByDescending(s => s.Ugyfelkod)
-                          : ((IOrderedQueryable<Models.Ugyfel>)qry).ThenByDescending(s => s.Ugyfelkod);
+                        switch (FromTo)
+                        {
+                            case FromTo.ToleIndul:
+                                qry = elsoSorrend
+                                    ? (qry).OrderByDescending(s => s.Tougyfelkod)
+                                    : ((IOrderedQueryable<Models.Ugyfelkapcsolat>)qry).ThenByDescending(s => s.Tougyfelkod);
+                                break;
+                            case FromTo.HozzaEr:
+                                qry = elsoSorrend
+                                    ? (qry).OrderByDescending(s => s.Fromugyfelkod)
+                                    : ((IOrderedQueryable<Models.Ugyfelkapcsolat>)qry).ThenByDescending(s => s.Fromugyfelkod);
+                                break;
+                        }
                         break;
                     default:
                         throw new Exception($"Lekezeletlen {f.Szempont} Szempont!");
@@ -126,105 +342,7 @@ namespace ossServer.Controllers.Ugyfelkapcsolat
                 elsoSorrend = false;
             }
 
-            return (IOrderedQueryable<Models.Ugyfel>)qry;
-        }
-
-
-
-
-
-        public async static Task Lock(ossContext context, int pKey, DateTime utoljaraModositva)
-        {
-            await context.ExecuteLockFunction("lockugyfel", "ugyfelkod", pKey, utoljaraModositva);
-        }
-
-        public static async Task<Models.Ugyfel> GetAsync(ossContext context, int pKey)
-        {
-            var result = await context.Ugyfel
-              .Include(r => r.HelysegkodNavigation)
-              .Include(r => r.TevekenysegkodNavigation)
-              .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
-              .Where(s => s.Ugyfelkod == pKey).ToListAsync();
-
-            if (result.Count != 1)
-                throw new Exception(string.Format(Messages.AdatNemTalalhato, 
-                    $"{nameof(Models.Ugyfel.Ugyfelkod)}={pKey}"));
-
-            return result.First();
-        }
-
-        public static async Task CheckReferencesAsync(ossContext context, int pKey)
-        {
-            var result = new Dictionary<string, int>();
-
-            var n = await context.Irat.CountAsync(s => s.Ugyfelkod == pKey);
-            if (n > 0)
-                result.Add("IRAT.UGYFELKOD", n);
-
-            n = await context.Projekt.CountAsync(s => s.Ugyfelkod == pKey);
-            if (n > 0)
-                result.Add("PROJEKT.UGYFELKOD", n);
-
-            n = await context.Bizonylat.CountAsync(s => s.Ugyfelkod == pKey);
-            if (n > 0)
-                result.Add("BIZONYLAT.UGYFELKOD", n);
-
-            n = await context.Penztartetel.CountAsync(s => s.Ugyfelkod == pKey);
-            if (n > 0)
-                result.Add("PENZTARTETEL.UGYFELKOD", n);
-
-            if (result.Count > 0)
-            {
-                string builder = "\r\n";
-                foreach (var r in result)
-                    builder += "\r\n" + r.Key + " (" + r.Value + ")";
-
-                throw new Exception(Messages.NemTorolhetoReferenciakMiatt + builder);
-            }
-        }
-
-
-
-        public static async Task ExistsAnotherAsync(ossContext context, Models.Ugyfel entity)
-        {
-            if (await context.Ugyfel.AnyAsync(s => s.Particiokod == entity.Particiokod &&
-                s.Nev == entity.Nev && s.Helysegkod == entity.Helysegkod &&
-                s.Kozterulet == entity.Kozterulet && s.Kozterulettipus == entity.Kozterulettipus &&
-                s.Hazszam == entity.Hazszam && s.Ugyfelkod != entity.Ugyfelkod))
-                throw new Exception(string.Format(Messages.NemMenthetoMarLetezik, entity.Nev));
-        }
-
-        public static async Task<int> UpdateAsync(ossContext context, Models.Ugyfel entity)
-        {
-            Register.Modification(context, entity);
-            await context.SaveChangesAsync();
-
-            return entity.Ugyfelkod;
-        }
-
-        public static async Task<List<Models.Ugyfel>> ReadAsync(ossContext context, string maszk)
-        {
-            return await context.Ugyfel.AsNoTracking()
-              .Include(r => r.HelysegkodNavigation)
-              .Include(r => r.TevekenysegkodNavigation)
-              .Where(s => s.Particiokod == context.CurrentSession.Particiokod && s.Nev.Contains(maszk))
-              .OrderBy(s => s.Nev)
-              .ToListAsync();
-        }
-
-        public static async Task ZoomCheckAsync(ossContext context, int ugyfelkod, string ugyfel)
-        {
-            if (!await context.Ugyfel.AnyAsync(s => s.Particiokod == context.CurrentSession.Particiokod &&
-                s.Ugyfelkod == ugyfelkod && s.Nev == ugyfel))
-                throw new Exception(string.Format(Messages.HibasZoom, "ügyfél"));
-        }
-
-        public static async Task UgyfelterCheckAsync(ossContext context, int particiokod, int ugyfelkod, string kikuldesikod)
-        {
-            var list = await context.Ugyfel.Where(s => s.Particiokod == particiokod &&
-                s.Ugyfelkod == ugyfelkod && s.Kikuldesikod == kikuldesikod).ToListAsync();
-            if (list.Count != 1)
-                throw new Exception("Nem juthat be az ügyféltérbe - hibás paraméterek!");
+            return (IOrderedQueryable<Models.Ugyfelkapcsolat>)qry;
         }
     }
 }
