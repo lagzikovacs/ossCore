@@ -133,7 +133,7 @@ namespace ossServer.Controllers.Ugyfelkapcsolat
                 try
                 {
                     var t = await UgyfelkapcsolatBll.SelectAsync(_context, sid, 
-                        par.RekordTol, par.LapMeret, par.Fi, par.FromTo);
+                        par.RekordTol, par.LapMeret, par.Ugyfelkod, par.Fi, par.FromTo);
 
                     result.Result = t.Item1;
                     result.OsszesRekord = t.Item2;

@@ -8,7 +8,7 @@ namespace ossServer.Controllers.Ugyfelkapcsolat
     {
         public int RekordTol { get; set; }
         public int LapMeret { get; set; }
-        public int Csoport { get; set; }
+        public int Ugyfelkod { get; set; }
         public List<SzMT> Fi { get; set; }
         public FromTo FromTo { get; set; }
     }

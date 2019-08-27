@@ -44,7 +44,9 @@ namespace ossServer.Controllers.Ugyfelkapcsolat
         {
             var result = await context.Ugyfelkapcsolat
               .Include(r => r.FromugyfelkodNavigation).ThenInclude(r1 => r1.HelysegkodNavigation)
+              .Include(r => r.FromugyfelkodNavigation).ThenInclude(r1 => r1.TevekenysegkodNavigation)
               .Include(r => r.TougyfelkodNavigation).ThenInclude(r1 => r1.HelysegkodNavigation)
+              .Include(r => r.TougyfelkodNavigation).ThenInclude(r1 => r1.TevekenysegkodNavigation)
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.Ugyfelkapcsolatkod == pKey).ToListAsync();
 
@@ -77,11 +79,13 @@ namespace ossServer.Controllers.Ugyfelkapcsolat
 
 
         public static IOrderedQueryable<Models.Ugyfelkapcsolat> GetQuery(ossContext context, 
-            List<SzMT> szmt, FromTo FromTo)
+            int Ugyfelkod, List<SzMT> szmt, FromTo FromTo)
         {
             var qry = context.Ugyfelkapcsolat.AsNoTracking()
               .Include(r => r.FromugyfelkodNavigation).ThenInclude(r1 => r1.HelysegkodNavigation)
+              .Include(r => r.FromugyfelkodNavigation).ThenInclude(r1 => r1.TevekenysegkodNavigation)
               .Include(r => r.TougyfelkodNavigation).ThenInclude(r1 => r1.HelysegkodNavigation)
+              .Include(r => r.TougyfelkodNavigation).ThenInclude(r1 => r1.TevekenysegkodNavigation)
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod);
 
             foreach (var f in szmt)
@@ -92,10 +96,12 @@ namespace ossServer.Controllers.Ugyfelkapcsolat
                         switch (FromTo)
                         {
                             case FromTo.ToleIndul:
-                                qry = qry.Where(s => s.TougyfelkodNavigation.Nev.Contains((string)f.Minta));
+                                qry = qry.Where(s => s.Fromugyfelkod == Ugyfelkod && 
+                                    s.TougyfelkodNavigation.Nev.Contains((string)f.Minta));
                                 break;
                             case FromTo.HozzaEr:
-                                qry = qry.Where(s => s.FromugyfelkodNavigation.Nev.Contains((string)f.Minta));
+                                qry = qry.Where(s => s.FromugyfelkodNavigation.Nev.Contains((string)f.Minta) &&
+                                    s.Tougyfelkod == Ugyfelkod);
                                 break;
                         }
                         break;
@@ -103,10 +109,12 @@ namespace ossServer.Controllers.Ugyfelkapcsolat
                         switch (FromTo)
                         {
                             case FromTo.ToleIndul:
-                                qry = qry.Where(s => s.TougyfelkodNavigation.Ceg.Contains((string)f.Minta));
+                                qry = qry.Where(s => s.Fromugyfelkod == Ugyfelkod && 
+                                    s.TougyfelkodNavigation.Ceg.Contains((string)f.Minta));
                                 break;
                             case FromTo.HozzaEr:
-                                qry = qry.Where(s => s.FromugyfelkodNavigation.Ceg.Contains((string)f.Minta));
+                                qry = qry.Where(s => s.FromugyfelkodNavigation.Ceg.Contains((string)f.Minta) &&
+                                    s.Tougyfelkod == Ugyfelkod);
                                 break;
                         }
                         break;
@@ -114,10 +122,12 @@ namespace ossServer.Controllers.Ugyfelkapcsolat
                         switch (FromTo)
                         {
                             case FromTo.ToleIndul:
-                                qry = qry.Where(s => s.TougyfelkodNavigation.Beosztas.Contains((string)f.Minta));
+                                qry = qry.Where(s => s.Fromugyfelkod == Ugyfelkod && 
+                                    s.TougyfelkodNavigation.Beosztas.Contains((string)f.Minta));
                                 break;
                             case FromTo.HozzaEr:
-                                qry = qry.Where(s => s.FromugyfelkodNavigation.Beosztas.Contains((string)f.Minta));
+                                qry = qry.Where(s => s.FromugyfelkodNavigation.Beosztas.Contains((string)f.Minta) &&
+                                    s.Tougyfelkod == Ugyfelkod);
                                 break;
                         }
                         break;
@@ -125,10 +135,12 @@ namespace ossServer.Controllers.Ugyfelkapcsolat
                         switch (FromTo)
                         {
                             case FromTo.ToleIndul:
-                                qry = qry.Where(s => s.TougyfelkodNavigation.HelysegkodNavigation.Helysegnev.Contains((string)f.Minta));
+                                qry = qry.Where(s => s.Fromugyfelkod == Ugyfelkod && 
+                                    s.TougyfelkodNavigation.HelysegkodNavigation.Helysegnev.Contains((string)f.Minta));
                                 break;
                             case FromTo.HozzaEr:
-                                qry = qry.Where(s => s.FromugyfelkodNavigation.HelysegkodNavigation.Helysegnev.Contains((string)f.Minta));
+                                qry = qry.Where(s => s.FromugyfelkodNavigation.HelysegkodNavigation.Helysegnev.Contains((string)f.Minta) &&
+                                    s.Tougyfelkod == Ugyfelkod);
                                 break;
                         }
                         break;
@@ -136,10 +148,12 @@ namespace ossServer.Controllers.Ugyfelkapcsolat
                         switch (FromTo)
                         {
                             case FromTo.ToleIndul:
-                                qry = qry.Where(s => s.TougyfelkodNavigation.Telefon.Contains((string)f.Minta));
+                                qry = qry.Where(s => s.Fromugyfelkod == Ugyfelkod && 
+                                    s.TougyfelkodNavigation.Telefon.Contains((string)f.Minta));
                                 break;
                             case FromTo.HozzaEr:
-                                qry = qry.Where(s => s.FromugyfelkodNavigation.Telefon.Contains((string)f.Minta));
+                                qry = qry.Where(s => s.FromugyfelkodNavigation.Telefon.Contains((string)f.Minta) &&
+                                    s.Tougyfelkod == Ugyfelkod);
                                 break;
                         }
                         break;
@@ -147,10 +161,12 @@ namespace ossServer.Controllers.Ugyfelkapcsolat
                         switch (FromTo)
                         {
                             case FromTo.ToleIndul:
-                                qry = qry.Where(s => s.TougyfelkodNavigation.Email.Contains((string)f.Minta));
+                                qry = qry.Where(s => s.Fromugyfelkod == Ugyfelkod && 
+                                    s.TougyfelkodNavigation.Email.Contains((string)f.Minta));
                                 break;
                             case FromTo.HozzaEr:
-                                qry = qry.Where(s => s.FromugyfelkodNavigation.Email.Contains((string)f.Minta));
+                                qry = qry.Where(s => s.FromugyfelkodNavigation.Email.Contains((string)f.Minta) &&
+                                    s.Tougyfelkod == Ugyfelkod);
                                 break;
                         }
                         break;
@@ -158,10 +174,12 @@ namespace ossServer.Controllers.Ugyfelkapcsolat
                         switch (FromTo)
                         {
                             case FromTo.ToleIndul:
-                                qry = qry.Where(s => s.TougyfelkodNavigation.Egyeblink.Contains((string)f.Minta));
+                                qry = qry.Where(s => s.Fromugyfelkod == Ugyfelkod && 
+                                    s.TougyfelkodNavigation.Egyeblink.Contains((string)f.Minta));
                                 break;
                             case FromTo.HozzaEr:
-                                qry = qry.Where(s => s.FromugyfelkodNavigation.Egyeblink.Contains((string)f.Minta));
+                                qry = qry.Where(s => s.FromugyfelkodNavigation.Egyeblink.Contains((string)f.Minta) &&
+                                    s.Tougyfelkod == Ugyfelkod);
                                 break;
                         }
                         break;
@@ -169,10 +187,12 @@ namespace ossServer.Controllers.Ugyfelkapcsolat
                         switch (FromTo)
                         {
                             case FromTo.ToleIndul:
-                                qry = qry.Where(s => s.TougyfelkodNavigation.Ajanlotta.Contains((string)f.Minta));
+                                qry = qry.Where(s => s.Fromugyfelkod == Ugyfelkod && 
+                                    s.TougyfelkodNavigation.Ajanlotta.Contains((string)f.Minta));
                                 break;
                             case FromTo.HozzaEr:
-                                qry = qry.Where(s => s.FromugyfelkodNavigation.Ajanlotta.Contains((string)f.Minta));
+                                qry = qry.Where(s => s.FromugyfelkodNavigation.Ajanlotta.Contains((string)f.Minta) &&
+                                    s.Tougyfelkod == Ugyfelkod);
                                 break;
                         }
                         break;
@@ -181,13 +201,13 @@ namespace ossServer.Controllers.Ugyfelkapcsolat
                         {
                             case FromTo.ToleIndul:
                                 qry = int.TryParse((string)f.Minta, out var ugyfelKod)
-                                    ? qry.Where(s => s.Tougyfelkod <= ugyfelKod)
-                                    : qry.Where(s => s.Tougyfelkod >= 0);
+                                    ? qry.Where(s => s.Fromugyfelkod == Ugyfelkod && s.Tougyfelkod <= ugyfelKod)
+                                    : qry.Where(s => s.Fromugyfelkod == Ugyfelkod && s.Tougyfelkod >= 0);
                                 break;
                             case FromTo.HozzaEr:
                                 qry = int.TryParse((string)f.Minta, out var ugyfelKod1)
-                                    ? qry.Where(s => s.Fromugyfelkod <= ugyfelKod1)
-                                    : qry.Where(s => s.Fromugyfelkod >= 0);
+                                    ? qry.Where(s => s.Fromugyfelkod <= ugyfelKod1 && s.Tougyfelkod == Ugyfelkod)
+                                    : qry.Where(s => s.Fromugyfelkod >= 0 && s.Tougyfelkod == Ugyfelkod);
                                 break;
                         }
                         break;

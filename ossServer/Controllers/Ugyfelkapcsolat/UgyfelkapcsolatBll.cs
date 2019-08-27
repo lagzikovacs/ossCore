@@ -60,8 +60,13 @@ namespace ossServer.Controllers.Ugyfelkapcsolat
                 case FromTo.ToleIndul: // a To ügyfelek adatai kellenek
                     if (entity.TougyfelkodNavigation != null)
                     {
+                        result.Nev = entity.TougyfelkodNavigation.Nev;
                         if (entity.TougyfelkodNavigation.HelysegkodNavigation != null)
                             result.Cim = Cim(entity.TougyfelkodNavigation);
+                        result.Ceg = entity.TougyfelkodNavigation.Ceg;
+                        result.Beosztas = entity.TougyfelkodNavigation.Beosztas;
+                        result.Telefon = entity.TougyfelkodNavigation.Telefon;
+                        result.Email = entity.TougyfelkodNavigation.Email;
                         if (entity.TougyfelkodNavigation.TevekenysegkodNavigation != null)
                             result.Tevekenyseg = entity.TougyfelkodNavigation.TevekenysegkodNavigation.Tevekenyseg1;
                     }
@@ -69,9 +74,13 @@ namespace ossServer.Controllers.Ugyfelkapcsolat
                 case FromTo.HozzaEr: // a From ügyfelek adatai kellenek
                     if (entity.FromugyfelkodNavigation != null)
                     {
-
+                        result.Nev = entity.FromugyfelkodNavigation.Nev;
                         if (entity.FromugyfelkodNavigation.HelysegkodNavigation != null)
                             result.Cim = Cim(entity.FromugyfelkodNavigation);
+                        result.Ceg = entity.FromugyfelkodNavigation.Ceg;
+                        result.Beosztas = entity.FromugyfelkodNavigation.Beosztas;
+                        result.Telefon = entity.FromugyfelkodNavigation.Telefon;
+                        result.Email = entity.FromugyfelkodNavigation.Email;
                         if (entity.FromugyfelkodNavigation.TevekenysegkodNavigation != null)
                             result.Tevekenyseg = entity.FromugyfelkodNavigation.TevekenysegkodNavigation.Tevekenyseg1;
                     }
@@ -104,12 +113,12 @@ namespace ossServer.Controllers.Ugyfelkapcsolat
         }
 
         public static async Task<Tuple<List<UgyfelkapcsolatDto>, int>> SelectAsync(ossContext context, 
-            string sid, int rekordTol, int lapMeret, List<SzMT> szmt, FromTo FromTo)
+            string sid, int rekordTol, int lapMeret, int Ugyfelkod, List<SzMT> szmt, FromTo FromTo)
         {
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.UGYFELEK);
 
-            var qry = UgyfelkapcsolatDal.GetQuery(context, szmt, FromTo);
+            var qry = UgyfelkapcsolatDal.GetQuery(context, Ugyfelkod, szmt, FromTo);
             var osszesRekord = await qry.CountAsync();
             var entities = await qry.Skip(rekordTol).Take(lapMeret).ToListAsync();
             var result = new List<UgyfelkapcsolatDto>();
