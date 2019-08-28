@@ -1,0 +1,1 @@
+ExistsAsync-ek esetén még nincs partíciókód, átmehet minden

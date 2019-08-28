@@ -13,9 +13,9 @@ namespace ossServer.Controllers.Ugyfelkapcsolat
     {
         public static async Task ExistsAsync(ossContext context, Models.Ugyfelkapcsolat entity)
         {
-            if (await context.Ugyfelkapcsolat.AnyAsync(s => s.Particiokod == entity.Particiokod &&
-                ((s.Fromugyfelkod == entity.Fromugyfelkod && s.Tougyfelkod == entity.Tougyfelkod) ||
-                (s.Fromugyfelkod == entity.Tougyfelkod && s.Tougyfelkod == entity.Fromugyfelkod)) ))
+            if (await context.Ugyfelkapcsolat.AnyAsync(s => 
+                (s.Fromugyfelkod == entity.Fromugyfelkod && s.Tougyfelkod == entity.Tougyfelkod) ||
+                (s.Fromugyfelkod == entity.Tougyfelkod && s.Tougyfelkod == entity.Fromugyfelkod) ))
 
                 throw new Exception(string.Format(Messages.MarLetezoTetel, "ügyfélkapcsolat"));
         }
