@@ -129,29 +129,19 @@ namespace ossServer.Controllers.Ugyfelkapcsolat
             return new Tuple<List<UgyfelkapcsolatDto>, int>(result, osszesRekord);
         }
 
-        // TODO nem egész korrekt
         public static List<ColumnSettings> GridColumns()
         {
             return new List<ColumnSettings>
             {
-                new ColumnSettings {Name="Ugyfelkod", Title = "Id", Type = ColumnType.INT },
-                new ColumnSettings {Name="Csoport", Title = "", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Ugyfelkapcsolatkod", Title = "Id", Type = ColumnType.INT },
                 new ColumnSettings {Name="Nev", Title = "Név", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Cim", Title = "Cím", Type = ColumnType.STRING },
                 new ColumnSettings {Name="Ceg", Title = "Cég", Type = ColumnType.STRING },
                 new ColumnSettings {Name="Beosztas", Title = "Beosztás", Type = ColumnType.STRING },
-                new ColumnSettings {Name="Iranyitoszam", Title = "Irányítószám", Type = ColumnType.STRING },
-                new ColumnSettings {Name="Helysegnev", Title = "Helységnév", Type = ColumnType.STRING },
-                new ColumnSettings {Name="Kozterulet", Title = "Közterület", Type = ColumnType.STRING },
-                new ColumnSettings {Name="Kozterulettipus", Title = "Közterület tipus", Type = ColumnType.STRING },
-                new ColumnSettings {Name="Hazszam", Title = "Házszám", Type = ColumnType.STRING },
-                new ColumnSettings {Name="Adoszam", Title = "Adószám", Type = ColumnType.STRING },
-                new ColumnSettings {Name="Euadoszam", Title = "EU adószám", Type = ColumnType.STRING },
                 new ColumnSettings {Name="Telefon", Title = "Telefon", Type = ColumnType.STRING },
                 new ColumnSettings {Name="Email", Title = "Email", Type = ColumnType.STRING },
                 new ColumnSettings {Name="Tevekenyseg", Title = "Tevékenység", Type = ColumnType.STRING },
-                new ColumnSettings {Name="Egyeblink", Title = "Egyéb link", Type = ColumnType.STRING },
-                new ColumnSettings {Name="Ajanlotta", Title = "Ajánlotta", Type = ColumnType.STRING },
-                new ColumnSettings {Name="Megjegyzes", Title = "Megjegyzés", Type = ColumnType.STRING },
+                new ColumnSettings {Name="Leiras", Title = "Leírás", Type = ColumnType.STRING },
             };
         }
 

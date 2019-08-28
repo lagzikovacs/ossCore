@@ -32,6 +32,8 @@ namespace ossServer.Controllers.Startup
         public List<ColumnSettings> Cikk_Reszletek { get; set; }
         public List<ColumnSettings> Ugyfel_Grid { get; set; }
         public List<ColumnSettings> Ugyfel_Reszletek { get; set; }
+        public List<ColumnSettings> Ugyfelkapcsolat_Grid { get; set; }
+        public List<ColumnSettings> Ugyfelkapcsolat_Reszletek { get; set; }
 
         public List<ColumnSettings> Projekt_Grid { get; set; }
         public List<ColumnSettings> Projekt_Reszletek { get; set; }
