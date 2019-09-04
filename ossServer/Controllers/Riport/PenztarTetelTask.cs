@@ -1,14 +1,13 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using ossServer.Models;
+using ossServer.Utils;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using ossServer.Models;
-using ossServer.Tasks;
-using ossServer.Utils;
 
 namespace ossServer.Controllers.Riport
 {
-    public class PenztarTetelTask : ServerTaskBase
+    public class PenztarTetelTask : RiportTask.RiportTask
     {
         private int _penztarKod;
         private DateTime _datumTol;

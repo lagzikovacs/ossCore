@@ -1,14 +1,13 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using ossServer.Models;
+using ossServer.Utils;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using ossServer.Models;
-using ossServer.Tasks;
-using ossServer.Utils;
 
 namespace ossServer.Controllers.Riport
 {
-    public class ProjektTask : ServerTaskBase
+    public class ProjektTask : RiportTask.RiportTask
     {
         private int _kod;
         private string _nev;

@@ -1,13 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ossServer.Models;
-using ossServer.Tasks;
 using ossServer.Utils;
 using System;
 using System.Collections.Generic;
 
 namespace ossServer.Controllers.Riport
 {
-    public class BejovoSzamlaTask : ServerTaskBase
+    public class BejovoSzamlaTask : RiportTask.RiportTask
     {
         private DateTime _teljesitesKeltetol;
         private DateTime _teljesitesKelteig;

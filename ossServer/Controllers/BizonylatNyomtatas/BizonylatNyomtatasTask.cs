@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using ossServer.Enums;
 using ossServer.Models;
-using ossServer.Tasks;
 using ossServer.Utils;
 using System;
 using System.Collections.Generic;
@@ -10,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ossServer.Controllers.BizonylatNyomtatas
 {
-    public class BizonylatNyomtatasTask : ServerTaskBase
+    public class BizonylatNyomtatasTask : RiportTask.RiportTask
     {
         private int _bizonylatkod;
         private BizonylatNyomtatasTipus _nyomtatasTipus;

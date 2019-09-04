@@ -4,12 +4,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using ossServer.Models;
-using ossServer.Tasks;
+using ossServer.RiportTask;
 using ossServer.Utils;
 
 namespace ossServer.Controllers.Riport
 {
-    public class BeszerzesTask : ServerTaskBase
+    public class BeszerzesTask : RiportTask.RiportTask
     {
         private DateTime _teljesitesKeltetol;
         private DateTime _teljesitesKelteig;

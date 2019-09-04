@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ossServer.Models;
-using ossServer.Tasks;
+using ossServer.RiportTask;
 using ossServer.Utils;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Riport
 {
-    public class KimenoSzamlaTask : ServerTaskBase
+    public class KimenoSzamlaTask : RiportTask.RiportTask
     {
         private DateTime _teljesitesKeltetol;
         private DateTime _teljesitesKelteig;

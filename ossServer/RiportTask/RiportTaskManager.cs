@@ -2,20 +2,20 @@
 using System;
 using System.Collections.Concurrent;
 
-namespace ossServer.Tasks
+namespace ossServer.RiportTask
 {
-    public class ServerTaskManager
+    public class RiportTaskManager
     {
-        private static readonly ConcurrentDictionary<string, ServerTaskBase> SessionHandlers =
-            new ConcurrentDictionary<string, ServerTaskBase>();
+        private static readonly ConcurrentDictionary<string, RiportTask> SessionHandlers =
+            new ConcurrentDictionary<string, RiportTask>();
 
-        public static void Add(string taskId, ServerTaskBase serverTask)
+        public static void Add(string taskId, RiportTask serverTask)
         {
             if (!SessionHandlers.TryAdd(taskId, serverTask))
                 throw new Exception("Tasks.Add");
         }
 
-        public static ServerTaskBase Get(string taskId, string sid)
+        public static RiportTask Get(string taskId, string sid)
         {
             if (SessionHandlers.TryGetValue(taskId, out var result))
             {

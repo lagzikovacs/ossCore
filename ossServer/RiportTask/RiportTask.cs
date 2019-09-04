@@ -4,28 +4,28 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ossServer.Tasks
+namespace ossServer.RiportTask
 {
-    public abstract class ServerTaskBase
+    public abstract class RiportTask
     {
         protected IServiceScopeFactory _scopeFactory;
         internal string _sid { get; set; }
         internal string _tasktoken { get; }
-        protected ServerTaskResult _result { get; set; }
+        protected RiportTaskResult _result { get; set; }
         protected CancellationToken _cancellationtoken = new CancellationToken();
         protected bool _cancelled;
 
-        protected ServerTaskBase(IServiceScopeFactory scopeFactory)
+        protected RiportTask(IServiceScopeFactory scopeFactory)
         {
             _scopeFactory = scopeFactory;
 
             _tasktoken = Guid.NewGuid().ToString("N");
-            _result = new ServerTaskResult();
+            _result = new RiportTaskResult();
         }
 
         public void Start()
         {
-            ServerTaskManager.Add(_tasktoken, this);
+            RiportTaskManager.Add(_tasktoken, this);
 
             var t = Task.Factory.StartNew(InternalRunAsync, _cancellationtoken);
         }
@@ -33,7 +33,7 @@ namespace ossServer.Tasks
         private async Task InternalRunAsync()
         {
             lock (_result)
-                _result.Status = ServerTaskStates.Running;
+                _result.Status = RiportTaskStates.Running;
 
             var exception = await RunAsync();
 
@@ -41,11 +41,11 @@ namespace ossServer.Tasks
             {
                 if (exception == null)
                 {
-                    _result.Status = _cancelled ? ServerTaskStates.Cancelled : ServerTaskStates.Completed;
+                    _result.Status = _cancelled ? RiportTaskStates.Cancelled : RiportTaskStates.Completed;
                 }
                 else
                 {
-                    _result.Status = ServerTaskStates.Error;
+                    _result.Status = RiportTaskStates.Error;
                     _result.Error = exception.InmostMessage();
                 }
             }
@@ -54,23 +54,23 @@ namespace ossServer.Tasks
             // ennyi ideje van hogy megszerezze az eredményt a kliens.
             Thread.Sleep(new TimeSpan(0, 0, 1, 0));
             // utána eldobjuk a taskot
-            ServerTaskManager.TryRemove(_tasktoken);
+            RiportTaskManager.TryRemove(_tasktoken);
         }
 
         protected abstract Task<Exception> RunAsync();
 
-        public ServerTaskResult Check()
+        public RiportTaskResult Check()
         {
             lock (_result)
             {
                 switch (_result.Status)
                 {
-                    case ServerTaskStates.Queued:
-                    case ServerTaskStates.Running:
+                    case RiportTaskStates.Queued:
+                    case RiportTaskStates.Running:
                         break;
-                    case ServerTaskStates.Error:
-                    case ServerTaskStates.Completed:
-                        ServerTaskManager.TryRemove(_tasktoken);
+                    case RiportTaskStates.Error:
+                    case RiportTaskStates.Completed:
+                        RiportTaskManager.TryRemove(_tasktoken);
                         break;
                 }
 

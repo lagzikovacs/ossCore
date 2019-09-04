@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ossServer.BaseResults;
-using ossServer.Models;
-using ossServer.Tasks;
+using ossServer.RiportTask;
 using ossServer.Utils;
 using System;
 using System.Collections.Generic;
@@ -19,13 +18,13 @@ namespace ossServer.Controllers.Riport
 
             try
             {
-                var taskm = ServerTaskManager.Get(taskToken, sid);
+                var taskm = RiportTaskManager.Get(taskToken, sid);
                 var taskresult = taskm.Check();
 
                 result.Status = taskresult.Status;
                 result.Error = taskresult.Error;
 
-                if (taskresult.Status == ServerTaskStates.Completed)
+                if (taskresult.Status == RiportTaskStates.Completed)
                     result.Riport = taskresult.Result;
             }
             catch (Exception ex)
@@ -44,7 +43,7 @@ namespace ossServer.Controllers.Riport
 
             try
             {
-                var taskm = ServerTaskManager.Get(taskToken, sid);
+                var taskm = RiportTaskManager.Get(taskToken, sid);
                 taskm.Cancel();
             }
             catch (Exception ex)

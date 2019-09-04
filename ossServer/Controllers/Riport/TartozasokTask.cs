@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ossServer.Models;
-using ossServer.Tasks;
 using ossServer.Utils;
 using System;
 using System.Collections.Generic;
@@ -8,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ossServer.Controllers.Riport
 {
-    public class TartozasokTask : ServerTaskBase
+    public class TartozasokTask : RiportTask.RiportTask
     {
         private DateTime _ezenANapon;
         private bool _lejart;

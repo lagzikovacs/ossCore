@@ -1,14 +1,13 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using ossServer.Models;
+using ossServer.Utils;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using ossServer.Models;
-using ossServer.Tasks;
-using ossServer.Utils;
 
 namespace ossServer.Controllers.Riport
 {
-    public class KeszletTask : ServerTaskBase
+    public class KeszletTask : RiportTask.RiportTask
     {
         private DateTime _idopont;
 

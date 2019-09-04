@@ -1,6 +1,6 @@
-﻿namespace ossServer.Tasks
+﻿namespace ossServer.RiportTask
 {
-    public enum ServerTaskStates
+    public enum RiportTaskStates
     {
         Queued = 0,
         Running = 1,

@@ -1,11 +1,11 @@
 ﻿using ossServer.BaseResults;
-using ossServer.Tasks;
+using ossServer.RiportTask;
 
 namespace ossServer.Controllers.Riport
 {
     public class RiportResult : EmptyResult
     {
-        public ServerTaskStates Status { get; set; } = ServerTaskStates.Queued;
+        public RiportTaskStates Status { get; set; } = RiportTaskStates.Queued;
         public byte[] Riport { get; set; }
     }
 }
