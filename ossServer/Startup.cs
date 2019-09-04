@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
 using ossServer.Controllers.BizonylatNyomtatas;
+using ossServer.Controllers.Kapcsolatihalo;
 using ossServer.Controllers.Riport;
 using ossServer.Hubs;
 using ossServer.Models;
@@ -38,6 +39,8 @@ namespace ossServer
             services.AddTransient<PenztarTetelTask>();
             services.AddTransient<ProjektTask>();
             services.AddTransient<BizonylatNyomtatasTask>();
+
+            services.AddTransient<KapcsolatihaloTask>();
 
             //TODO: lehet finomítani - most mindenhonnan hívható minden action
             services.AddCors(options =>

@@ -75,6 +75,11 @@ namespace ossServer.Controllers.Ugyfel
             var entity = await UgyfelDal.GetAsync(context, key);
             return Calc(entity);
         }
+        public static async Task<UgyfelDto> GetAsync(ossContext context, int key)
+        {
+            var entity = await UgyfelDal.GetAsync(context, key);
+            return Calc(entity);
+        }
 
         public static async Task<List<UgyfelDto>> ReadAsync(ossContext context, string sid, string maszk)
         {

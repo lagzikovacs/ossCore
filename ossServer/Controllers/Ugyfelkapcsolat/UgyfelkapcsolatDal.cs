@@ -74,9 +74,14 @@ namespace ossServer.Controllers.Ugyfelkapcsolat
             return entity.Ugyfelkapcsolatkod;
         }
 
+        public static IOrderedQueryable<Models.Ugyfelkapcsolat> GetQuery(ossContext context)
+        {
+            var qry = context.Ugyfelkapcsolat.AsNoTracking()
+                .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
+                .OrderBy(s => s.Ugyfelkapcsolatkod);
 
-
-
+            return qry;
+        }
 
         public static IOrderedQueryable<Models.Ugyfelkapcsolat> GetQuery(ossContext context, 
             int Ugyfelkod, List<SzMT> szmt, FromTo FromTo)
