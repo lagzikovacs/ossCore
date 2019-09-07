@@ -10,13 +10,13 @@ namespace ossServer.Controllers.Kapcsolatihalo
     public class KapcsolatihaloController : ControllerBase
     {
         [HttpPost]
-        public StringResult TaskStartNew([FromServices] KapcsolatihaloTask taskm, [FromQuery] string sid)
+        public StringResult StartReader([FromServices] KapcsolatihaloTask taskm, [FromQuery] string sid)
         {
             var result = new StringResult();
 
             try
             {
-                taskm.sid = sid;
+                taskm.Setup(sid, KapcsolatihaloTaskTypes.Reader);
                 taskm.Start();
                 result.Result = taskm.tasktoken;
             }

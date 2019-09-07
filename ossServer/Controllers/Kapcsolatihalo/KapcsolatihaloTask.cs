@@ -11,7 +11,8 @@ namespace ossServer.Controllers.Kapcsolatihalo
     {
         public IServiceScopeFactory scopeFactory;
         public string tasktoken { get; }
-        public string sid { get; set; }
+        public KapcsolatihaloTaskTypes tasktype { get; private set; }
+        public string sid { get; private set; }
         public KapcsolatihaloTaskResult result { get; set; }
         public CancellationToken cancellationtoken = new CancellationToken();
 
@@ -21,6 +22,12 @@ namespace ossServer.Controllers.Kapcsolatihalo
 
             tasktoken = Guid.NewGuid().ToString("N");
             result = new KapcsolatihaloTaskResult();
+        }
+
+        public void Setup(string sid, KapcsolatihaloTaskTypes tasktype)
+        {
+            this.sid = sid;
+            this.tasktype = tasktype;
         }
 
         public void Start()
@@ -34,10 +41,18 @@ namespace ossServer.Controllers.Kapcsolatihalo
             }
 
             KapcsolatihaloTaskManager.Add(tasktoken, this);
-            Task.Factory.StartNew(RunAsync, cancellationtoken);
+            switch (tasktype)
+            {
+                case KapcsolatihaloTaskTypes.Reader:
+                    Task.Factory.StartNew(ReadAsync, cancellationtoken);
+                    break;
+                case KapcsolatihaloTaskTypes.Writer:
+                    break;
+            }
+            
         }
 
-        private async Task RunAsync()
+        private async Task ReadAsync()
         {
             using (var scope = scopeFactory.CreateScope())
             {

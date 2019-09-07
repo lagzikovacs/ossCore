@@ -30,7 +30,8 @@ namespace ossServer.Controllers.Ugyfel
         public bool Hirlevel { get; set; }
         public string Kikuldesikod { get; set; }
         public DateTime? Kikuldesikodidopontja { get; set; }
-
+        public int? Halox { get; set; }
+        public int? Haloy { get; set; }
 
         public DateTime Letrehozva { get; set; }
         public string Letrehozta { get; set; }

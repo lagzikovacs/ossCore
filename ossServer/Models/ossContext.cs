@@ -2678,6 +2678,10 @@ namespace ossServer.Models
                     .HasMaxLength(20)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Halox).HasColumnName("HALOX");
+
+                entity.Property(e => e.Haloy).HasColumnName("HALOY");
+
                 entity.Property(e => e.Hazszam)
                     .HasColumnName("HAZSZAM")
                     .HasMaxLength(10)
