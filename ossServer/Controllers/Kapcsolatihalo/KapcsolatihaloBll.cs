@@ -43,5 +43,24 @@ namespace ossServer.Controllers.Kapcsolatihalo
 
             return result;
         }
+
+        public static async Task<KapcsolatihaloTaskResult> Write(ossContext context, string sid,
+            List<KapcsolatihaloPos> pos)
+        {
+            SessionBll.Check(context, sid);
+            await CsoportDal.JogeAsync(context, JogKod.KAPCSOLATIHALOMOD);
+
+            var result = new KapcsolatihaloTaskResult
+            {
+                lstUgyfelkapcsolatDto = null,
+                lstUgyfelDto = new List<UgyfelDto>()
+            };
+
+            foreach (var p in pos)
+                result.lstUgyfelDto.Add(await UgyfelBll.UpdatePosAsync(context, sid,
+                    p.Ugyfelkod, p.X, p.Y, p.UtolsoModositas));
+
+            return result;
+        }
     }
 }

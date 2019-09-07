@@ -2,6 +2,7 @@
 using ossServer.BaseResults;
 using ossServer.Utils;
 using System;
+using System.Collections.Generic;
 
 namespace ossServer.Controllers.Kapcsolatihalo
 {
@@ -17,6 +18,26 @@ namespace ossServer.Controllers.Kapcsolatihalo
             try
             {
                 taskm.Setup(sid, KapcsolatihaloTaskTypes.Reader);
+                taskm.Start();
+                result.Result = taskm.tasktoken;
+            }
+            catch (Exception ex)
+            {
+                result.Error = ex.InmostMessage();
+            }
+
+            return result;
+        }
+
+        [HttpPost]
+        public StringResult StartWriter([FromServices] KapcsolatihaloTask taskm, [FromQuery] string sid,
+            [FromBody] List<KapcsolatihaloPos> pos)
+        {
+            var result = new StringResult();
+
+            try
+            {
+                taskm.Setup(sid, KapcsolatihaloTaskTypes.Writer, pos);
                 taskm.Start();
                 result.Result = taskm.tasktoken;
             }

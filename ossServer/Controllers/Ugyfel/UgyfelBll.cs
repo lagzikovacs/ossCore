@@ -124,6 +124,22 @@ namespace ossServer.Controllers.Ugyfel
             return await UgyfelDal.UpdateAsync(context, entity);
         }
 
+        public static async Task<UgyfelDto> UpdatePosAsync(ossContext context, string sid,
+            int Ugyfelkod, int X, int Y, DateTime UtolsoModositas)
+        {
+            SessionBll.Check(context, sid);
+            await CsoportDal.JogeAsync(context, JogKod.UGYFELEKMOD);
+
+            await UgyfelDal.Lock(context, Ugyfelkod, UtolsoModositas);
+            var entity = await UgyfelDal.GetAsync(context, Ugyfelkod);
+
+            entity.Halox = X;
+            entity.Haloy = Y;
+            await UgyfelDal.UpdateAsync(context, entity);
+
+            return await GetAsync(context, Ugyfelkod);
+        }
+
         public static async Task ZoomCheckAsync(ossContext context, string sid, int ugyfelkod, string ugyfel)
         {
             SessionBll.Check(context, sid);
