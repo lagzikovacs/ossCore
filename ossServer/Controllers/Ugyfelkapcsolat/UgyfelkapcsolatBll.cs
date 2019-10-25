@@ -1,7 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using ossServer.Controllers.Csoport;
 using ossServer.Controllers.Session;
+using ossServer.Controllers.Ugyfel;
 using ossServer.Enums;
+using ossServer.Hubs;
 using ossServer.Models;
 using ossServer.Utils;
 using System;
@@ -21,14 +24,22 @@ namespace ossServer.Controllers.Ugyfelkapcsolat
             return new UgyfelkapcsolatDto {};
         }
 
-        public static async Task<int> AddAsync(ossContext context, string sid, UgyfelkapcsolatDto dto)
+        public static async Task<int> AddAsync(ossContext context, string sid, IHubContext<OssHub> hubcontext, 
+            UgyfelkapcsolatDto dto)
         {
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.UGYFELEKMOD);
 
             var entity = ObjectUtils.Convert<UgyfelkapcsolatDto, Models.Ugyfelkapcsolat>(dto);
             await UgyfelkapcsolatDal.ExistsAsync(context, entity);
-            return await UgyfelkapcsolatDal.AddAsync(context, entity);
+            var result = await UgyfelkapcsolatDal.AddAsync(context, entity);
+
+            var fromugyfel = await UgyfelBll.GetAsync(context, dto.Fromugyfelkod);
+
+            HubUtils.Uzenet(hubcontext, context.CurrentSession.Felhasznalo,
+                $"Új ügyfélkapcsolat: {fromugyfel.Nev} -> {dto.Nev}");
+
+            return result;
         }
 
         public static async Task DeleteAsync(ossContext context, string sid, UgyfelkapcsolatDto dto)

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using ossServer.BaseResults;
+using ossServer.Hubs;
 using ossServer.Models;
 using ossServer.Utils;
 using System;
@@ -13,10 +15,12 @@ namespace ossServer.Controllers.Ugyfelkapcsolat
     public class UgyfelkapcsolatController : ControllerBase
     {
         private readonly ossContext _context;
+        private readonly IHubContext<OssHub> _hubcontext;
 
-        public UgyfelkapcsolatController(ossContext context)
+        public UgyfelkapcsolatController(ossContext context, IHubContext<OssHub> hubcontext)
         {
             _context = context;
+            _hubcontext = hubcontext;
         }
 
         [HttpPost]
@@ -48,7 +52,7 @@ namespace ossServer.Controllers.Ugyfelkapcsolat
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = await UgyfelkapcsolatBll.AddAsync(_context, sid, dto);
+                    result.Result = await UgyfelkapcsolatBll.AddAsync(_context, sid, _hubcontext, dto);
 
                     tr.Commit();
                 }

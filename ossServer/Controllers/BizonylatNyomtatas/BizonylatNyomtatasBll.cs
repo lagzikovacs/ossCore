@@ -34,6 +34,9 @@ namespace ossServer.Controllers.BizonylatNyomtatas
 
             var entityBizonylat = await BizonylatDal.GetComplexAsync(context, bizonylatKod);
             await BizonylatDal.Lock(context, bizonylatKod, entityBizonylat.Modositva);
+            if ((nyomtatasTipus == BizonylatNyomtatasTipus.Eredeti ||
+                nyomtatasTipus == BizonylatNyomtatasTipus.Másolat) && entityBizonylat.Bizonylatszam == null)
+                throw new Exception("Erről a bizonylatról csak MINTA nyomatási kép készülhet!");
 
             var entityParticio = await ParticioDal.GetAsync(context);
             var bc = JsonConvert.DeserializeObject<BizonylatConf>(entityParticio.Bizonylat);

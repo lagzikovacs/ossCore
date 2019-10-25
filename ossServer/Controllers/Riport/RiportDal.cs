@@ -203,17 +203,38 @@ namespace ossServer.Controllers.Riport
               .Where(s => s.BizonylatkodNavigation.Bizonylattipuskod == (int)BizonylatTipus.Szallito ||
                           s.BizonylatkodNavigation.Bizonylattipuskod == (int)BizonylatTipus.BejovoSzamla)
               .Where(s => s.BizonylatkodNavigation.Teljesiteskelte < ezenIdopontig)
-              .GroupBy(s => new { s.Cikkkod, s.CikkkodNavigation.Megnevezes, s.CikkkodNavigation.MekodNavigation.Me })
+              .GroupBy(s => new { s.Cikkkod, s.CikkkodNavigation.Megnevezes, 
+                  s.CikkkodNavigation.MekodNavigation.Me, s.BizonylatkodNavigation.Bizonylattipuskod })
               .Select(t => new KeszletDto
               {
                   Cikkkod = t.Key.Cikkkod,
                   Cikk = t.Key.Megnevezes,
                   Me = t.Key.Me,
-                  Keszlet = t.Sum(s => s.BizonylatkodNavigation.Bizonylattipuskod == (int)BizonylatTipus.BejovoSzamla ? s.Mennyiseg : 0) -
-                          t.Sum(s => s.BizonylatkodNavigation.Bizonylattipuskod == (int)BizonylatTipus.Szallito ? s.Mennyiseg : 0)
+
+                  Bizonylattipuskod = t.Key.Bizonylattipuskod,
+                  Mozgas = t.Sum(s => s.Mennyiseg)
+                  //Keszlet = t.Sum(s => s.BizonylatkodNavigation.Bizonylattipuskod == (int)BizonylatTipus.BejovoSzamla ? s.Mennyiseg : 0) -
+                  //        t.Sum(s => s.BizonylatkodNavigation.Bizonylattipuskod == (int)BizonylatTipus.Szallito ? s.Mennyiseg : 0)
               });
 
-            return (await qry.ToListAsync()).Where(s => s.Keszlet != 0).OrderBy(s => s.Cikk).ToList();
+            // .net core 3.0 miatt nem megy a korábbi változat
+
+            var lstMozgas = await qry.ToListAsync();
+            foreach (var M in lstMozgas)
+                if (M.Bizonylattipuskod == (int)BizonylatTipus.Szallito)
+                    M.Mozgas = -M.Mozgas;
+
+            var lstKeszlet = lstMozgas.GroupBy(s => new { s.Cikkkod, s.Cikk, s.Me})
+                .Select(t => new KeszletDto 
+                {
+                    Cikkkod = t.Key.Cikkkod,
+                    Cikk = t.Key.Cikk,
+                    Me = t.Key.Me,
+                    Keszlet = t.Sum(s => s.Mozgas)
+                })
+                .ToList();
+
+            return lstKeszlet.Where(s => s.Keszlet != 0).OrderBy(s => s.Cikk).ToList();
         }
 
         //a készlet az utoljára beérkezett tételekből áll

@@ -7,6 +7,10 @@ namespace ossServer.Controllers.Riport
         public int Cikkkod { get; set; }
         public string Cikk { get; set; }
         public string Me { get; set; }
+
+        public int Bizonylattipuskod { get; set; }
+        public decimal Mozgas { get; set; }
+
         public decimal Keszlet { get; set; }
         public DateTime? Utolsobevet { get; set; }
         public decimal Utolsoar { get; set; }
