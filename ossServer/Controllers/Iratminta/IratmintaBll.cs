@@ -95,7 +95,7 @@ namespace ossServer.Controllers.Iratminta
                 TELEFONSZAM = entityProjekt.UgyfelkodNavigation.Telefon,
                 EMAIL = entityProjekt.UgyfelkodNavigation.Email,
                 AC = entityProjekt.Ackva.ToString(CultureInfo.CurrentCulture),
-                DATUM = DateTime.Now.Date.ToLongDateString()
+                DATUM = DateTime.Now.Date.ToShortDateString()
             };
 
             document.MailMerge.Execute(mezoertekek);
@@ -141,7 +141,7 @@ namespace ossServer.Controllers.Iratminta
                 TELEFONSZAM = entityProjekt.UgyfelkodNavigation.Telefon,
                 EMAIL = entityProjekt.UgyfelkodNavigation.Email,
                 AC = entityProjekt.Ackva.ToString(CultureInfo.CurrentCulture),
-                DATUM = DateTime.Now.Date.ToLongDateString()
+                DATUM = DateTime.Now.Date.ToShortDateString()
             };
 
             document.MailMerge.Execute(mezoertekek);
@@ -187,7 +187,7 @@ namespace ossServer.Controllers.Iratminta
                 TELEFONSZAM = entityProjekt.UgyfelkodNavigation.Telefon,
                 EMAIL = entityProjekt.UgyfelkodNavigation.Email,
                 AC = entityProjekt.Ackva.ToString(CultureInfo.CurrentCulture),
-                DATUM = DateTime.Now.Date.ToLongDateString()
+                DATUM = DateTime.Now.Date.ToShortDateString()
             };
 
             document.MailMerge.Execute(mezoertekek);
@@ -296,13 +296,13 @@ namespace ossServer.Controllers.Iratminta
                 NAPELEM = entityProjekt.Napelem,
                 INVERTER = entityProjekt.Inverter,
                 TELEPITESICIM = entityProjekt.Telepitesicim,
-                KIVITELEZESIHATARIDO = entityProjekt.Kivitelezesihatarido.Value.ToLongDateString(),
-                MUNKATERULETATADASA = DateTime.Now.Date.AddDays(1).ToLongDateString(),
+                KIVITELEZESIHATARIDO = entityProjekt.Kivitelezesihatarido.Value.ToShortDateString(),
+                MUNKATERULETATADASA = DateTime.Now.Date.AddDays(1).ToShortDateString(),
                 ARNETTO = arNetto.ToString("#,#", nfi),
                 ARBRUTTO = Calc.RealRound(arNetto * (decimal)1.27, 1m).ToString("#,#", nfi),
                 ELOLEGNETTO = elolegNetto.ToString("#,#", nfi),
                 ELOLEGBRUTTO = Calc.RealRound(elolegNetto * (decimal)1.27, 1m).ToString("#,#", nfi),
-                DATUM = DateTime.Now.Date.ToLongDateString()
+                DATUM = DateTime.Now.Date.ToShortDateString()
             };
 
             document.MailMerge.Execute(mezoertekek);
@@ -355,11 +355,11 @@ namespace ossServer.Controllers.Iratminta
                 NAPELEM = entityProjekt.Napelem,
                 INVERTER = entityProjekt.Inverter,
                 TELEPITESICIM = entityProjekt.Telepitesicim,
-                KIVITELEZESIHATARIDO = entityProjekt.Kivitelezesihatarido.Value.ToLongDateString(),
-                MUNKATERULETATADASA = DateTime.Now.Date.AddDays(1).ToLongDateString(),
+                KIVITELEZESIHATARIDO = entityProjekt.Kivitelezesihatarido.Value.ToShortDateString(),
+                MUNKATERULETATADASA = DateTime.Now.Date.AddDays(1).ToShortDateString(),
                 ARNETTO = (arNetto - 65000).ToString("#,#", nfi),
                 ARBRUTTO = Calc.RealRound((arNetto - 65000) * (decimal)1.27, 1m).ToString("#,#", nfi),
-                DATUM = DateTime.Now.Date.ToLongDateString()
+                DATUM = DateTime.Now.Date.ToShortDateString()
             };
 
             document.MailMerge.Execute(mezoertekek);
@@ -412,13 +412,13 @@ namespace ossServer.Controllers.Iratminta
                 NAPELEM = entityProjekt.Napelem,
                 INVERTER = entityProjekt.Inverter,
                 TELEPITESICIM = entityProjekt.Telepitesicim,
-                KIVITELEZESIHATARIDO = entityProjekt.Kivitelezesihatarido.Value.ToLongDateString(),
-                MUNKATERULETATADASA = DateTime.Now.Date.AddDays(1).ToLongDateString(),
+                KIVITELEZESIHATARIDO = entityProjekt.Kivitelezesihatarido.Value.ToShortDateString(),
+                MUNKATERULETATADASA = DateTime.Now.Date.AddDays(1).ToShortDateString(),
                 ARNETTO = arNetto.ToString("#,#", nfi),
                 ARBRUTTO = Calc.RealRound(arNetto * (decimal)1.27, 1m).ToString("#,#", nfi),
                 ELOLEGNETTO = elolegNetto.ToString("#,#", nfi),
                 ELOLEGBRUTTO = Calc.RealRound(elolegNetto * (decimal)1.27, 1m).ToString("#,#", nfi),
-                DATUM = DateTime.Now.Date.ToLongDateString()
+                DATUM = DateTime.Now.Date.ToShortDateString()
             };
 
             document.MailMerge.Execute(mezoertekek);

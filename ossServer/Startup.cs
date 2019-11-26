@@ -47,7 +47,7 @@ namespace ossServer
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
-                  builder => builder.SetIsOriginAllowed((host) => true) // Core 2.2
+                  builder => builder.SetIsOriginAllowed((host) => true)
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials());
