@@ -357,8 +357,8 @@ namespace ossServer.Controllers.Iratminta
                 TELEPITESICIM = entityProjekt.Telepitesicim,
                 KIVITELEZESIHATARIDO = entityProjekt.Kivitelezesihatarido.Value.ToShortDateString(),
                 MUNKATERULETATADASA = DateTime.Now.Date.AddDays(1).ToShortDateString(),
-                ARNETTO = (arNetto - 65000).ToString("#,#", nfi),
-                ARBRUTTO = Calc.RealRound((arNetto - 65000) * (decimal)1.27, 1m).ToString("#,#", nfi),
+                ARNETTO = (arNetto - 75000).ToString("#,#", nfi),
+                ARBRUTTO = Calc.RealRound((arNetto - 75000) * (decimal)1.27, 1m).ToString("#,#", nfi),
                 DATUM = DateTime.Now.Date.ToShortDateString()
             };
 
