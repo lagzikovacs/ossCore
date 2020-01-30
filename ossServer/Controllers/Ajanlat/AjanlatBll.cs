@@ -146,7 +146,7 @@ namespace ossServer.Controllers.Ajanlat
 
             var gar =
                 "A napelemekre {0} év gyári, az inverterre {1} év gyári, mechanikai szerelvényre {2} év, villamos szerelvényre {3} év, kivitelezésre {4} év garancia érvényes.";
-            XlsUtils.Mezo(_sheet, 32, 3,
+            XlsUtils.Mezo(_sheet, 33, 3,
                 string.Format(gar, napelem.Garancia, inverter.Garancia, mechanikaiSzerelveny.Garancia,
                 villamosSzerelveny.Garancia, munkadij.Garancia));
 
