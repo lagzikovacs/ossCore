@@ -48,7 +48,7 @@ namespace ossServer.Controllers.Ajanlat
                 },
                 ProjektKod = -1,
 
-                Ervenyes = DateTime.Now.AddMonths(1),
+                Ervenyes = DateTime.Now.AddDays(14),
                 SzuksegesAramerosseg = "",
                 Tajolas = "déli",
                 Termeles = 1100,
