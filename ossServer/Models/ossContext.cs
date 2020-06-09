@@ -61,14 +61,12 @@ namespace ossServer.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=94.199.180.128, 50000;Database=oss;User ID=gsg;Password=san1man0;");
+                optionsBuilder.UseSqlServer("Server=kocka\\sqlexpress, 50803;Database=oss;User ID=sa;Password=roadster;");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("ProductVersion", "2.2.6-servicing-10079");
-
             modelBuilder.Entity<Afakulcs>(entity =>
             {
                 entity.HasKey(e => e.Afakulcskod);
@@ -2233,28 +2231,11 @@ namespace ossServer.Models
 
                 entity.ToTable("PROJEKTTEENDO");
 
-                entity.HasIndex(e => e.Dedikalva);
-
                 entity.HasIndex(e => e.Particiokod);
 
                 entity.HasIndex(e => e.Projektkod);
 
-                entity.HasIndex(e => e.Teendokod);
-
                 entity.Property(e => e.Projektteendokod).HasColumnName("PROJEKTTEENDOKOD");
-
-                entity.Property(e => e.Dedikalva)
-                    .HasColumnName("DEDIKALVA")
-                    .HasMaxLength(30)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Elvegezve)
-                    .HasColumnName("ELVEGEZVE")
-                    .HasColumnType("datetime");
-
-                entity.Property(e => e.Hatarido)
-                    .HasColumnName("HATARIDO")
-                    .HasColumnType("datetime");
 
                 entity.Property(e => e.Leiras)
                     .HasColumnName("LEIRAS")
@@ -2284,8 +2265,6 @@ namespace ossServer.Models
 
                 entity.Property(e => e.Projektkod).HasColumnName("PROJEKTKOD");
 
-                entity.Property(e => e.Teendokod).HasColumnName("TEENDOKOD");
-
                 entity.HasOne(d => d.ParticiokodNavigation)
                     .WithMany(p => p.Projektteendo)
                     .HasForeignKey(d => d.Particiokod)
@@ -2297,12 +2276,6 @@ namespace ossServer.Models
                     .HasForeignKey(d => d.Projektkod)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PROJEKTTEENDO_PROJEKT");
-
-                entity.HasOne(d => d.TeendokodNavigation)
-                    .WithMany(p => p.Projektteendo)
-                    .HasForeignKey(d => d.Teendokod)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PROJEKTTEENDO_TEENDO");
             });
 
             modelBuilder.Entity<Session>(entity =>
@@ -2318,8 +2291,7 @@ namespace ossServer.Models
                 entity.Property(e => e.Sessionid)
                     .HasColumnName("SESSIONID")
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .ValueGeneratedNever();
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Azonosito)
                     .IsRequired()
@@ -2895,8 +2867,7 @@ namespace ossServer.Models
                 entity.Property(e => e.Verzio1)
                     .HasColumnName("VERZIO")
                     .HasMaxLength(20)
-                    .IsUnicode(false)
-                    .ValueGeneratedNever();
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Volume>(entity =>
@@ -2947,6 +2918,10 @@ namespace ossServer.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_VOLUME_PARTICIO");
             });
+
+            OnModelCreatingPartial(modelBuilder);
         }
+
+        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }

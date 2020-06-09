@@ -19,7 +19,7 @@ namespace ossServer.Controllers.ProjektTeendo
             var entity = await ProjektTeendoDal.GetAsync(context, key);
             var result = ObjectUtils.Convert<Projektteendo, ProjektTeendoDto>(entity);
 
-            result.Teendo = entity.TeendokodNavigation.Teendo1;
+            //result.Teendo = entity.TeendokodNavigation.Teendo1;
 
             return result;
         }
@@ -31,7 +31,7 @@ namespace ossServer.Controllers.ProjektTeendo
 
             return new ProjektTeendoDto
             {
-                Hatarido = DateTime.Now.Date
+                //Hatarido = DateTime.Now.Date
             };
         }
 
@@ -55,7 +55,7 @@ namespace ossServer.Controllers.ProjektTeendo
             foreach (var entity in entities)
             {
                 var dto = ObjectUtils.Convert<Projektteendo, ProjektTeendoDto>(entity);
-                dto.Teendo = entity.TeendokodNavigation.Teendo1;
+                //dto.Teendo = entity.TeendokodNavigation.Teendo1;
 
                 result.Add(dto);
             }
@@ -89,7 +89,6 @@ namespace ossServer.Controllers.ProjektTeendo
             return new List<ColumnSettings>
             {
                 new ColumnSettings {Name="Projektteendokod", Title = "Id", Type = ColumnType.INT },
-                new ColumnSettings {Name="Hatarido", Title = "Határidő", Type = ColumnType.DATE },
                 new ColumnSettings {Name="Leiras", Title = "Leirás", Type = ColumnType.STRING },
             };
         }

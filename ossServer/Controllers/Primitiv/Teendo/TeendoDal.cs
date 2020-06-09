@@ -46,20 +46,7 @@ namespace ossServer.Controllers.Primitiv.Teendo
 
         public static async Task CheckReferencesAsync(ossContext context, int pKey)
         {
-            var result = new Dictionary<string, int>();
 
-            var n = await context.Projektteendo.CountAsync(s => s.Teendokod == pKey);
-            if (n > 0)
-                result.Add("PROJEKTTEENDO.TEENDO", n);
-
-            if (result.Count > 0)
-            {
-                string builder = "\r\n";
-                foreach (var r in result)
-                    builder += "\r\n" + r.Key + " (" + r.Value + ")";
-
-                throw new Exception(Messages.NemTorolhetoReferenciakMiatt + builder);
-            }
         }
 
         public static async Task DeleteAsync(ossContext context, Models.Teendo entity)
