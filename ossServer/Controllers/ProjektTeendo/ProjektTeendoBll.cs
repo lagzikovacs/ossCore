@@ -3,7 +3,6 @@ using ossServer.Controllers.Session;
 using ossServer.Enums;
 using ossServer.Models;
 using ossServer.Utils;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -19,8 +18,6 @@ namespace ossServer.Controllers.ProjektTeendo
             var entity = await ProjektTeendoDal.GetAsync(context, key);
             var result = ObjectUtils.Convert<Projektteendo, ProjektTeendoDto>(entity);
 
-            //result.Teendo = entity.TeendokodNavigation.Teendo1;
-
             return result;
         }
 
@@ -29,10 +26,7 @@ namespace ossServer.Controllers.ProjektTeendo
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
-            return new ProjektTeendoDto
-            {
-                //Hatarido = DateTime.Now.Date
-            };
+            return new ProjektTeendoDto();
         }
 
         public static async Task<int> AddAsync(ossContext context, string sid, ProjektTeendoDto dto)

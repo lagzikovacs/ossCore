@@ -27,7 +27,6 @@ namespace ossServer.Controllers.ProjektTeendo
         public static async Task<Projektteendo> GetAsync(ossContext context, int pKey)
         {
             var result = await context.Projektteendo
-              //.Include(r => r.TeendokodNavigation)
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.Projektteendokod == pKey).ToListAsync();
 
@@ -55,7 +54,6 @@ namespace ossServer.Controllers.ProjektTeendo
         public static async Task<List<Projektteendo>> SelectAsync(ossContext context, int projektKod)
         {
             return await context.Projektteendo.AsNoTracking()
-              //.Include(r => r.TeendokodNavigation)
               .Where(s => s.Particiokod == context.CurrentSession.Particiokod)
               .Where(s => s.Projektkod == projektKod)
               .OrderBy(s => s.Projektteendokod)

@@ -47,7 +47,6 @@ namespace ossServer.Models
         public virtual DbSet<Projektteendo> Projektteendo { get; set; }
         public virtual DbSet<Session> Session { get; set; }
         public virtual DbSet<Szamlazasirend> Szamlazasirend { get; set; }
-        public virtual DbSet<Teendo> Teendo { get; set; }
         public virtual DbSet<Termekdij> Termekdij { get; set; }
         public virtual DbSet<Tevekenyseg> Tevekenyseg { get; set; }
         public virtual DbSet<Ugyfel> Ugyfel { get; set; }
@@ -61,7 +60,7 @@ namespace ossServer.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=kocka\\sqlexpress, 50803;Database=oss;User ID=sa;Password=roadster;");
+                optionsBuilder.UseSqlServer("Server=kocka, 50803;Database=oss;User ID=sa;Password=roadster;");
             }
         }
 
@@ -2428,55 +2427,6 @@ namespace ossServer.Models
                     .HasForeignKey(d => d.Projektkod)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SZAMLAZASIREND_PROJEKT");
-            });
-
-            modelBuilder.Entity<Teendo>(entity =>
-            {
-                entity.HasKey(e => e.Teendokod);
-
-                entity.ToTable("TEENDO");
-
-                entity.HasIndex(e => e.Particiokod);
-
-                entity.HasIndex(e => new { e.Particiokod, e.Teendo1 })
-                    .HasName("IX_TEENDO_TEENDO")
-                    .IsUnique();
-
-                entity.Property(e => e.Teendokod).HasColumnName("TEENDOKOD");
-
-                entity.Property(e => e.Letrehozta)
-                    .IsRequired()
-                    .HasColumnName("LETREHOZTA")
-                    .HasMaxLength(30)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Letrehozva)
-                    .HasColumnName("LETREHOZVA")
-                    .HasColumnType("datetime");
-
-                entity.Property(e => e.Modositotta)
-                    .IsRequired()
-                    .HasColumnName("MODOSITOTTA")
-                    .HasMaxLength(30)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Modositva)
-                    .HasColumnName("MODOSITVA")
-                    .HasColumnType("datetime");
-
-                entity.Property(e => e.Particiokod).HasColumnName("PARTICIOKOD");
-
-                entity.Property(e => e.Teendo1)
-                    .IsRequired()
-                    .HasColumnName("TEENDO")
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.HasOne(d => d.ParticiokodNavigation)
-                    .WithMany(p => p.Teendo)
-                    .HasForeignKey(d => d.Particiokod)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_TEENDO_PARTICIO");
             });
 
             modelBuilder.Entity<Termekdij>(entity =>

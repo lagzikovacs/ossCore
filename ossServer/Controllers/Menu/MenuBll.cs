@@ -23,7 +23,6 @@ namespace ossServer.Controllers.Menu
               Sub = new List<AngularMenuDto>
             {
               new AngularMenuDto {Title = "Irattipus", RouterLink = "/irattipus", Enabled = jogok.Contains(JogKod.PRIMITIVEK)},
-              new AngularMenuDto {Title = "Teendő", RouterLink = "/teendo", Enabled = jogok.Contains(JogKod.PRIMITIVEK)},
               new AngularMenuDto {Title = "divider"},
               new AngularMenuDto {Title = "Fizetési mód", RouterLink = "/fizetesimod", Enabled = jogok.Contains(JogKod.PRIMITIVEK)},
               new AngularMenuDto {Title = "Pénznem", RouterLink = "/penznem", Enabled = jogok.Contains(JogKod.PRIMITIVEK)},

@@ -73,28 +73,11 @@ namespace ossServer.Controllers.Projekt
                         break;
 
                     case Szempont.CsakHaTeendo:
-                        //qry = qry.Where(p => p.Projektteendo.Any(pt => (pt.Elvegezve == (DateTime?)null)));
+                        qry = qry.Where(p => p.Projektteendo.Any());
                         break;
                     case Szempont.CsakHaTeendoSajat:
-                        var hataridoIg = Convert.ToDateTime(f.Minta).Date;
-                        //qry = qry.Where(p => p.Projektteendo.Any(pt =>
-                        //  (pt.Elvegezve == null & pt.Dedikalva == context.CurrentSession.Felhasznalo &
-                        //   pt.Hatarido <= hataridoIg)));
-                        break;
                     case Szempont.CsakHaLejartTeendo:
-                        //qry = qry.Where(p =>
-                        //  p.Projektteendo.Any(pt => (pt.Elvegezve == null & DateTime.Today > pt.Hatarido)));
-                        break;
                     case Szempont.SajatTeendo:
-                        var ss = f.Minta.ToString().Split(';');
-                        var sHataridoIg = Convert.ToDateTime(ss[0]).Date;
-                        var tl = new List<string>();
-                        if (ss.Length > 1)
-                            for (var i = 1; i < ss.Length; i++)
-                                tl.Add(ss[i]);
-                        //qry = qry.Where(p => p.Projektteendo.Any(pt =>
-                        //  (pt.Elvegezve == null & pt.Dedikalva == context.CurrentSession.Felhasznalo &
-                        //   pt.Hatarido <= sHataridoIg & tl.Contains(pt.TeendokodNavigation.Teendo1))));
                         break;
                     default:
                         throw new Exception($"Lekezeletlen {f.Szempont} Szempont!");

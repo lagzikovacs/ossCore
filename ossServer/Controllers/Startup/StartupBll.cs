@@ -13,7 +13,6 @@ using ossServer.Controllers.Primitiv.Helyseg;
 using ossServer.Controllers.Primitiv.Irattipus;
 using ossServer.Controllers.Primitiv.Me;
 using ossServer.Controllers.Primitiv.Penznem;
-using ossServer.Controllers.Primitiv.Teendo;
 using ossServer.Controllers.Primitiv.Termekdij;
 using ossServer.Controllers.Primitiv.Tevekenyseg;
 using ossServer.Controllers.Projekt;
@@ -50,8 +49,6 @@ namespace ossServer.Controllers.Startup
                 Me_Reszletek = MennyisegiegysegBll.ReszletekColumns(),
                 Penznem_Grid = PenznemBll.GridColumns(),
                 Penznem_Reszletek = PenznemBll.ReszletekColumns(),
-                Teendo_Grid = TeendoBll.GridColumns(),
-                Teendo_Reszletek = TeendoBll.ReszletekColumns(),
                 Termekdij_Grid = TermekdijBll.GridColumns(),
                 Termekdij_Reszletek = TermekdijBll.ReszletekColumns(),
                 Tevekenyseg_Grid = TevekenysegBll.GridColumns(),

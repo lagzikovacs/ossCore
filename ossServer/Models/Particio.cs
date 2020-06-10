@@ -35,7 +35,6 @@ namespace ossServer.Models
             Projektteendo = new HashSet<Projektteendo>();
             Session = new HashSet<Session>();
             Szamlazasirend = new HashSet<Szamlazasirend>();
-            Teendo = new HashSet<Teendo>();
             Termekdij = new HashSet<Termekdij>();
             Tevekenyseg = new HashSet<Tevekenyseg>();
             Ugyfel = new HashSet<Ugyfel>();
@@ -85,7 +84,6 @@ namespace ossServer.Models
         public virtual ICollection<Projektteendo> Projektteendo { get; set; }
         public virtual ICollection<Session> Session { get; set; }
         public virtual ICollection<Szamlazasirend> Szamlazasirend { get; set; }
-        public virtual ICollection<Teendo> Teendo { get; set; }
         public virtual ICollection<Termekdij> Termekdij { get; set; }
         public virtual ICollection<Tevekenyseg> Tevekenyseg { get; set; }
         public virtual ICollection<Ugyfel> Ugyfel { get; set; }
