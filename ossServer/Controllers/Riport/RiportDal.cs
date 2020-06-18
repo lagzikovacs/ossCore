@@ -179,14 +179,14 @@ namespace ossServer.Controllers.Riport
                   Megnevezes = t.Key.Megnevezes,
                   Mennyiseg = t.Sum(u => u.Mennyiseg),
                   Me = t.Key.Me,
-                  Nettoft = t.Sum(u => u.Netto * u.BizonylatkodNavigation.Arfolyam),
-                  BizonylatFej = t.Select(u => new BeszerzesRiporttetelBizonylatDto
-                  {
-                      Bizonylatszam = u.BizonylatkodNavigation.Bizonylatszam,
-                      Bizonylatkelte = u.BizonylatkodNavigation.Bizonylatkelte,
-                      Teljesiteskelte = u.BizonylatkodNavigation.Teljesiteskelte,
-                      Ugyfelnev = u.BizonylatkodNavigation.Ugyfelnev
-                  }).OrderBy(o => o.Teljesiteskelte)
+                  //Nettoft = t.Sum(u => u.Netto * u.BizonylatkodNavigation.Arfolyam),
+                  //BizonylatFej = t.Select(u => new BeszerzesRiporttetelBizonylatDto
+                  //{
+                  //    Bizonylatszam = u.BizonylatkodNavigation.Bizonylatszam,
+                  //    Bizonylatkelte = u.BizonylatkodNavigation.Bizonylatkelte,
+                  //    Teljesiteskelte = u.BizonylatkodNavigation.Teljesiteskelte,
+                  //    Ugyfelnev = u.BizonylatkodNavigation.Ugyfelnev
+                  //}).OrderBy(o => o.Teljesiteskelte)
               })
               .ToListAsync();
         }
