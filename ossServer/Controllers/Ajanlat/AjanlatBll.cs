@@ -19,6 +19,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
+//teszt
 namespace ossServer.Controllers.Ajanlat
 {
     public class AjanlatBll
