@@ -16,7 +16,7 @@ using ossServer.Controllers.Primitiv.Penznem;
 using ossServer.Controllers.Primitiv.Termekdij;
 using ossServer.Controllers.Primitiv.Tevekenyseg;
 using ossServer.Controllers.Projekt;
-using ossServer.Controllers.ProjektTeendo;
+using ossServer.Controllers.ProjektJegyzet;
 using ossServer.Controllers.Session;
 using ossServer.Controllers.SzamlazasiRend;
 using ossServer.Controllers.Ugyfel;
@@ -64,8 +64,8 @@ namespace ossServer.Controllers.Startup
 
                 Projekt_Grid = ProjektBll.GridColumns(),
                 Projekt_Reszletek = ProjektBll.ReszletekColumns(),
-                Projektteendo_Grid = ProjektTeendoBll.GridColumns(),
-                Projektteendo_Reszletek = ProjektTeendoBll.ReszletekColumns(),
+                Projektjegyzet_Grid = ProjektJegyzetBll.GridColumns(),
+                Projektjegyzet_Reszletek = ProjektJegyzetBll.ReszletekColumns(),
                 Szamlazasirend_Grid = SzamlazasiRendBll.GridColumns(),
                 Szamlazasirend_Reszletek = SzamlazasiRendBll.ReszletekColumns(),
 

@@ -1,1 +1,1 @@
-Scaffold-DbContext "Server=kocka, 50803;Database=oss;User ID=sa;Password=roadster;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -force
+Scaffold-DbContext "Server=kocka\sqlexpress;Database=oss;User ID=sa;Password=roadster;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -force

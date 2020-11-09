@@ -7,8 +7,8 @@ namespace ossServer.Models
     {
         public Projekt()
         {
+            Projektjegyzet = new HashSet<Projektjegyzet>();
             Projektkapcsolat = new HashSet<Projektkapcsolat>();
-            Projektteendo = new HashSet<Projektteendo>();
             Szamlazasirend = new HashSet<Szamlazasirend>();
         }
 
@@ -40,8 +40,8 @@ namespace ossServer.Models
         public virtual Particio ParticiokodNavigation { get; set; }
         public virtual Penznem PenznemkodNavigation { get; set; }
         public virtual Ugyfel UgyfelkodNavigation { get; set; }
+        public virtual ICollection<Projektjegyzet> Projektjegyzet { get; set; }
         public virtual ICollection<Projektkapcsolat> Projektkapcsolat { get; set; }
-        public virtual ICollection<Projektteendo> Projektteendo { get; set; }
         public virtual ICollection<Szamlazasirend> Szamlazasirend { get; set; }
     }
 }

@@ -43,8 +43,8 @@ namespace ossServer.Models
         public virtual DbSet<Penztar> Penztar { get; set; }
         public virtual DbSet<Penztartetel> Penztartetel { get; set; }
         public virtual DbSet<Projekt> Projekt { get; set; }
+        public virtual DbSet<Projektjegyzet> Projektjegyzet { get; set; }
         public virtual DbSet<Projektkapcsolat> Projektkapcsolat { get; set; }
-        public virtual DbSet<Projektteendo> Projektteendo { get; set; }
         public virtual DbSet<Session> Session { get; set; }
         public virtual DbSet<Szamlazasirend> Szamlazasirend { get; set; }
         public virtual DbSet<Termekdij> Termekdij { get; set; }
@@ -60,7 +60,7 @@ namespace ossServer.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=kocka, 50803;Database=oss;User ID=sa;Password=roadster;");
+                optionsBuilder.UseSqlServer("Server=kocka\\sqlexpress;Database=oss;User ID=sa;Password=roadster;");
             }
         }
 
@@ -2167,6 +2167,62 @@ namespace ossServer.Models
                     .HasConstraintName("FK_PROJEKT_UGYFEL");
             });
 
+            modelBuilder.Entity<Projektjegyzet>(entity =>
+            {
+                entity.HasKey(e => e.Projektjegyzetkod)
+                    .HasName("PK_PROJEKTTEENDO");
+
+                entity.ToTable("PROJEKTJEGYZET");
+
+                entity.HasIndex(e => e.Particiokod)
+                    .HasName("IX_PROJEKTTEENDO_PARTICIOKOD");
+
+                entity.HasIndex(e => e.Projektkod)
+                    .HasName("IX_PROJEKTTEENDO_PROJEKTKOD");
+
+                entity.Property(e => e.Projektjegyzetkod).HasColumnName("PROJEKTJEGYZETKOD");
+
+                entity.Property(e => e.Leiras)
+                    .HasColumnName("LEIRAS")
+                    .HasColumnType("text");
+
+                entity.Property(e => e.Letrehozta)
+                    .IsRequired()
+                    .HasColumnName("LETREHOZTA")
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Letrehozva)
+                    .HasColumnName("LETREHOZVA")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.Modositotta)
+                    .IsRequired()
+                    .HasColumnName("MODOSITOTTA")
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Modositva)
+                    .HasColumnName("MODOSITVA")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.Particiokod).HasColumnName("PARTICIOKOD");
+
+                entity.Property(e => e.Projektkod).HasColumnName("PROJEKTKOD");
+
+                entity.HasOne(d => d.ParticiokodNavigation)
+                    .WithMany(p => p.Projektjegyzet)
+                    .HasForeignKey(d => d.Particiokod)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PROJEKTTEENDO_PARTICIO");
+
+                entity.HasOne(d => d.ProjektkodNavigation)
+                    .WithMany(p => p.Projektjegyzet)
+                    .HasForeignKey(d => d.Projektkod)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PROJEKTTEENDO_PROJEKT");
+            });
+
             modelBuilder.Entity<Projektkapcsolat>(entity =>
             {
                 entity.HasKey(e => e.Projektkapcsolatkod);
@@ -2222,59 +2278,6 @@ namespace ossServer.Models
                     .HasForeignKey(d => d.Projektkod)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PROJEKTKAPCSOLAT_PROJEKT");
-            });
-
-            modelBuilder.Entity<Projektteendo>(entity =>
-            {
-                entity.HasKey(e => e.Projektteendokod);
-
-                entity.ToTable("PROJEKTTEENDO");
-
-                entity.HasIndex(e => e.Particiokod);
-
-                entity.HasIndex(e => e.Projektkod);
-
-                entity.Property(e => e.Projektteendokod).HasColumnName("PROJEKTTEENDOKOD");
-
-                entity.Property(e => e.Leiras)
-                    .HasColumnName("LEIRAS")
-                    .HasColumnType("text");
-
-                entity.Property(e => e.Letrehozta)
-                    .IsRequired()
-                    .HasColumnName("LETREHOZTA")
-                    .HasMaxLength(30)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Letrehozva)
-                    .HasColumnName("LETREHOZVA")
-                    .HasColumnType("datetime");
-
-                entity.Property(e => e.Modositotta)
-                    .IsRequired()
-                    .HasColumnName("MODOSITOTTA")
-                    .HasMaxLength(30)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Modositva)
-                    .HasColumnName("MODOSITVA")
-                    .HasColumnType("datetime");
-
-                entity.Property(e => e.Particiokod).HasColumnName("PARTICIOKOD");
-
-                entity.Property(e => e.Projektkod).HasColumnName("PROJEKTKOD");
-
-                entity.HasOne(d => d.ParticiokodNavigation)
-                    .WithMany(p => p.Projektteendo)
-                    .HasForeignKey(d => d.Particiokod)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PROJEKTTEENDO_PARTICIO");
-
-                entity.HasOne(d => d.ProjektkodNavigation)
-                    .WithMany(p => p.Projektteendo)
-                    .HasForeignKey(d => d.Projektkod)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PROJEKTTEENDO_PROJEKT");
             });
 
             modelBuilder.Entity<Session>(entity =>

@@ -16,9 +16,7 @@
 
         UgyfelKod = 11,
 
-        CsakHaTeendo = 12,
-        CsakHaTeendoSajat = 13,
-        CsakHaLejartTeendo = 14,
+        CsakHaJegyzetIs = 12,
 
         TeljesitesKeltetol = 15,
         TeljesitesKelteig = 16,

@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace ossServer.Controllers.ProjektTeendo
+namespace ossServer.Controllers.ProjektJegyzet
 {
-    public class ProjektTeendoDto
+    public class ProjektJegyzetDto
     {
-        public int Projektteendokod { get; set; }
+        public int Projektjegyzetkod { get; set; }
         public int Projektkod { get; set; }
         public string Leiras { get; set; }
         public System.DateTime Letrehozva { get; set; }

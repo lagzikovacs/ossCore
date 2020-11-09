@@ -31,8 +31,8 @@ namespace ossServer.Models
             Penztar = new HashSet<Penztar>();
             Penztartetel = new HashSet<Penztartetel>();
             ProjektNavigation = new HashSet<Projekt>();
+            Projektjegyzet = new HashSet<Projektjegyzet>();
             Projektkapcsolat = new HashSet<Projektkapcsolat>();
-            Projektteendo = new HashSet<Projektteendo>();
             Session = new HashSet<Session>();
             Szamlazasirend = new HashSet<Szamlazasirend>();
             Termekdij = new HashSet<Termekdij>();
@@ -80,8 +80,8 @@ namespace ossServer.Models
         public virtual ICollection<Penztar> Penztar { get; set; }
         public virtual ICollection<Penztartetel> Penztartetel { get; set; }
         public virtual ICollection<Projekt> ProjektNavigation { get; set; }
+        public virtual ICollection<Projektjegyzet> Projektjegyzet { get; set; }
         public virtual ICollection<Projektkapcsolat> Projektkapcsolat { get; set; }
-        public virtual ICollection<Projektteendo> Projektteendo { get; set; }
         public virtual ICollection<Session> Session { get; set; }
         public virtual ICollection<Szamlazasirend> Szamlazasirend { get; set; }
         public virtual ICollection<Termekdij> Termekdij { get; set; }

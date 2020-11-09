@@ -6,49 +6,49 @@ using ossServer.Utils;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ossServer.Controllers.ProjektTeendo
+namespace ossServer.Controllers.ProjektJegyzet
 {
-    public class ProjektTeendoBll
+    public class ProjektJegyzetBll
     {
-        public static async Task<ProjektTeendoDto> GetAsync(ossContext context, string sid, int key)
+        public static async Task<ProjektJegyzetDto> GetAsync(ossContext context, string sid, int key)
         {
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
-            var entity = await ProjektTeendoDal.GetAsync(context, key);
-            var result = ObjectUtils.Convert<Projektteendo, ProjektTeendoDto>(entity);
+            var entity = await ProjektJegyzetDal.GetAsync(context, key);
+            var result = ObjectUtils.Convert<Projektjegyzet, ProjektJegyzetDto>(entity);
 
             return result;
         }
 
-        public static async Task<ProjektTeendoDto> CreateNewAsync(ossContext context, string sid)
+        public static async Task<ProjektJegyzetDto> CreateNewAsync(ossContext context, string sid)
         {
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
-            return new ProjektTeendoDto();
+            return new ProjektJegyzetDto();
         }
 
-        public static async Task<int> AddAsync(ossContext context, string sid, ProjektTeendoDto dto)
+        public static async Task<int> AddAsync(ossContext context, string sid, ProjektJegyzetDto dto)
         {
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
-            var entity = ObjectUtils.Convert<ProjektTeendoDto, Projektteendo>(dto);
-            return await ProjektTeendoDal.AddAsync(context, entity);
+            var entity = ObjectUtils.Convert<ProjektJegyzetDto, Projektjegyzet>(dto);
+            return await ProjektJegyzetDal.AddAsync(context, entity);
         }
 
-        public static async Task<List<ProjektTeendoDto>> SelectAsync(ossContext context, string sid, int projektKod)
+        public static async Task<List<ProjektJegyzetDto>> SelectAsync(ossContext context, string sid, int projektKod)
         {
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
-            var entities = await ProjektTeendoDal.SelectAsync(context, projektKod);
-            var result = new List<ProjektTeendoDto>();
+            var entities = await ProjektJegyzetDal.SelectAsync(context, projektKod);
+            var result = new List<ProjektJegyzetDto>();
 
             foreach (var entity in entities)
             {
-                var dto = ObjectUtils.Convert<Projektteendo, ProjektTeendoDto>(entity);
+                var dto = ObjectUtils.Convert<Projektjegyzet, ProjektJegyzetDto>(entity);
                 //dto.Teendo = entity.TeendokodNavigation.Teendo1;
 
                 result.Add(dto);
@@ -57,32 +57,32 @@ namespace ossServer.Controllers.ProjektTeendo
             return result;
         }
 
-        public static async Task DeleteAsync(ossContext context, string sid, ProjektTeendoDto dto)
+        public static async Task DeleteAsync(ossContext context, string sid, ProjektJegyzetDto dto)
         {
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
-            await ProjektTeendoDal.Lock(context, dto.Projektteendokod, dto.Modositva);
-            var entity = await ProjektTeendoDal.GetAsync(context, dto.Projektteendokod);
-            await ProjektTeendoDal.DeleteAsync(context, entity);
+            await ProjektJegyzetDal.Lock(context, dto.Projektjegyzetkod, dto.Modositva);
+            var entity = await ProjektJegyzetDal.GetAsync(context, dto.Projektjegyzetkod);
+            await ProjektJegyzetDal.DeleteAsync(context, entity);
         }
 
-        public static async Task<int> UpdateAsync(ossContext context, string sid, ProjektTeendoDto dto)
+        public static async Task<int> UpdateAsync(ossContext context, string sid, ProjektJegyzetDto dto)
         {
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
 
-            await ProjektTeendoDal.Lock(context, dto.Projektteendokod, dto.Modositva);
-            var entity = await ProjektTeendoDal.GetAsync(context, dto.Projektteendokod);
+            await ProjektJegyzetDal.Lock(context, dto.Projektjegyzetkod, dto.Modositva);
+            var entity = await ProjektJegyzetDal.GetAsync(context, dto.Projektjegyzetkod);
             ObjectUtils.Update(dto, entity);
-            return await ProjektTeendoDal.UpdateAsync(context, entity);
+            return await ProjektJegyzetDal.UpdateAsync(context, entity);
         }
 
         public static List<ColumnSettings> GridColumns()
         {
             return new List<ColumnSettings>
             {
-                new ColumnSettings {Name="Projektteendokod", Title = "Id", Type = ColumnType.INT },
+                new ColumnSettings {Name="Projektjegyzetkod", Title = "Id", Type = ColumnType.INT },
                 new ColumnSettings {Name="Leiras", Title = "Leirás", Type = ColumnType.STRING },
             };
         }

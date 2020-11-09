@@ -8,28 +8,28 @@ using ossServer.BaseResults;
 using ossServer.Models;
 using ossServer.Utils;
 
-namespace ossServer.Controllers.ProjektTeendo
+namespace ossServer.Controllers.ProjektJegyzet
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class ProjektTeendoController : ControllerBase
+    public class ProjektJegyzetController : ControllerBase
     {
         private readonly ossContext _context;
 
-        public ProjektTeendoController(ossContext context)
+        public ProjektJegyzetController(ossContext context)
         {
             _context = context;
         }
 
         [HttpPost]
-        public async Task<Int32Result> Add([FromQuery] string sid, [FromBody] ProjektTeendoDto dto)
+        public async Task<Int32Result> Add([FromQuery] string sid, [FromBody] ProjektJegyzetDto dto)
         {
             var result = new Int32Result();
 
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = await ProjektTeendoBll.AddAsync(_context, sid, dto);
+                    result.Result = await ProjektJegyzetBll.AddAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -43,14 +43,14 @@ namespace ossServer.Controllers.ProjektTeendo
         }
 
         [HttpPost]
-        public async Task<ProjektTeendoResult> CreateNew([FromQuery] string sid)
+        public async Task<ProjektJegyzetResult> CreateNew([FromQuery] string sid)
         {
-            var result = new ProjektTeendoResult();
+            var result = new ProjektJegyzetResult();
 
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<ProjektTeendoDto> { await ProjektTeendoBll.CreateNewAsync(_context, sid) };
+                    result.Result = new List<ProjektJegyzetDto> { await ProjektJegyzetBll.CreateNewAsync(_context, sid) };
 
                     tr.Commit();
                 }
@@ -64,14 +64,14 @@ namespace ossServer.Controllers.ProjektTeendo
         }
 
         [HttpPost]
-        public async Task<BaseResults.EmptyResult> Delete([FromQuery] string sid, [FromBody] ProjektTeendoDto dto)
+        public async Task<BaseResults.EmptyResult> Delete([FromQuery] string sid, [FromBody] ProjektJegyzetDto dto)
         {
             var result = new BaseResults.EmptyResult();
 
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    await ProjektTeendoBll.DeleteAsync(_context, sid, dto);
+                    await ProjektJegyzetBll.DeleteAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -85,14 +85,14 @@ namespace ossServer.Controllers.ProjektTeendo
         }
 
         [HttpPost]
-        public async Task<ProjektTeendoResult> Get([FromQuery] string sid, [FromBody] int key)
+        public async Task<ProjektJegyzetResult> Get([FromQuery] string sid, [FromBody] int key)
         {
-            var result = new ProjektTeendoResult();
+            var result = new ProjektJegyzetResult();
 
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = new List<ProjektTeendoDto> { await ProjektTeendoBll.GetAsync(_context, sid, key) };
+                    result.Result = new List<ProjektJegyzetDto> { await ProjektJegyzetBll.GetAsync(_context, sid, key) };
 
                     tr.Commit();
                 }
@@ -106,14 +106,14 @@ namespace ossServer.Controllers.ProjektTeendo
         }
 
         [HttpPost]
-        public async Task<Int32Result> Update([FromQuery] string sid, [FromBody] ProjektTeendoDto dto)
+        public async Task<Int32Result> Update([FromQuery] string sid, [FromBody] ProjektJegyzetDto dto)
         {
             var result = new Int32Result();
 
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = await ProjektTeendoBll.UpdateAsync(_context, sid, dto);
+                    result.Result = await ProjektJegyzetBll.UpdateAsync(_context, sid, dto);
 
                     tr.Commit();
                 }
@@ -127,14 +127,14 @@ namespace ossServer.Controllers.ProjektTeendo
         }
 
         [HttpPost]
-        public async Task<ProjektTeendoResult> Select([FromQuery] string sid, [FromBody] int projektKod)
+        public async Task<ProjektJegyzetResult> Select([FromQuery] string sid, [FromBody] int projektKod)
         {
-            var result = new ProjektTeendoResult();
+            var result = new ProjektJegyzetResult();
 
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = await ProjektTeendoBll.SelectAsync(_context, sid, projektKod);
+                    result.Result = await ProjektJegyzetBll.SelectAsync(_context, sid, projektKod);
 
                     tr.Commit();
                 }
@@ -155,7 +155,7 @@ namespace ossServer.Controllers.ProjektTeendo
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = ProjektTeendoBll.GridSettings(_context, sid);
+                    result.Result = ProjektJegyzetBll.GridSettings(_context, sid);
 
                     tr.Commit();
                 }
@@ -176,7 +176,7 @@ namespace ossServer.Controllers.ProjektTeendo
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = ProjektTeendoBll.ReszletekSettings(_context, sid);
+                    result.Result = ProjektJegyzetBll.ReszletekSettings(_context, sid);
 
                     tr.Commit();
                 }

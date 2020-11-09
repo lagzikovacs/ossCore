@@ -72,13 +72,10 @@ namespace ossServer.Controllers.Projekt
                     case Szempont.Keszrejelentve:
                         break;
 
-                    case Szempont.CsakHaTeendo:
-                        qry = qry.Where(p => p.Projektteendo.Any());
+                    case Szempont.CsakHaJegyzetIs:
+                        qry = qry.Where(p => p.Projektjegyzet.Any());
                         break;
-                    case Szempont.CsakHaTeendoSajat:
-                    case Szempont.CsakHaLejartTeendo:
-                    case Szempont.SajatTeendo:
-                        break;
+
                     default:
                         throw new Exception($"Lekezeletlen {f.Szempont} Szempont!");
                 }
@@ -147,10 +144,7 @@ namespace ossServer.Controllers.Projekt
                     case Szempont.Null:
                     case Szempont.Fut:
 
-                    case Szempont.CsakHaTeendo:
-                    case Szempont.CsakHaTeendoSajat:
-                    case Szempont.CsakHaLejartTeendo:
-                    case Szempont.SajatTeendo:
+                    case Szempont.CsakHaJegyzetIs:
 
                     case Szempont.Megrendelve:
                     case Szempont.Kivitelezve:
@@ -198,7 +192,7 @@ namespace ossServer.Controllers.Projekt
             if (n > 0)
                 result.Add("PROJEKTKAPCSOLAT.PROJEKTKOD", n);
 
-            n = await context.Projektteendo.CountAsync(s => s.Projektkod == pKey);
+            n = await context.Projektjegyzet.CountAsync(s => s.Projektkod == pKey);
             if (n > 0)
                 result.Add("PROJEKTTEENDO.PROJEKTKOD", n);
 

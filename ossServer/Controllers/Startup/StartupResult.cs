@@ -20,8 +20,6 @@ namespace ossServer.Controllers.Startup
         public List<ColumnSettings> Me_Reszletek { get; set; }
         public List<ColumnSettings> Penznem_Grid { get; set; }
         public List<ColumnSettings> Penznem_Reszletek { get; set; }
-        public List<ColumnSettings> Teendo_Grid { get; set; }
-        public List<ColumnSettings> Teendo_Reszletek { get; set; }
         public List<ColumnSettings> Termekdij_Grid { get; set; }
         public List<ColumnSettings> Termekdij_Reszletek { get; set; }
         public List<ColumnSettings> Tevekenyseg_Grid { get; set; }
@@ -37,8 +35,8 @@ namespace ossServer.Controllers.Startup
 
         public List<ColumnSettings> Projekt_Grid { get; set; }
         public List<ColumnSettings> Projekt_Reszletek { get; set; }
-        public List<ColumnSettings> Projektteendo_Grid { get; set; }
-        public List<ColumnSettings> Projektteendo_Reszletek { get; set; }
+        public List<ColumnSettings> Projektjegyzet_Grid { get; set; }
+        public List<ColumnSettings> Projektjegyzet_Reszletek { get; set; }
         public List<ColumnSettings> Szamlazasirend_Grid { get; set; }
         public List<ColumnSettings> Szamlazasirend_Reszletek { get; set; }
 
