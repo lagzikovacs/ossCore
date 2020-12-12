@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using ImageMagick;
 
 namespace ossServer.Controllers.Dokumentum
 {
@@ -259,28 +260,41 @@ namespace ossServer.Controllers.Dokumentum
             return fajlBuf;
         }
 
+        public static byte[] LetoltesPDFFajl(IConfiguration config, Models.Dokumentum entityDokumentum)
+        {
+            var ext = entityDokumentum.Ext.ToLower();
+            var fb = LetoltesFajl(entityDokumentum, 0, entityDokumentum.Meret);
+
+            if (ext == ".pdf")
+                return fb.b;
+            else if (ext == ".xls" | ext == ".xlsx" | ext == ".doc" | ext == ".docx")
+                return OfficeUtils.ToPdf(config, new OfficeParam { Bytes = fb.b, Ext = ext });
+            else if (ext == ".jpg")
+            {
+                using (var image = new MagickImage(fb.b))
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        image.Write(ms, MagickFormat.Pdf);
+                        
+                        ms.Seek(0, SeekOrigin.Begin);
+                        var b = new byte[ms.Length];
+                        ms.Read(b, 0, (int)ms.Length);
+
+                        return b;
+                    }
+                }
+            }
+
+            throw new Exception($"A(z) {ext} fájlok nem konvertálhatók!");
+        }
+
         //sql tranzakcióban működik, kis fájlok legyenek
         public static async Task FeltoltesAsync(ossContext context, string sid, FajlBuf fajlBuf)
         {
             var entityDokumentum = await BejegyzesAsync(context, sid, fajlBuf);
             BejegyzesFajl(entityDokumentum);
             FeltoltesFajl(entityDokumentum, fajlBuf);
-        }
-
-        public static async Task<Models.Dokumentum> LetoltesPDFAsync(ossContext context, string sid, int dokumentumKod)
-        {
-            SessionBll.Check(context, sid);
-            await CsoportDal.JogeAsync(context, JogKod.IRAT);
-
-            return await LetoltesAsync(context, sid, dokumentumKod);
-        }
-
-        public static byte[] LetoltesPDFFajl(IConfiguration config, Models.Dokumentum entityDokumentum)
-        {
-            var fb = LetoltesFajl(entityDokumentum, 0, entityDokumentum.Meret);
-            var op = new OfficeParam { Bytes = fb.b, Ext = entityDokumentum.Ext.ToLower() };
-
-            return OfficeUtils.ToPdf(config, op);
         }
 
         public static List<ColumnSettings> GridColumns()

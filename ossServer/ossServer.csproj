@@ -13,6 +13,7 @@
   <ItemGroup>
     <PackageReference Include="GemBox.Document" Version="29.0.0.1158" />
     <PackageReference Include="GemBox.Spreadsheet" Version="43.0.0.1127" />
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="7.22.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.0.0" />

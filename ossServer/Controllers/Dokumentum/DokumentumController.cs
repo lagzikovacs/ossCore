@@ -139,6 +139,36 @@ namespace ossServer.Controllers.Dokumentum
         }
 
         [HttpPost]
+        public async Task<ByteArrayResult> LetoltesPDF([FromQuery] string sid, [FromBody] int dokumentumKod)
+        {
+            var result = new ByteArrayResult();
+
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    var entity = await DokumentumBll.LetoltesAsync(_context, sid, dokumentumKod);
+
+                    tr.Commit();
+
+                    try
+                    {
+                        result.Result = DokumentumBll.LetoltesPDFFajl(_config, entity);
+                    }
+                    catch (Exception ef)
+                    {
+                        result.Error = ef.InmostMessage();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
+        }
+
+        [HttpPost]
         public async Task<DokumentumResult> Select([FromQuery] string sid, [FromBody] int iratkod)
         {
             var result = new DokumentumResult();
@@ -232,36 +262,6 @@ namespace ossServer.Controllers.Dokumentum
                         DokumentumBll.FeltoltesFajl(entityDokumentum, par);
 
                         result.Result = entityDokumentum.Dokumentumkod;
-                    }
-                    catch (Exception ef)
-                    {
-                        result.Error = ef.InmostMessage();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    tr.Rollback();
-                    result.Error = ex.InmostMessage();
-                }
-
-            return result;
-        }
-
-        [HttpPost]
-        public async Task<ByteArrayResult> LetoltesPDF([FromQuery] string sid, [FromBody] int dokumentumKod)
-        {
-            var result = new ByteArrayResult();
-
-            using (var tr = await _context.Database.BeginTransactionAsync())
-                try
-                {
-                    var entity = await DokumentumBll.LetoltesPDFAsync(_context, sid, dokumentumKod);
-
-                    tr.Commit();
-
-                    try
-                    {
-                        result.Result = DokumentumBll.LetoltesPDFFajl(_config, entity);
                     }
                     catch (Exception ef)
                     {
