@@ -269,7 +269,7 @@ namespace ossServer.Controllers.Dokumentum
                 return fb.b;
             else if (ext == ".xls" | ext == ".xlsx" | ext == ".doc" | ext == ".docx")
                 return OfficeUtils.ToPdf(config, new OfficeParam { Bytes = fb.b, Ext = ext });
-            else if (ext == ".jpg")
+            else if (ext == ".jpg" | ext == ".jpeg")
             {
                 using (var image = new MagickImage(fb.b))
                 {
