@@ -28,13 +28,43 @@ namespace ossServer.Controllers.Dokumentum
             return ObjectUtils.Convert<Models.Dokumentum, DokumentumDto>(entity);
         }
 
-        public static async Task<List<DokumentumDto>> SelectAsync(ossContext context, string sid, int iratKod)
+        public static async Task<List<DokumentumDto>> SelectAsync(ossContext context, string sid, int iratKod, bool imgprev, int imgwidth)
         {
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.IRAT);
 
             var entities = await DokumentumDal.SelectAsync(context, iratKod);
-            return ObjectUtils.Convert<Models.Dokumentum, DokumentumDto>(entities);
+            var entitiesDto = new List<DokumentumDto>();
+            
+
+            foreach (var ent in entities)
+            {
+                //újraolvasni a volume miatt
+                var doc = await DokumentumDal.GetWithVolumeAsync(context, ent.Dokumentumkod);
+
+                var entDto = ObjectUtils.Convert<Models.Dokumentum, DokumentumDto>(ent);
+
+                if (imgprev)
+                {
+                    var ext = ent.Ext.ToLower();
+                    if (ext == ".jpg" | ext == ".jpeg" | ext == ".png")
+                    {
+                        //kell a volume
+                        var fb = LetoltesFajl(doc, 0, ent.Meret);
+
+                        using (var image = new MagickImage(fb.b))
+                        {
+                            image.Resize(imgwidth, imgwidth);
+
+                            entDto.Imgprev = image.ToBase64();
+                        }
+                    }
+                }
+
+                entitiesDto.Add(entDto);
+            }
+
+            return entitiesDto;
         }
 
         public static async Task DeleteAsync(ossContext context, string sid, DokumentumDto dto)
@@ -269,7 +299,7 @@ namespace ossServer.Controllers.Dokumentum
                 return fb.b;
             else if (ext == ".xls" | ext == ".xlsx" | ext == ".doc" | ext == ".docx")
                 return OfficeUtils.ToPdf(config, new OfficeParam { Bytes = fb.b, Ext = ext });
-            else if (ext == ".jpg" | ext == ".jpeg")
+            else if (ext == ".jpg" | ext == ".jpeg" | ext == ".png")
             {
                 using (var image = new MagickImage(fb.b))
                 {

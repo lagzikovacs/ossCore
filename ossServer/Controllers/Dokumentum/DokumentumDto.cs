@@ -12,6 +12,7 @@ namespace ossServer.Controllers.Dokumentum
         public string Hash { get; set; }
         public int Iratkod { get; set; }
         public string Megjegyzes { get; set; }
+        public string Imgprev { get; set; }
 
         public DateTime Letrehozva { get; set; }
         public string Letrehozta { get; set; }

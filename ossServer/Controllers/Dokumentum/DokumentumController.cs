@@ -176,7 +176,7 @@ namespace ossServer.Controllers.Dokumentum
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = await DokumentumBll.SelectAsync(_context, sid, iratkod);
+                    result.Result = await DokumentumBll.SelectAsync(_context, sid, iratkod, false, 0);
                     tr.Commit();
                 }
                 catch (Exception ex)
