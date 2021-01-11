@@ -258,6 +258,65 @@ namespace ossServer.Controllers.Iratminta
             return result;
         }
 
+        public static async Task<byte[]> SzerzodesAsync(ossContext context, string sid, int projektKod)
+        {
+            SessionBll.Check(context, sid);
+            await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
+
+            var entityProjekt = await ProjektDal.GetAsync(context, projektKod);
+
+            var entityParticio = await ParticioDal.GetAsync(context);
+            var pc = JsonConvert.DeserializeObject<ProjektConf>(entityParticio.Projekt);
+            var iratKod = pc.SzerzodesIratkod != null ? (int)pc.SzerzodesIratkod :
+                throw new Exception(string.Format(Messages.ParticioHiba, "ProjektSzerzodesIratkod"));
+
+            var original = await IratBll.LetoltesAsync(context, sid, iratKod);
+
+            NumberFormatInfo nfi = new CultureInfo("hu-HU", false).NumberFormat;
+            nfi.NumberGroupSeparator = ".";
+
+            var arNetto = entityProjekt.Vallalasiarnetto;
+            var elolegNetto = (int)(arNetto * (decimal)0.7) / 1000 * 1000;
+
+            ComponentInfo.SetLicense(serialKey);
+
+            DocumentModel document;
+            using (var msDocx = new MemoryStream())
+            {
+                msDocx.Write(original.b, 0, original.b.Count());
+                document = DocumentModel.Load(msDocx, GemBox.Document.LoadOptions.DocxDefault);
+            }
+
+            var mezoertekek = new
+            {
+                UGYFELNEV = entityProjekt.UgyfelkodNavigation.Nev,
+                UGYFELCIM = UgyfelBll.Cim(entityProjekt.UgyfelkodNavigation),
+                TELEFONSZAM = entityProjekt.UgyfelkodNavigation.Telefon,
+                DC = entityProjekt.Dckw.ToString(CultureInfo.CurrentCulture),
+                NAPELEM = entityProjekt.Napelem,
+                INVERTER = entityProjekt.Inverter,
+                TELEPITESICIM = entityProjekt.Telepitesicim,
+                KIVITELEZESIHATARIDO = entityProjekt.Kivitelezesihatarido.Value.ToShortDateString(),
+                MUNKATERULETATADASA = DateTime.Now.Date.AddDays(1).ToShortDateString(),
+                ARNETTO = arNetto.ToString("#,#", nfi),
+                ARBRUTTO = Calc.RealRound(arNetto * (decimal)1.27, 1m).ToString("#,#", nfi),
+                ELOLEGNETTO = elolegNetto.ToString("#,#", nfi),
+                ELOLEGBRUTTO = Calc.RealRound(elolegNetto * (decimal)1.27, 1m).ToString("#,#", nfi),
+                DATUM = DateTime.Now.Date.ToShortDateString()
+            };
+
+            document.MailMerge.Execute(mezoertekek);
+
+            byte[] result;
+
+            using (var msDocx = new MemoryStream())
+            {
+                document.Save(msDocx, GemBox.Document.SaveOptions.DocxDefault);
+                result = msDocx.ToArray();
+            }
+
+            return result;
+        }
         public static async Task<byte[]> SzallitasiSzerzodesAsync(ossContext context, string sid, int projektKod)
         {
             SessionBll.Check(context, sid);
@@ -374,7 +433,7 @@ namespace ossServer.Controllers.Iratminta
 
             return result;
         }
-        public static async Task<byte[]> SzerzodesAsync(ossContext context, string sid, int projektKod)
+        public static async Task<byte[]> OFTSzerzodesAsync(ossContext context, string sid, int projektKod)
         {
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
@@ -383,8 +442,8 @@ namespace ossServer.Controllers.Iratminta
 
             var entityParticio = await ParticioDal.GetAsync(context);
             var pc = JsonConvert.DeserializeObject<ProjektConf>(entityParticio.Projekt);
-            var iratKod = pc.SzerzodesIratkod != null ? (int)pc.SzerzodesIratkod : 
-                throw new Exception(string.Format(Messages.ParticioHiba, "ProjektSzerzodesIratkod"));
+            var iratKod = pc.FeltetelesSzerzodesIratkod != null ? (int)pc.FeltetelesSzerzodesIratkod :
+                throw new Exception(string.Format(Messages.ParticioHiba, "OFTSzerzodesIratkod"));
 
             var original = await IratBll.LetoltesAsync(context, sid, iratKod);
 
@@ -414,10 +473,8 @@ namespace ossServer.Controllers.Iratminta
                 TELEPITESICIM = entityProjekt.Telepitesicim,
                 KIVITELEZESIHATARIDO = entityProjekt.Kivitelezesihatarido.Value.ToShortDateString(),
                 MUNKATERULETATADASA = DateTime.Now.Date.AddDays(1).ToShortDateString(),
-                ARNETTO = arNetto.ToString("#,#", nfi),
-                ARBRUTTO = Calc.RealRound(arNetto * (decimal)1.27, 1m).ToString("#,#", nfi),
-                ELOLEGNETTO = elolegNetto.ToString("#,#", nfi),
-                ELOLEGBRUTTO = Calc.RealRound(elolegNetto * (decimal)1.27, 1m).ToString("#,#", nfi),
+                ARNETTO = (arNetto - 75000).ToString("#,#", nfi),
+                ARBRUTTO = Calc.RealRound((arNetto - 75000) * (decimal)1.27, 1m).ToString("#,#", nfi),
                 DATUM = DateTime.Now.Date.ToShortDateString()
             };
 

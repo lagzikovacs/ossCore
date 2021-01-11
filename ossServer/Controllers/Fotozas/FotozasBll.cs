@@ -129,7 +129,7 @@ namespace ossServer.Controllers.Fotozas
 
             result.iratDto = (await IratBll.SelectAsync(context, result.sid, 0, 1,
                 new List<SzMT> { new SzMT { Szempont = Szempont.Kod, Minta = Fp.Iratkod.ToString() } })).Item1;
-            result.dokumentumDto = await DokumentumBll.SelectAsync(context, result.sid, Fp.Iratkod, true, 200);
+            result.dokumentumDto = await DokumentumBll.SelectAsync(context, result.sid, Fp.Iratkod, true, 350);
 
             var projektKapcsolatDto = await ProjektKapcsolatBll.SelectByIratAsync(context, result.sid, Fp.Iratkod);
             if (projektKapcsolatDto.Count != 0)

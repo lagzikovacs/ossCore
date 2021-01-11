@@ -171,6 +171,28 @@ namespace ossServer.Controllers.Iratminta
         }
 
         [HttpPost]
+        public async Task<ByteArrayResult> OFTSzerzodes([FromQuery] string sid,
+            [FromBody] int projektKod)
+        {
+            var result = new ByteArrayResult();
+
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    result.Result = await IratmintaBll.OFTSzerzodesAsync(_context, sid, projektKod);
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
+        }
+
+        [HttpPost]
         public async Task<ByteArrayResult> Szerzodes([FromQuery] string sid, [FromBody] int projektKod)
         {
             var result = new ByteArrayResult();
