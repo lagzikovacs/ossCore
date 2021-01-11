@@ -442,7 +442,7 @@ namespace ossServer.Controllers.Iratminta
 
             var entityParticio = await ParticioDal.GetAsync(context);
             var pc = JsonConvert.DeserializeObject<ProjektConf>(entityParticio.Projekt);
-            var iratKod = pc.FeltetelesSzerzodesIratkod != null ? (int)pc.FeltetelesSzerzodesIratkod :
+            var iratKod = pc.FeltetelesSzerzodesIratkod != null ? (int)pc.OFTSzerzodesIratkod :
                 throw new Exception(string.Format(Messages.ParticioHiba, "OFTSzerzodesIratkod"));
 
             var original = await IratBll.LetoltesAsync(context, sid, iratKod);
@@ -473,8 +473,10 @@ namespace ossServer.Controllers.Iratminta
                 TELEPITESICIM = entityProjekt.Telepitesicim,
                 KIVITELEZESIHATARIDO = entityProjekt.Kivitelezesihatarido.Value.ToShortDateString(),
                 MUNKATERULETATADASA = DateTime.Now.Date.AddDays(1).ToShortDateString(),
-                ARNETTO = (arNetto - 75000).ToString("#,#", nfi),
-                ARBRUTTO = Calc.RealRound((arNetto - 75000) * (decimal)1.27, 1m).ToString("#,#", nfi),
+                ARNETTO = arNetto.ToString("#,#", nfi),
+                ARBRUTTO = Calc.RealRound(arNetto * (decimal)1.27, 1m).ToString("#,#", nfi),
+                ELOLEGNETTO = elolegNetto.ToString("#,#", nfi),
+                ELOLEGBRUTTO = Calc.RealRound(elolegNetto * (decimal)1.27, 1m).ToString("#,#", nfi),
                 DATUM = DateTime.Now.Date.ToShortDateString()
             };
 
