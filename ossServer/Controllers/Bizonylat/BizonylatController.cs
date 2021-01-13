@@ -285,51 +285,6 @@ namespace ossServer.Controllers.Bizonylat
         }
 
         [HttpPost]
-        public async Task<StringResult> SzamlaFormaiEllenorzese([FromQuery] string sid, 
-            [FromBody] int bizonylatKod)
-        {
-            var result = new StringResult();
-
-            using (var tr = await _context.Database.BeginTransactionAsync())
-                try
-                {
-                    result.Result = await BizonylatBll.SzamlaFormaiEllenorzeseAsync(_context, sid, bizonylatKod);
-
-                    tr.Commit();
-                }
-                catch (Exception ex)
-                {
-                    tr.Rollback();
-                    result.Error = ex.InmostMessage();
-                }
-
-            return result;
-        }
-
-        [HttpPost]
-        public async Task<StringResult> LetoltesOnlineszamlaFormatumban([FromQuery] string sid, 
-            [FromBody] int bizonylatKod)
-        {
-            var result = new StringResult();
-
-            using (var tr = await _context.Database.BeginTransactionAsync())
-                try
-                {
-                    result.Result = await BizonylatBll.LetoltesOnlineszamlaFormatumbanAsync(_context, sid, 
-                        bizonylatKod);
-
-                    tr.Commit();
-                }
-                catch (Exception ex)
-                {
-                    tr.Rollback();
-                    result.Error = ex.InmostMessage();
-                }
-
-            return result;
-        }
-
-        [HttpPost]
         public async Task<BizonylatTetelResult> BizonylattetelCalc([FromQuery] string sid, 
             [FromBody] BizonylatTetelDto dto)
         {

@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using ossServer.Controllers.Csoport;
-using ossServer.Controllers.Onlineszamla;
 using ossServer.Controllers.Particio;
 using ossServer.Controllers.Primitiv.Penznem;
 using ossServer.Controllers.Session;
@@ -435,17 +434,6 @@ namespace ossServer.Controllers.Bizonylat
                 await BizonylatTermekdijDal.AddAsync(context, termekdij);
             }
 
-            //ellenőrizni a tartalmat
-            // TODO
-            //var invoice = OnlineszamlaBll.GetInvoice(context, stornozo.Bizonylatkod);
-            //var hibak = invoice.ValidateErrors();
-            //if (hibak.Any())
-            //    throw new Exception(string.Join(Environment.NewLine, hibak));
-
-            //hozzáadni a feltöltendők listájához
-            await OnlineszamlaDal.AddAsync(context, stornozo.Bizonylatkod);
-
-
             //az eredetiben ennyi módosítás
             stornozando.Ezstornozott = true;
             stornozando.Stornozobizonylatkod = stornozo.Bizonylatkod;
@@ -483,21 +471,6 @@ namespace ossServer.Controllers.Bizonylat
                 entity.Bizonylatszam = bizonylatszam ?? throw new Exception("A bizonylatszám nem lehet üres!");
             var result = await BizonylatDal.UpdateAsync(context, entity);
 
-            //ha számla és előlegszámla
-            if ((BizonylatTipus)entity.Bizonylattipuskod == BizonylatTipus.Szamla ||
-                (BizonylatTipus)entity.Bizonylattipuskod == BizonylatTipus.ElolegSzamla)
-            {
-                //ellenőrizni a tartalmat
-                // TODO
-                //var invoice = OnlineszamlaBll.GetInvoice(context, entity.BIZONYLATKOD);
-                //var hibak = invoice.ValidateErrors();
-                //if (hibak.Any())
-                //    throw new Exception(string.Join(Environment.NewLine, hibak));
-
-                //hozzáadni a feltöltendők listájához
-                await OnlineszamlaDal.AddAsync(context, entity.Bizonylatkod);
-            }
-
             return result;
         }
 
@@ -527,25 +500,6 @@ namespace ossServer.Controllers.Bizonylat
             else
                 entity.Kiszallitva = true;
             return await BizonylatDal.UpdateAsync(context, entity);
-        }
-
-        public static async Task<string> SzamlaFormaiEllenorzeseAsync(ossContext context, string sid, int bizonylatKod)
-        {
-            SessionBll.Check(context, sid);
-            await CsoportDal.JogeBizonylatAsync(context);
-
-            var dto = await GetComplexAsync(context, sid, bizonylatKod);
-            return OnlineszamlaBll.SzamlaFormaiEllenorzese(dto);
-        }
-
-        public static async Task<string> LetoltesOnlineszamlaFormatumbanAsync(ossContext context, string sid, 
-            int bizonylatKod)
-        {
-            SessionBll.Check(context, sid);
-            await CsoportDal.JogeBizonylatAsync(context);
-
-            var dto = await GetComplexAsync(context, sid, bizonylatKod);
-            return OnlineszamlaBll.LetoltesOnlineszamlaFormatumban(dto);
         }
 
         public static async Task<BizonylatTetelDto> BizonylattetelCalcAsync(ossContext context, string sid, 

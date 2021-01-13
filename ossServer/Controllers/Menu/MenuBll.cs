@@ -66,11 +66,6 @@ namespace ossServer.Controllers.Menu
               new AngularMenuDto {Title = "divider"},
               new AngularMenuDto {Title = "Megrendelés", RouterLink = "/bizonylat/megrendeles", Enabled = jogok.Contains(JogKod.MEGRENDELES)},
               new AngularMenuDto {Title = "Bejövő számla", RouterLink = "/bizonylat/bejovoszamla", Enabled = jogok.Contains(JogKod.BEJOVOSZAMLA)},
-              new AngularMenuDto {Title = "divider"},
-              new AngularMenuDto {Title = "Online számla", RouterLink = "/navfeltoltesellenorzese", Enabled = jogok.Contains(JogKod.NAVFELTOLTESELLENORZESE)},
-              new AngularMenuDto {Title = "divider"},
-              new AngularMenuDto {Title = "NAV adószám ellenőrzés", RouterLink = "/adoszamellenorzes", Enabled = true},
-              new AngularMenuDto {Title = "NAV számlalekérdezés", RouterLink = "/szamlalekerdezes", Enabled = jogok.Contains(JogKod.NAVSZAMLALEKERDEZES)},
             }
             },
             new AngularMenuDto
