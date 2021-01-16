@@ -523,12 +523,6 @@ namespace ossServer.Controllers.Iratminta
             {
                 UGYFELNEV = entityProjekt.UgyfelkodNavigation.Nev,
                 UGYFELCIM = UgyfelBll.Cim(entityProjekt.UgyfelkodNavigation),
-                TELEFONSZAM = entityProjekt.UgyfelkodNavigation.Telefon,
-                DC = entityProjekt.Dckw.ToString(CultureInfo.CurrentCulture),
-                NAPELEM = entityProjekt.Napelem,
-                INVERTER = entityProjekt.Inverter,
-                TELEPITESICIM = entityProjekt.Telepitesicim,
-                KIVITELEZESIHATARIDO = entityProjekt.Kivitelezesihatarido.Value.ToShortDateString(),
                 DATUM = DateTime.Now.Date.ToShortDateString()
             };
 
