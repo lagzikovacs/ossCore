@@ -12,5 +12,6 @@
         public int? SzerzodesIratkod { get; set; }
         public int? FeltetelesSzerzodesIratkod { get; set; }
         public int? OFTSzerzodesIratkod { get; set; }
-    }
+        public int? HMKEtulajdonoshozzajarulasIratkod { get; set; }
+}
 }

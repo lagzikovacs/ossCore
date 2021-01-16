@@ -442,7 +442,7 @@ namespace ossServer.Controllers.Iratminta
 
             var entityParticio = await ParticioDal.GetAsync(context);
             var pc = JsonConvert.DeserializeObject<ProjektConf>(entityParticio.Projekt);
-            var iratKod = pc.FeltetelesSzerzodesIratkod != null ? (int)pc.OFTSzerzodesIratkod :
+            var iratKod = pc.OFTSzerzodesIratkod != null ? (int)pc.OFTSzerzodesIratkod :
                 throw new Exception(string.Format(Messages.ParticioHiba, "OFTSzerzodesIratkod"));
 
             var original = await IratBll.LetoltesAsync(context, sid, iratKod);
@@ -477,6 +477,58 @@ namespace ossServer.Controllers.Iratminta
                 ARBRUTTO = Calc.RealRound(arNetto * (decimal)1.27, 1m).ToString("#,#", nfi),
                 ELOLEGNETTO = elolegNetto.ToString("#,#", nfi),
                 ELOLEGBRUTTO = Calc.RealRound(elolegNetto * (decimal)1.27, 1m).ToString("#,#", nfi),
+                DATUM = DateTime.Now.Date.ToShortDateString()
+            };
+
+            document.MailMerge.Execute(mezoertekek);
+
+            byte[] result;
+
+            using (var msDocx = new MemoryStream())
+            {
+                document.Save(msDocx, GemBox.Document.SaveOptions.DocxDefault);
+                result = msDocx.ToArray();
+            }
+
+            return result;
+        }
+
+        public static async Task<byte[]> HMKEtulajdonoshozzajarulas(ossContext context, string sid, int projektKod)
+        {
+            SessionBll.Check(context, sid);
+            await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
+
+            var entityProjekt = await ProjektDal.GetAsync(context, projektKod);
+
+            var entityParticio = await ParticioDal.GetAsync(context);
+            var pc = JsonConvert.DeserializeObject<ProjektConf>(entityParticio.Projekt);
+            var iratKod = pc.HMKEtulajdonoshozzajarulasIratkod != null ? (int)pc.HMKEtulajdonoshozzajarulasIratkod :
+                throw new Exception(string.Format(Messages.ParticioHiba, "HMKEtulajdonoshozzajarulasIratkod"));
+            
+            var original = await IratBll.LetoltesAsync(context, sid, iratKod);
+            
+            NumberFormatInfo nfi = new CultureInfo("hu-HU", false).NumberFormat;
+            nfi.NumberGroupSeparator = ".";
+
+            ComponentInfo.SetLicense(serialKey);
+
+            DocumentModel document;
+            using (var msDocx = new MemoryStream())
+            {
+                msDocx.Write(original.b, 0, original.b.Count());
+                document = DocumentModel.Load(msDocx, GemBox.Document.LoadOptions.DocxDefault);
+            }
+
+            var mezoertekek = new
+            {
+                UGYFELNEV = entityProjekt.UgyfelkodNavigation.Nev,
+                UGYFELCIM = UgyfelBll.Cim(entityProjekt.UgyfelkodNavigation),
+                TELEFONSZAM = entityProjekt.UgyfelkodNavigation.Telefon,
+                DC = entityProjekt.Dckw.ToString(CultureInfo.CurrentCulture),
+                NAPELEM = entityProjekt.Napelem,
+                INVERTER = entityProjekt.Inverter,
+                TELEPITESICIM = entityProjekt.Telepitesicim,
+                KIVITELEZESIHATARIDO = entityProjekt.Kivitelezesihatarido.Value.ToShortDateString(),
                 DATUM = DateTime.Now.Date.ToShortDateString()
             };
 
