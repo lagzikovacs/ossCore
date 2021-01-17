@@ -522,8 +522,8 @@ namespace ossServer.Controllers.Iratminta
             var mezoertekek = new
             {
                 UGYFELNEV = entityProjekt.UgyfelkodNavigation.Nev,
-                UGYFELCIM = UgyfelBll.Cim(entityProjekt.UgyfelkodNavigation),
-                DATUM = DateTime.Now.Date.ToShortDateString()
+                TELEPITESICIM = entityProjekt.Telepitesicim,
+                MEGRENDELVE = entityProjekt.Megrendelve.Value.ToShortDateString(),
             };
 
             document.MailMerge.Execute(mezoertekek);
