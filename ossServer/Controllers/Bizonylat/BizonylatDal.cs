@@ -162,5 +162,12 @@ namespace ossServer.Controllers.Bizonylat
               .Where(s => s.Bizonylatszam.CompareTo(ig) <= 0)
               .ToListAsync();
         }
+
+        public static async Task ZoomCheckAsync(ossContext context, int bizonylatkod, string bizonylatszam)
+        {
+            if (!await context.Bizonylat.AnyAsync(s => s.Particiokod == context.CurrentSession.Particiokod &&
+                s.Bizonylatkod == bizonylatkod && s.Bizonylatszam == bizonylatszam))
+                throw new Exception(string.Format(Messages.HibasZoom, "bizonylat"));
+        }
     }
 }

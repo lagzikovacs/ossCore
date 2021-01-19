@@ -24,6 +24,13 @@ namespace ossServer.Controllers.Bizonylat
                 .OrderBy(s => s.Bizonylattetelkod).ToList();
         }
 
+        public static async Task<int> UpdateAsync(ossContext context, Bizonylattetel entity)
+        {
+            await context.SaveChangesAsync();
+
+            return entity.Bizonylatkod;
+        }
+
         public static async Task DeleteAsync(ossContext context, Bizonylattetel entity)
         {
             context.Bizonylattetel.Remove(entity);

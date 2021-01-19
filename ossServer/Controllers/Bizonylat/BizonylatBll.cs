@@ -531,5 +531,71 @@ namespace ossServer.Controllers.Bizonylat
             BizonylatUtils.SumEsAfaEsTermekdij(dto.Dto, dto.LstTetelDto, dto.LstAfaDto, dto.LstTermekdijDto);
             return dto;
         }
+
+        public static async Task<int> Fuvardij(ossContext context, string sid, FuvardijParam par)
+        {
+            SessionBll.Check(context, sid);
+            await CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
+
+            await BizonylatDal.Lock(context, par.dtoAnyagszamla.Bizonylatkod, par.dtoAnyagszamla.Modositva);
+
+            var entityAnyagszamla = await BizonylatDal.GetAsync(context, par.dtoAnyagszamla.Bizonylatkod);
+            if (entityAnyagszamla.Bizonylattipuskod != (int)BizonylatTipus.BejovoSzamla)
+                throw new Exception($"Ez a bizonylat nem bejövő számla: {entityAnyagszamla.Bizonylatkod}!");
+            if (entityAnyagszamla.Bizonylatszam == null)
+                throw new Exception($"Ez a bizonylat még módosítható: {entityAnyagszamla.Bizonylatkod}!");
+
+            var entityFuvarszamla = await BizonylatDal.GetAsync(context, par.dtoFuvarszamla.Bizonylatkod);
+            if (entityFuvarszamla.Bizonylattipuskod != (int)BizonylatTipus.BejovoSzamla)
+                throw new Exception($"Ez a bizonylat nem bejövő számla: {entityFuvarszamla.Bizonylatkod}!");
+            if (entityFuvarszamla.Bizonylatszam == null)
+                throw new Exception($"Ez a bizonylat még módosítható: {entityFuvarszamla.Bizonylatkod}!");
+
+            //
+            await BizonylatDal.UpdateAsync(context, entityAnyagszamla);
+
+            var entitesTetel = BizonylatTetelDal.Select(context, par.dtoAnyagszamla.Bizonylatkod);
+            foreach (var l in entitesTetel)
+            {
+                //
+                await BizonylatTetelDal.UpdateAsync(context, l);
+            }
+
+            return entityAnyagszamla.Bizonylatkod;
+        }
+
+        public static async Task<int> FuvardijTorles(ossContext context, string sid, BizonylatDto dto)
+        {
+            SessionBll.Check(context, sid);
+            await CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
+
+            await BizonylatDal.Lock(context, dto.Bizonylatkod, dto.Modositva);
+
+            var entity = await BizonylatDal.GetAsync(context, dto.Bizonylatkod);
+            if (entity.Bizonylattipuskod != (int)BizonylatTipus.BejovoSzamla)
+                throw new Exception($"Ez a bizonylat nem bejövő számla: {entity.Bizonylatkod}!");
+            if (entity.Bizonylatszam == null)
+                throw new Exception($"Ez a bizonylat még módosítható: {entity.Bizonylatkod}!");
+
+            //
+            await BizonylatDal.UpdateAsync(context, entity);
+
+            var entitesTetel = BizonylatTetelDal.Select(context, dto.Bizonylatkod);
+            foreach (var l in entitesTetel)
+            {
+                //
+                await BizonylatTetelDal.UpdateAsync(context, l);
+            }
+
+            return entity.Bizonylatkod;
+        }
+
+        public static async Task ZoomCheckAsync(ossContext context, string sid, int bizonylatkod, string bizonylatszam)
+        {
+            SessionBll.Check(context, sid);
+            await CsoportDal.JogeAsync(context, JogKod.BIZONYLATMOD);
+
+            await BizonylatDal.ZoomCheckAsync(context, bizonylatkod, bizonylatszam);
+        }
     }
 }

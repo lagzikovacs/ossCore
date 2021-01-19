@@ -377,5 +377,70 @@ namespace ossServer.Controllers.Bizonylat
 
             return result;
         }
+
+
+
+        [HttpPost]
+        public async Task<Int32Result> Fuvardij([FromQuery] string sid, [FromBody] FuvardijParam par)
+        {
+            var result = new Int32Result();
+
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    result.Result = await BizonylatBll.Fuvardij(_context, sid, par);
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
+        }
+
+        [HttpPost]
+        public async Task<Int32Result> FuvardijTorles([FromQuery] string sid, [FromBody] BizonylatDto par)
+        {
+            var result = new Int32Result();
+
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    result.Result = await BizonylatBll.FuvardijTorles(_context, sid, par);
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
+        }
+
+        [HttpPost]
+        public async Task<BaseResults.EmptyResult> ZoomCheck([FromQuery] string sid, [FromBody] BizonylatZoomParameter par)
+        {
+            var result = new BaseResults.EmptyResult();
+
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    await BizonylatBll.ZoomCheckAsync(_context, sid, par.Bizonylatkod, par.Bizonylatszam);
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
+        }
     }
 }
