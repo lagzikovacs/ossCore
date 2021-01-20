@@ -9,6 +9,6 @@ namespace ossServer.Controllers.Bizonylat
     {
         public BizonylatDto dtoAnyagszamla { get; set; }
         public BizonylatDto dtoFuvarszamla { get; set; }
-        public double Fuvardij { get; set; }
+        public decimal Fuvardij { get; set; }
     }
 }

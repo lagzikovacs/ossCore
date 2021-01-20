@@ -7,7 +7,8 @@ namespace ossServer.Models
     {
         public Penznem()
         {
-            Bizonylat = new HashSet<Bizonylat>();
+            BizonylatFuvardijpenznemkodNavigation = new HashSet<Bizonylat>();
+            BizonylatPenznemkodNavigation = new HashSet<Bizonylat>();
             Kifizetes = new HashSet<Kifizetes>();
             Penztar = new HashSet<Penztar>();
             Projekt = new HashSet<Projekt>();
@@ -23,7 +24,8 @@ namespace ossServer.Models
         public string Modositotta { get; set; }
 
         public virtual Particio ParticiokodNavigation { get; set; }
-        public virtual ICollection<Bizonylat> Bizonylat { get; set; }
+        public virtual ICollection<Bizonylat> BizonylatFuvardijpenznemkodNavigation { get; set; }
+        public virtual ICollection<Bizonylat> BizonylatPenznemkodNavigation { get; set; }
         public virtual ICollection<Kifizetes> Kifizetes { get; set; }
         public virtual ICollection<Penztar> Penztar { get; set; }
         public virtual ICollection<Projekt> Projekt { get; set; }

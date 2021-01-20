@@ -17,6 +17,9 @@ namespace ossServer.Controllers.Riport
         public string Utolsoarpenzneme { get; set; }
         public decimal Utolsoarforintban { get; set; }
         public int Beszerzesekszama { get; set; }
+
+        public decimal Aruertek { get; internal set; }
+        public decimal Fuvardij { get; internal set; }
         public decimal Keszletertek { get; internal set; }
     }
 }

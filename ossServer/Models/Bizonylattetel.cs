@@ -31,6 +31,8 @@ namespace ossServer.Models
         public string Termekdijmegnevezes { get; set; }
         public decimal? Termekdijegysegar { get; set; }
         public decimal? Termekdij { get; set; }
+        public decimal? Fuvardijegysegar { get; set; }
+        public decimal? Fuvardij { get; set; }
 
         public virtual Afakulcs AfakulcskodNavigation { get; set; }
         public virtual Bizonylat BizonylatkodNavigation { get; set; }

@@ -220,9 +220,11 @@ namespace ossServer.Models
 
                 entity.ToTable("BIZONYLAT");
 
-                entity.HasIndex(e => e.Bizonylatszam);
-
                 entity.HasIndex(e => e.Fizetesimodkod);
+
+                entity.HasIndex(e => e.Fuvardijpenznemkod);
+
+                entity.HasIndex(e => e.Fuvarszamlakod);
 
                 entity.HasIndex(e => e.Particiokod);
 
@@ -277,6 +279,28 @@ namespace ossServer.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.Fizetesimodkod).HasColumnName("FIZETESIMODKOD");
+
+                entity.Property(e => e.Fuvardij)
+                    .HasColumnName("FUVARDIJ")
+                    .HasColumnType("decimal(16, 2)");
+
+                entity.Property(e => e.Fuvardijarfolyam)
+                    .HasColumnName("FUVARDIJARFOLYAM")
+                    .HasColumnType("decimal(16, 2)");
+
+                entity.Property(e => e.Fuvardijpenznem)
+                    .HasColumnName("FUVARDIJPENZNEM")
+                    .HasMaxLength(3)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Fuvardijpenznemkod).HasColumnName("FUVARDIJPENZNEMKOD");
+
+                entity.Property(e => e.Fuvarszamla)
+                    .HasColumnName("FUVARSZAMLA")
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Fuvarszamlakod).HasColumnName("FUVARSZAMLAKOD");
 
                 entity.Property(e => e.Kifizetesrendben).HasColumnName("KIFIZETESRENDBEN");
 
@@ -435,6 +459,16 @@ namespace ossServer.Models
                     .HasForeignKey(d => d.Fizetesimodkod)
                     .HasConstraintName("FK_BIZONYLAT_FIZETESIMOD");
 
+                entity.HasOne(d => d.FuvardijpenznemkodNavigation)
+                    .WithMany(p => p.BizonylatFuvardijpenznemkodNavigation)
+                    .HasForeignKey(d => d.Fuvardijpenznemkod)
+                    .HasConstraintName("FK_BIZONYLAT_PENZNEM1");
+
+                entity.HasOne(d => d.FuvarszamlakodNavigation)
+                    .WithMany(p => p.InverseFuvarszamlakodNavigation)
+                    .HasForeignKey(d => d.Fuvarszamlakod)
+                    .HasConstraintName("FK_BIZONYLAT_BIZONYLAT");
+
                 entity.HasOne(d => d.ParticiokodNavigation)
                     .WithMany(p => p.BizonylatNavigation)
                     .HasForeignKey(d => d.Particiokod)
@@ -442,7 +476,7 @@ namespace ossServer.Models
                     .HasConstraintName("FK_BIZONYLAT_PARTICIO");
 
                 entity.HasOne(d => d.PenznemkodNavigation)
-                    .WithMany(p => p.Bizonylat)
+                    .WithMany(p => p.BizonylatPenznemkodNavigation)
                     .HasForeignKey(d => d.Penznemkod)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_BIZONYLAT_PENZNEM");
@@ -691,6 +725,14 @@ namespace ossServer.Models
                     .HasColumnType("decimal(16, 2)");
 
                 entity.Property(e => e.Ezeloleg).HasColumnName("EZELOLEG");
+
+                entity.Property(e => e.Fuvardij)
+                    .HasColumnName("FUVARDIJ")
+                    .HasColumnType("decimal(16, 2)");
+
+                entity.Property(e => e.Fuvardijegysegar)
+                    .HasColumnName("FUVARDIJEGYSEGAR")
+                    .HasColumnType("decimal(16, 2)");
 
                 entity.Property(e => e.Kozvetitettszolgaltatas).HasColumnName("KOZVETITETTSZOLGALTATAS");
 

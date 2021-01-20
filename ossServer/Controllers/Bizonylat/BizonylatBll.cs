@@ -551,14 +551,28 @@ namespace ossServer.Controllers.Bizonylat
             if (entityFuvarszamla.Bizonylatszam == null)
                 throw new Exception($"Ez a bizonylat még módosítható: {entityFuvarszamla.Bizonylatkod}!");
 
-            //
+            entityAnyagszamla.Fuvarszamlakod = entityFuvarszamla.Bizonylatkod;
+            entityAnyagszamla.Fuvarszamla = entityFuvarszamla.Bizonylatszam;
+            entityAnyagszamla.Fuvardij = par.Fuvardij;
+            entityAnyagszamla.Fuvardijpenznemkod = entityFuvarszamla.Penznemkod;
+            entityAnyagszamla.Fuvardijpenznem = entityFuvarszamla.Penznem;
+            entityAnyagszamla.Fuvardijarfolyam = entityFuvarszamla.Arfolyam;
+
             await BizonylatDal.UpdateAsync(context, entityAnyagszamla);
 
+            
             var entitesTetel = BizonylatTetelDal.Select(context, par.dtoAnyagszamla.Bizonylatkod);
+            var osszdb = entitesTetel.Where(s => s.CikkkodNavigation.Keszletetkepez).Sum(s => s.Mennyiseg);
+            var fuvardijegysegar = entityFuvarszamla.Netto / osszdb;
             foreach (var l in entitesTetel)
             {
-                //
-                await BizonylatTetelDal.UpdateAsync(context, l);
+                if (l.CikkkodNavigation.Keszletetkepez)
+                {
+                    l.Fuvardijegysegar = fuvardijegysegar;
+                    l.Fuvardij = l.Mennyiseg * fuvardijegysegar;
+
+                    await BizonylatTetelDal.UpdateAsync(context, l);
+                }
             }
 
             return entityAnyagszamla.Bizonylatkod;
@@ -577,13 +591,21 @@ namespace ossServer.Controllers.Bizonylat
             if (entity.Bizonylatszam == null)
                 throw new Exception($"Ez a bizonylat még módosítható: {entity.Bizonylatkod}!");
 
-            //
+            entity.Fuvarszamlakod = null;
+            entity.Fuvarszamla = null;
+            entity.Fuvardij = null;
+            entity.Fuvardijpenznemkod = null;
+            entity.Fuvardijpenznem = null;
+            entity.Fuvardijarfolyam = null;
+
             await BizonylatDal.UpdateAsync(context, entity);
 
             var entitesTetel = BizonylatTetelDal.Select(context, dto.Bizonylatkod);
             foreach (var l in entitesTetel)
             {
-                //
+                l.Fuvardijegysegar = null;
+                l.Fuvardij = null;
+
                 await BizonylatTetelDal.UpdateAsync(context, l);
             }
 

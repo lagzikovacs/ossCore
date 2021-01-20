@@ -49,6 +49,14 @@ namespace ossServer.Controllers.Bizonylat
         public bool Ezstornozott { get; set; }
         public int? Stornozobizonylatkod { get; set; }
         public int? Stornozottbizonylatkod { get; set; }
+
+        public int? Fuvarszamlakod { get; set; }
+        public string Fuvarszamla { get; set; }
+        public decimal? Fuvardij { get; set; }
+        public int? Fuvardijpenznemkod { get; set; }
+        public string Fuvardijpenznem { get; set; }
+        public decimal? Fuvardijarfolyam { get; set; }
+
         public System.DateTime Letrehozva { get; set; }
         public string Letrehozta { get; set; }
         public DateTime Modositva { get; set; }

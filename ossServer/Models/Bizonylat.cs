@@ -11,6 +11,7 @@ namespace ossServer.Models
             Bizonylatkapcsolat = new HashSet<Bizonylatkapcsolat>();
             Bizonylattermekdij = new HashSet<Bizonylattermekdij>();
             Bizonylattetel = new HashSet<Bizonylattetel>();
+            InverseFuvarszamlakodNavigation = new HashSet<Bizonylat>();
             InverseStornozobizonylatkodNavigation = new HashSet<Bizonylat>();
             InverseStornozottbizonylatkodNavigation = new HashSet<Bizonylat>();
             Kifizetes = new HashSet<Kifizetes>();
@@ -62,12 +63,20 @@ namespace ossServer.Models
         public bool Ezstornozott { get; set; }
         public int? Stornozobizonylatkod { get; set; }
         public int? Stornozottbizonylatkod { get; set; }
+        public int? Fuvarszamlakod { get; set; }
+        public string Fuvarszamla { get; set; }
+        public decimal? Fuvardij { get; set; }
+        public int? Fuvardijpenznemkod { get; set; }
+        public string Fuvardijpenznem { get; set; }
+        public decimal? Fuvardijarfolyam { get; set; }
         public DateTime Letrehozva { get; set; }
         public string Letrehozta { get; set; }
         public DateTime Modositva { get; set; }
         public string Modositotta { get; set; }
 
         public virtual Fizetesimod FizetesimodkodNavigation { get; set; }
+        public virtual Penznem FuvardijpenznemkodNavigation { get; set; }
+        public virtual Bizonylat FuvarszamlakodNavigation { get; set; }
         public virtual Particio ParticiokodNavigation { get; set; }
         public virtual Penznem PenznemkodNavigation { get; set; }
         public virtual Bizonylat StornozobizonylatkodNavigation { get; set; }
@@ -78,6 +87,7 @@ namespace ossServer.Models
         public virtual ICollection<Bizonylatkapcsolat> Bizonylatkapcsolat { get; set; }
         public virtual ICollection<Bizonylattermekdij> Bizonylattermekdij { get; set; }
         public virtual ICollection<Bizonylattetel> Bizonylattetel { get; set; }
+        public virtual ICollection<Bizonylat> InverseFuvarszamlakodNavigation { get; set; }
         public virtual ICollection<Bizonylat> InverseStornozobizonylatkodNavigation { get; set; }
         public virtual ICollection<Bizonylat> InverseStornozottbizonylatkodNavigation { get; set; }
         public virtual ICollection<Kifizetes> Kifizetes { get; set; }

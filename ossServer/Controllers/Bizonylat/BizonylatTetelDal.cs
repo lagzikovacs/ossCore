@@ -1,4 +1,5 @@
-﻿using ossServer.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using ossServer.Models;
 using ossServer.Utils;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,7 @@ namespace ossServer.Controllers.Bizonylat
         public static List<Bizonylattetel> Select(ossContext context, int bizonylatKod)
         {
             return context.Bizonylattetel
+                .Include(s => s.CikkkodNavigation)
                 .Where(s => s.Bizonylatkod == bizonylatKod)
                 .OrderBy(s => s.Bizonylattetelkod).ToList();
         }

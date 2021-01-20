@@ -28,5 +28,8 @@
         public string Termekdijmegnevezes { get; set; }
         public decimal? Termekdijegysegar { get; set; }
         public decimal? Termekdij { get; set; }
+
+        public decimal? Fuvardijegysegar { get; set; }
+        public decimal? Fuvardij { get; set; }
     }
 }

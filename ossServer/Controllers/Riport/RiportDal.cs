@@ -258,7 +258,10 @@ namespace ossServer.Controllers.Riport
                   s.BizonylatkodNavigation.Penznem,
                   s.BizonylatkodNavigation.Arfolyam,
                   s.Mennyiseg,
-                  s.Egysegar
+                  s.Egysegar,
+                  s.BizonylatkodNavigation.Fuvardijpenznem,
+                  s.BizonylatkodNavigation.Fuvardijarfolyam,
+                  s.Fuvardijegysegar
               });
 
             var osszes = await qry.CountAsync();
@@ -286,7 +289,9 @@ namespace ossServer.Controllers.Riport
                             levonhato = lst[i].Mennyiseg;
                         levonando -= levonhato;
 
-                        dto.Keszletertek += levonhato * lst[i].Egysegar * lst[i].Arfolyam;
+                        dto.Aruertek += levonhato * lst[i].Egysegar * lst[i].Arfolyam;
+                        if (lst[i].Fuvardijegysegar != null && lst[i].Fuvardijarfolyam != null)
+                            dto.Fuvardij += levonhato * (decimal)lst[i].Fuvardijegysegar * (decimal)lst[i].Fuvardijarfolyam;
 
                         if (levonando == 0)
                             break;
@@ -294,6 +299,8 @@ namespace ossServer.Controllers.Riport
 
                     rekordTol += lapMeret;
                 }
+
+                dto.Keszletertek = dto.Aruertek + dto.Fuvardij;
             }
         }
 

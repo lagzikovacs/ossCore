@@ -419,15 +419,20 @@ namespace ossServer.Controllers.Riport
             Fejlec(rowNum, 0, "Megnevezés");
             Fejlec(rowNum, 1, "Mennyiség");
             Fejlec(rowNum, 2, "Me");
-            Fejlec(rowNum, 3, "Besz. érték");
-            Fejlec(rowNum, 4, "Utolsó bevét");
-            Fejlec(rowNum, 5, "Utolsó ár");
-            Fejlec(rowNum, 6, "Utolsó ár pénzneme");
-            Fejlec(rowNum, 7, "Utolsó ár forintban");
-            Fejlec(rowNum, 8, "Beszerzések száma");
+            Fejlec(rowNum, 3, "Áruérték");
+            Fejlec(rowNum, 4, "Fuvardíj");
+            Fejlec(rowNum, 5, "Besz. érték");
+
+            Fejlec(rowNum, 6, "Utolsó bevét");
+            Fejlec(rowNum, 7, "Utolsó ár");
+            Fejlec(rowNum, 8, "Utolsó ár pénzneme");
+            Fejlec(rowNum, 9, "Utolsó ár forintban");
+            Fejlec(rowNum, 10, "Beszerzések száma");
 
             ++rowNum;
 
+            decimal sumAru = 0;
+            decimal sumFuvar = 0;
             decimal sumBeszErtek = 0;
 
             foreach (var dto in lstDto)
@@ -445,19 +450,26 @@ namespace ossServer.Controllers.Riport
                 Mezo(rowNum, 0, dto.Cikk);
                 Mezo(rowNum, 1, dto.Keszlet);
                 Mezo(rowNum, 2, dto.Me);
-                Mezo(rowNum, 3, dto.Keszletertek);
-                Mezo(rowNum, 4, dto.Utolsobevet);
-                Mezo(rowNum, 5, dto.Utolsoar);
-                Mezo(rowNum, 6, dto.Utolsoarpenzneme);
-                Mezo(rowNum, 7, dto.Utolsoarforintban);
-                Mezo(rowNum, 8, dto.Beszerzesekszama);
+                Mezo(rowNum, 3, dto.Aruertek);
+                Mezo(rowNum, 4, dto.Fuvardij);
+                Mezo(rowNum, 5, dto.Keszletertek);
+
+                Mezo(rowNum, 6, dto.Utolsobevet);
+                Mezo(rowNum, 7, dto.Utolsoar);
+                Mezo(rowNum, 8, dto.Utolsoarpenzneme);
+                Mezo(rowNum, 9, dto.Utolsoarforintban);
+                Mezo(rowNum, 10, dto.Beszerzesekszama);
 
                 ++rowNum;
 
+                sumAru += dto.Aruertek;
+                sumFuvar += dto.Fuvardij;
                 sumBeszErtek += dto.Keszletertek;
             }
 
-            Vegosszeg(rowNum, 3, sumBeszErtek);
+            Vegosszeg(rowNum, 3, sumAru);
+            Vegosszeg(rowNum, 4, sumFuvar);
+            Vegosszeg(rowNum, 5, sumBeszErtek);
 
             AutosizeColumns(rowStart);
 
