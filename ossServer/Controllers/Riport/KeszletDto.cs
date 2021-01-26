@@ -21,5 +21,6 @@ namespace ossServer.Controllers.Riport
         public decimal Aruertek { get; internal set; }
         public decimal Fuvardij { get; internal set; }
         public decimal Keszletertek { get; internal set; }
+        public decimal FuvardijjalTerheltAtlagosEgysegar { get; internal set; }
     }
 }

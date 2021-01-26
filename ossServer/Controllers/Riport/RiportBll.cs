@@ -422,12 +422,13 @@ namespace ossServer.Controllers.Riport
             Fejlec(rowNum, 3, "Áruérték");
             Fejlec(rowNum, 4, "Fuvardíj");
             Fejlec(rowNum, 5, "Besz. érték");
+            Fejlec(rowNum, 6, "Fuvardíjjal terhelt átlagos egységár");
 
-            Fejlec(rowNum, 6, "Utolsó bevét");
-            Fejlec(rowNum, 7, "Utolsó ár");
-            Fejlec(rowNum, 8, "Utolsó ár pénzneme");
-            Fejlec(rowNum, 9, "Utolsó ár forintban");
-            Fejlec(rowNum, 10, "Beszerzések száma");
+            Fejlec(rowNum, 7, "Utolsó bevét");
+            Fejlec(rowNum, 8, "Utolsó ár");
+            Fejlec(rowNum, 9, "Utolsó ár pénzneme");
+            Fejlec(rowNum, 10, "Utolsó ár forintban");
+            Fejlec(rowNum, 11, "Beszerzések száma");
 
             ++rowNum;
 
@@ -453,12 +454,13 @@ namespace ossServer.Controllers.Riport
                 Mezo(rowNum, 3, dto.Aruertek);
                 Mezo(rowNum, 4, dto.Fuvardij);
                 Mezo(rowNum, 5, dto.Keszletertek);
+                Mezo(rowNum, 6, dto.FuvardijjalTerheltAtlagosEgysegar);
 
-                Mezo(rowNum, 6, dto.Utolsobevet);
-                Mezo(rowNum, 7, dto.Utolsoar);
-                Mezo(rowNum, 8, dto.Utolsoarpenzneme);
-                Mezo(rowNum, 9, dto.Utolsoarforintban);
-                Mezo(rowNum, 10, dto.Beszerzesekszama);
+                Mezo(rowNum, 7, dto.Utolsobevet);
+                Mezo(rowNum, 8, dto.Utolsoar);
+                Mezo(rowNum, 9, dto.Utolsoarpenzneme);
+                Mezo(rowNum, 10, dto.Utolsoarforintban);
+                Mezo(rowNum, 11, dto.Beszerzesekszama);
 
                 ++rowNum;
 

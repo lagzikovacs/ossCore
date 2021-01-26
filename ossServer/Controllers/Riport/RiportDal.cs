@@ -301,6 +301,7 @@ namespace ossServer.Controllers.Riport
                 }
 
                 dto.Keszletertek = dto.Aruertek + dto.Fuvardij;
+                dto.FuvardijjalTerheltAtlagosEgysegar = dto.Keszletertek / dto.Keszlet;
             }
         }
 
