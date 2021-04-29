@@ -563,7 +563,7 @@ namespace ossServer.Controllers.Bizonylat
             
             var entitesTetel = BizonylatTetelDal.Select(context, par.dtoAnyagszamla.Bizonylatkod);
             var osszdb = entitesTetel.Where(s => s.CikkkodNavigation.Keszletetkepez).Sum(s => s.Mennyiseg);
-            var fuvardijegysegar = entityFuvarszamla.Netto / osszdb;
+            var fuvardijegysegar = par.Fuvardij / osszdb;
             foreach (var l in entitesTetel)
             {
                 if (l.CikkkodNavigation.Keszletetkepez)
