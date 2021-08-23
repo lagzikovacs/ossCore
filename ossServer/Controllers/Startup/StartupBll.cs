@@ -20,7 +20,6 @@ using ossServer.Controllers.ProjektJegyzet;
 using ossServer.Controllers.Session;
 using ossServer.Controllers.SzamlazasiRend;
 using ossServer.Controllers.Ugyfel;
-using ossServer.Controllers.Ugyfelkapcsolat;
 using ossServer.Controllers.UgyfelterLog;
 using ossServer.Controllers.Volume;
 using ossServer.Models;
@@ -59,8 +58,6 @@ namespace ossServer.Controllers.Startup
                 Cikk_Reszletek = CikkBll.ReszletekColumns(),
                 Ugyfel_Grid = UgyfelBll.GridColumns(),
                 Ugyfel_Reszletek = UgyfelBll.ReszletekColumns(),
-                Ugyfelkapcsolat_Grid = UgyfelkapcsolatBll.GridColumns(),
-                Ugyfelkapcsolat_Reszletek = UgyfelkapcsolatBll.ReszletekColumns(),
 
                 Projekt_Grid = ProjektBll.GridColumns(),
                 Projekt_Reszletek = ProjektBll.ReszletekColumns(),

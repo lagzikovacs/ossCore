@@ -13,6 +13,7 @@ namespace ossServer.Models
         public int Cikkkod { get; set; }
         public int Particiokod { get; set; }
         public string Megnevezes { get; set; }
+        public int Listavegere { get; set; }
         public int Mekod { get; set; }
         public int Afakulcskod { get; set; }
         public decimal Egysegar { get; set; }

@@ -38,7 +38,6 @@ namespace ossServer.Models
             Termekdij = new HashSet<Termekdij>();
             Tevekenyseg = new HashSet<Tevekenyseg>();
             Ugyfel = new HashSet<Ugyfel>();
-            Ugyfelkapcsolat = new HashSet<Ugyfelkapcsolat>();
             Ugyfelterlog = new HashSet<Ugyfelterlog>();
             VolumeNavigation = new HashSet<Volume>();
         }
@@ -87,7 +86,6 @@ namespace ossServer.Models
         public virtual ICollection<Termekdij> Termekdij { get; set; }
         public virtual ICollection<Tevekenyseg> Tevekenyseg { get; set; }
         public virtual ICollection<Ugyfel> Ugyfel { get; set; }
-        public virtual ICollection<Ugyfelkapcsolat> Ugyfelkapcsolat { get; set; }
         public virtual ICollection<Ugyfelterlog> Ugyfelterlog { get; set; }
         public virtual ICollection<Volume> VolumeNavigation { get; set; }
     }

@@ -15,7 +15,6 @@ namespace ossServer.Models
             InverseStornozobizonylatkodNavigation = new HashSet<Bizonylat>();
             InverseStornozottbizonylatkodNavigation = new HashSet<Bizonylat>();
             Kifizetes = new HashSet<Kifizetes>();
-            Navfeltoltes = new HashSet<Navfeltoltes>();
             Projektkapcsolat = new HashSet<Projektkapcsolat>();
         }
 
@@ -91,7 +90,6 @@ namespace ossServer.Models
         public virtual ICollection<Bizonylat> InverseStornozobizonylatkodNavigation { get; set; }
         public virtual ICollection<Bizonylat> InverseStornozottbizonylatkodNavigation { get; set; }
         public virtual ICollection<Kifizetes> Kifizetes { get; set; }
-        public virtual ICollection<Navfeltoltes> Navfeltoltes { get; set; }
         public virtual ICollection<Projektkapcsolat> Projektkapcsolat { get; set; }
     }
 }
