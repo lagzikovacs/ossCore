@@ -860,8 +860,6 @@ namespace ossServer.Models
                     .HasColumnName("LETREHOZVA")
                     .HasColumnType("datetime");
 
-                entity.Property(e => e.Listavegere).HasColumnName("LISTAVEGERE");
-
                 entity.Property(e => e.Megnevezes)
                     .IsRequired()
                     .HasColumnName("MEGNEVEZES")
