@@ -6,7 +6,6 @@
         public string Megnevezes { get; set; }
 
         public string Szallito { get; set; }
-        public string Navonlineszamla { get; set; }
         public string Bizonylat { get; set; }
         public string Projekt { get; set; }
         public string Volume { get; set; }

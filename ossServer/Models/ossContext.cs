@@ -1758,10 +1758,6 @@ namespace ossServer.Models
                     .HasColumnName("MODOSITVA")
                     .HasColumnType("datetime");
 
-                entity.Property(e => e.Navonlineszamla)
-                    .HasColumnName("NAVONLINESZAMLA")
-                    .HasColumnType("text");
-
                 entity.Property(e => e.Projekt)
                     .HasColumnName("PROJEKT")
                     .HasColumnType("text");
