@@ -40,7 +40,7 @@ namespace ossServer.Controllers.Iratminta
         }
 
         [HttpPost]
-        public async Task<ByteArrayResult> KeszrejelentesNkm([FromQuery] string sid, 
+        public async Task<ByteArrayResult> KeszrejelentesMvm([FromQuery] string sid, 
             [FromBody] int projektKod)
         {
             var result = new ByteArrayResult();
@@ -48,7 +48,7 @@ namespace ossServer.Controllers.Iratminta
             using (var tr = await _context.Database.BeginTransactionAsync())
                 try
                 {
-                    result.Result = await IratmintaBll.KeszrejelentesNkmAsync(_context, sid, projektKod);
+                    result.Result = await IratmintaBll.KeszrejelentesMvmAsync(_context, sid, projektKod);
 
                     tr.Commit();
                 }

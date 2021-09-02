@@ -4,7 +4,7 @@
     {
         public int? AjanlatIratkod { get; set; }
         public int? ElegedettsegiFelmeresIratkod { get; set; }
-        public int? KeszrejelentesNkmIratkod { get; set; }
+        public int? KeszrejelentesMvmIratkod { get; set; }
         public int? KeszrejelentesElmuemaszIratkod { get; set; }
         public int? KeszrejelentesEonIratkod { get; set; }
         public int? MunkalapIratkod { get; set; }

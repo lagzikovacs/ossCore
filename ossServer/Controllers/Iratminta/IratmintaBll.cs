@@ -15,6 +15,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
+// { "AjanlatIratkod":134830,"ElegedettsegiFelmeresIratkod":134831,"KeszrejelentesNkmIratkod":134832,"KeszrejelentesElmuemaszIratkod":134833,"KeszrejelentesEonIratkod":134834,"MunkalapIratkod":134835,"SzallitasiSzerzodesIratkod":134836,"SzerzodesIratkod":134837,"FeltetelesSzerzodesIratkod":147199,"OFTSzerzodesIratkod":158472,"HMKEtulajdonoshozzajarulasIratkod":158595}
+
 namespace ossServer.Controllers.Iratminta
 {
     public class IratmintaBll
@@ -64,7 +66,7 @@ namespace ossServer.Controllers.Iratminta
             return result;
         }
 
-        public static async Task<byte[]> KeszrejelentesNkmAsync(ossContext context, string sid, int projektKod)
+        public static async Task<byte[]> KeszrejelentesMvmAsync(ossContext context, string sid, int projektKod)
         {
             SessionBll.Check(context, sid);
             await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
@@ -73,8 +75,8 @@ namespace ossServer.Controllers.Iratminta
 
             var entityParticio = await ParticioDal.GetAsync(context);
             var pc = JsonConvert.DeserializeObject<ProjektConf>(entityParticio.Projekt);
-            var iratKod = pc.KeszrejelentesNkmIratkod != null ? (int)pc.KeszrejelentesNkmIratkod : 
-              throw new Exception(string.Format(Messages.ParticioHiba, "KeszrejelentesNkmIratkod"));
+            var iratKod = pc.KeszrejelentesMvmIratkod != null ? (int)pc.KeszrejelentesMvmIratkod : 
+              throw new Exception(string.Format(Messages.ParticioHiba, "KeszrejelentesMvmIratkod"));
 
             var original = await IratBll.LetoltesAsync(context, sid, iratKod);
 
