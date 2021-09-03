@@ -234,5 +234,50 @@ namespace ossServer.Controllers.Iratminta
 
             return result;
         }
+
+
+
+        [HttpPost]
+        public async Task<ByteArrayResult> KeszrejelentesEonelmu([FromQuery] string sid,
+            [FromBody] int projektKod)
+        {
+            var result = new ByteArrayResult();
+
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    result.Result = await IratmintaBll.KeszrejelentesEonelmuAsync(_context, sid, projektKod);
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
+        }
+        [HttpPost]
+        public async Task<ByteArrayResult> KeszrejelentesMvmemasz([FromQuery] string sid,
+            [FromBody] int projektKod)
+        {
+            var result = new ByteArrayResult();
+
+            using (var tr = await _context.Database.BeginTransactionAsync())
+                try
+                {
+                    result.Result = await IratmintaBll.KeszrejelentesMvmemaszAsync(_context, sid, projektKod);
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    result.Error = ex.InmostMessage();
+                }
+
+            return result;
+        }
     }
 }

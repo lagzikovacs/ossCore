@@ -540,5 +540,100 @@ namespace ossServer.Controllers.Iratminta
 
             return result;
         }
+
+
+
+        public static async Task<byte[]> KeszrejelentesEonelmuAsync(ossContext context, string sid, int projektKod)
+        {
+            SessionBll.Check(context, sid);
+            await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
+
+            var entityProjekt = await ProjektDal.GetAsync(context, projektKod);
+
+            var entityParticio = await ParticioDal.GetAsync(context);
+            var pc = JsonConvert.DeserializeObject<ProjektConf>(entityParticio.Projekt);
+            var iratKod = pc.KeszrejelentesEonelmuIratkod != null ? (int)pc.KeszrejelentesEonelmuIratkod :
+              throw new Exception(string.Format(Messages.ParticioHiba, "KeszrejelentesEonelmuIratkod"));
+
+            var original = await IratBll.LetoltesAsync(context, sid, iratKod);
+
+            ComponentInfo.SetLicense(serialKey);
+
+            DocumentModel document;
+            using (var msDocx = new MemoryStream())
+            {
+                msDocx.Write(original.b, 0, original.b.Count());
+                document = DocumentModel.Load(msDocx, GemBox.Document.LoadOptions.DocxDefault);
+            }
+
+            var mezoertekek = new
+            {
+                UGYFELNEV = entityProjekt.UgyfelkodNavigation.Nev,
+                TELEPITESICIM = entityProjekt.Telepitesicim,
+                INVERTER = entityProjekt.Inverter,
+                TELEFONSZAM = entityProjekt.UgyfelkodNavigation.Telefon,
+                EMAIL = entityProjekt.UgyfelkodNavigation.Email,
+                AC = entityProjekt.Ackva.ToString(CultureInfo.CurrentCulture),
+                DATUM = DateTime.Now.Date.ToShortDateString()
+            };
+
+            document.MailMerge.Execute(mezoertekek);
+
+            byte[] result;
+
+            using (var msDocx = new MemoryStream())
+            {
+                document.Save(msDocx, GemBox.Document.SaveOptions.DocxDefault);
+                result = msDocx.ToArray();
+            }
+
+            return result;
+        }
+        public static async Task<byte[]> KeszrejelentesMvmemaszAsync(ossContext context, string sid, int projektKod)
+        {
+            SessionBll.Check(context, sid);
+            await CsoportDal.JogeAsync(context, JogKod.PROJEKT);
+
+            var entityProjekt = await ProjektDal.GetAsync(context, projektKod);
+
+            var entityParticio = await ParticioDal.GetAsync(context);
+            var pc = JsonConvert.DeserializeObject<ProjektConf>(entityParticio.Projekt);
+            var iratKod = pc.KeszrejelentesMvmemaszIratkod != null ? (int)pc.KeszrejelentesMvmemaszIratkod :
+              throw new Exception(string.Format(Messages.ParticioHiba, "KeszrejelentesMvmemaszIratkod"));
+
+            var original = await IratBll.LetoltesAsync(context, sid, iratKod);
+
+            ComponentInfo.SetLicense(serialKey);
+
+            DocumentModel document;
+            using (var msDocx = new MemoryStream())
+            {
+                msDocx.Write(original.b, 0, original.b.Count());
+                document = DocumentModel.Load(msDocx, GemBox.Document.LoadOptions.DocxDefault);
+            }
+
+            var mezoertekek = new
+            {
+                UGYFELNEV = entityProjekt.UgyfelkodNavigation.Nev,
+                TELEPITESICIM = entityProjekt.Telepitesicim,
+                INVERTER = entityProjekt.Inverter,
+                TELEFONSZAM = entityProjekt.UgyfelkodNavigation.Telefon,
+                EMAIL = entityProjekt.UgyfelkodNavigation.Email,
+                AC = entityProjekt.Ackva.ToString(CultureInfo.CurrentCulture),
+                DATUM = DateTime.Now.Date.ToShortDateString()
+            };
+
+            document.MailMerge.Execute(mezoertekek);
+
+            byte[] result;
+
+            using (var msDocx = new MemoryStream())
+            {
+                document.Save(msDocx, GemBox.Document.SaveOptions.DocxDefault);
+                result = msDocx.ToArray();
+            }
+
+            return result;
+        }
     }
 }

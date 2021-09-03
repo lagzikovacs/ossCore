@@ -13,5 +13,8 @@
         public int? FeltetelesSzerzodesIratkod { get; set; }
         public int? OFTSzerzodesIratkod { get; set; }
         public int? HMKEtulajdonoshozzajarulasIratkod { get; set; }
-}
+
+        public int? KeszrejelentesEonelmuIratkod { get; set; }
+        public int? KeszrejelentesMvmemaszIratkod { get; set; }
+    }
 }
