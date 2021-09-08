@@ -569,6 +569,7 @@ namespace ossServer.Controllers.Iratminta
             var mezoertekek = new
             {
                 UGYFELNEV = entityProjekt.UgyfelkodNavigation.Nev,
+                UGYFELCIM = UgyfelBll.Cim(entityProjekt.UgyfelkodNavigation),
                 TELEPITESICIM = entityProjekt.Telepitesicim,
                 INVERTER = entityProjekt.Inverter,
                 TELEFONSZAM = entityProjekt.UgyfelkodNavigation.Telefon,
@@ -615,6 +616,7 @@ namespace ossServer.Controllers.Iratminta
             var mezoertekek = new
             {
                 UGYFELNEV = entityProjekt.UgyfelkodNavigation.Nev,
+                UGYFELCIM = UgyfelBll.Cim(entityProjekt.UgyfelkodNavigation),
                 TELEPITESICIM = entityProjekt.Telepitesicim,
                 INVERTER = entityProjekt.Inverter,
                 TELEFONSZAM = entityProjekt.UgyfelkodNavigation.Telefon,
